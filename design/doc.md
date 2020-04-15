@@ -34,10 +34,10 @@ This is a short story written in Inform 6 with the hope of learning how to imple
                |        Top of Tree                                |
                |       / (up)                                     Tomb
                |      /                                          (dark)
-               Clearing -- {Jungle}
-                  |                \
-               Old Hut              \
-              /      .               \
+               Clearing -------- Jungle Path
+                  |                   |
+               Old Hut                |
+              /      .                |
           Garden      Stream     River Shore
 		                           (START)
 

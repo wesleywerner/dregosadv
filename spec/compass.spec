@@ -1,10 +1,10 @@
 go faster
 exit
 north
-east
+southwest
 again
 again
 again
 examine compass
-east
+west
 examine compass
