@@ -49,8 +49,12 @@ Include "VerbLib";
     location = canoe;
     ! Move objects to their starting places
     move canoe to river;
-    ! move river_water to river;
     move boatman to canoe;
+    ! enable some debugging actions:
+    #ifdef DEBUG;
+      ! allow skipping the long boat ride with GO FASTER
+      move canoe_hasten to river;
+    #endif;
     ! Give player inventory
     move lodestar to player;
     move bullwhip to player;
@@ -69,13 +73,17 @@ Include "VerbLib";
             area in New Guinea -- to find the legendary ", (name) golden_egg;
 ];
 
+! Remember the last known location of the player, before they get lost
+! in the jungle, and return the player to this good location when they
+! find their way back.
 Global last_known_location = 0;
 
+! Print out amusing things to try (only available after game is won).
 [ Amusing;
-    print_ret "I hope you enjoyed playing this story. There are a couple of
-            strange or fun things that you can try, if you haven't
-            done some of them already:^
-            ^1) Whip the water when in the canoe.";
+    print_ret "Here are some strange and fun things that you can try
+            (if you haven't already):^
+            ^1) Whip the water while in the canoe.
+            ^2) Get lost in the jungle, then look at your compass.";
 ];
 
 !====================================================================
@@ -175,18 +183,17 @@ Object canoe "canoe"
                 print_ret "^~We are almost there, ", (a) player, "~, ", (a) boatman, " says.";
         ],
 
-        ! Initialise time_left 0
+        ! Initialise TurnsInCanoe timer to 0
         time_left,
 
-        ! called when the StartTimer expires
+        ! called when TurnsInCanoe timer expires
         time_out [;
             if (location == river) {
-                ! The "1" parameter moves player silently as we look after
-                ! repositioning the canoe.
+                ! The "1" parameter moves player silently
+                ! so that we can reposition the canoe then call look.
                 PlayerTo(river_shore, 1);
                 move canoe to river_shore;
                 move player to canoe;
-                ! move river_water to river_shore;
                 print "^~Here we are~, ", (a) boatman, " says -- the canoe comes to a stop on the shore.^";
                 <<Look>>;
             }
@@ -201,6 +208,16 @@ NotYourPropertyObject boatmans_spear "fishing spear" canoe
         description "A traditional fishing spear made from wood, it has three
                     metal prongs at the business end.",
     has scenery;
+
+Object canoe_hasten
+    with
+        name 'faster',
+        before [;
+            Enter:
+                canoe.time_left = 0;
+                print_ret "You hasten your journey.";
+        ],
+    has scenery enterable;
 
 Object golden_egg "Golden Egg of Man-Toomba"
     with
@@ -219,11 +236,27 @@ Object golden_egg "Golden Egg of Man-Toomba"
 EssentialObject lodestar "compass"
     with
         name 'compass',
+
+        ! display a random description
         rnd_no 0,
+
+        ! one-time bonus point when using the lodestar to navigate while lost.
+        used_scored false,
 
         description [;
 
-            ! Display a random text
+            ! Return the player to the last known good location
+            if (location == lost_in_jungle) {
+                if (~~self.used_scored) {
+                    self.used_scored = true;
+                    score = score + 1;
+                }
+                print "^", (A) self, " guides you back to safety.^";
+                PlayerTo(last_known_location);
+                return true;
+            }
+
+            ! Display a random text when examining this.
             self.rnd_no = random(5); ! 1..n
             switch (self.rnd_no) {
                 1: print "According to the needle, you are exactly where you need to be.^";
@@ -231,17 +264,12 @@ EssentialObject lodestar "compass"
                 default: print (A) self, " helps you navigate while in the jungle.^";
             }
 
-            ! NPC's notice your action
+            ! The boatman notices your action.
             if (player in canoe && boatman.noticed_compass == false) {
                 boatman.noticed_compass = true;
                 print "^", (A) boatman, " notices ", (a) self, " -- ~My father had one just like that~
                         he says.^";
             }
-
-            if (location == lost_in_jungle)
-                print "^Unfortunately it only works when you know in which
-                        direction you are meant to be going.^";
-
         ],
 ;
 
@@ -418,7 +446,7 @@ JungleRoom lost_in_jungle "Lost in the Jungle"
         description "You don't know where you are.",
         before [;
             Go:
-                if (random(6) == 1) {
+                if (random(20) == 1) {
                     print "^You happen to find your way back.^";
                     PlayerTo(last_known_location);
                     return true;
