@@ -36,6 +36,10 @@ Constant AMUSING_PROVIDED;
 Include "Parser";
 Include "VerbLib";
 
+! TODO
+! + Get NewbieGrammar.h included
+! + Implement task_scores - DM$ $22
+! + Implement changing weather in the sky object
 
 !====================================================================
 ! Routines
@@ -209,6 +213,7 @@ NotYourPropertyObject boatmans_spear "fishing spear" canoe
                     metal prongs at the business end.",
     has scenery;
 
+! A debug-only object that provides the GO FASTER command to skip the ride.
 Object canoe_hasten
     with
         name 'faster',
@@ -221,8 +226,8 @@ Object canoe_hasten
 
 Object golden_egg "Golden Egg of Man-Toomba"
     with
-        name 'gold' 'golden' 'egg'
-;
+        name 'gold' 'golden' 'egg',
+        description "It shimmers with golden light.";
 
 ! The word "compass" is a reserved keyword in Inform, as such we use "lodestar"
 ! to identify the object as it lives in the player's inventory.
@@ -273,6 +278,7 @@ EssentialObject lodestar "compass"
         ],
 ;
 
+! Also see the custom 'WhipSub' action.
 EssentialObject bullwhip "bullwhip"
     with
         name 'bullwhip' 'whip',
@@ -286,6 +292,7 @@ EssentialObject journal "journal"
         description "It is your journal filled with your research notes.
                     You can CONSULT IT ABOUT any TOPIC.";
 
+! The sky is visible in all outdoor areas.
 Object sky "sky"
     with
         name 'sky' 'clouds' 'weather' 'sun',
@@ -295,7 +302,7 @@ Object sky "sky"
         ],
     has scenery;
 
-! Scenic jungle when in JungleRooms
+! The jungle is visible in all JungleRooms
 Object jungle_scenery "jungle"
     with
         name 'jungle' 'foliage' 'plant' 'plants' 'bush' 'brush' 'shrub',
@@ -311,13 +318,29 @@ Object jungle_scenery "jungle"
 
 Object fish "fish"
     with
-        caught false,
         name 'fish',
         initial "A fish flops around inside the canoe.",
         description "It looks like a black bass.",
+
+        ! Tracks if the fish was caught
+        caught false,
+
+        ! try catch the fish with the whip
+        try_catch [;
+            if (self notin canoe && self.caught == false) {
+                move self to canoe;
+                self.caught = true;
+                print_ret "*SNAP* -- As you crack the whip into the water
+                        you snag a fish!
+                        ~Mogillo!~ ", (a) boatman, " shouts excitedly.
+                        ~What are the chances!~";
+            }
+        ],
+
         before [;
             Take: print_ret "You decide to leave the fish for ", (a) boatman, ".";
         ],
+
         after [;
             Insert:
                 if (second == river_water) {
@@ -325,6 +348,7 @@ Object fish "fish"
                                 ". ~Ai, there goes supper~ ", (a) boatman, " says.";
                 }
         ],
+
         each_turn [;
             if (self in canoe && random(3) == 1) {
                 print "^A fish flops around inside the canoe.^";
@@ -343,13 +367,10 @@ NonPlayerCharacterObject boatman
         ! NPC noticed you examining your compass
         noticed_compass false,
 
-        ! Room description
+        ! Hide the room description (in the boat you see your guide)
+        ! TODO move desccriptions from rooms into here.
         initial [;
             return true;
-            ! if (parent(self) == parent(player))
-            !     print_ret (A) self, " is in the canoe with you.";
-            ! else
-            !     print_ret (A) self, " sits patiently in the canoe.";
         ],
 
         each_turn [;
@@ -478,12 +499,13 @@ OutdoorRoom river_shore "River Shore"
                         print_ret "You are on the river shore. A roughly cut path
                                     leads North into the jungle.";
                     ],
-        n_to jungle_path,
-;
+        n_to jungle_path;
 
-Object river_water "The Maro River"
+Object river_water "Maro River"
     with
         name 'maro' 'river' 'water',
+        article "the",
+        ! TODO move this detailed description to an entry in the journal.
         description "The Maro river flows from north-east to south-west, into
                     the Arafura Sea, it runs for over 200 km and is between 50 and
                     900 m wide. The river is strongly tidal for most of its length
@@ -493,14 +515,7 @@ Object river_water "The Maro River"
         found_in  river river_shore,
         after [;
             Whip:
-                if (fish notin canoe && fish.caught == false) {
-                    move fish to canoe;
-                    fish.caught = true;
-                    print_ret "*SNAP* -- As you crack the whip into the water
-                            you snag a fish!
-                            ~Mogillo!~ ", (a) boatman, " shouts excitedly.
-                            ~What are the chances!~";
-                }
+                return fish.try_catch();
         ],
     has container open scenery;
 
@@ -510,16 +525,8 @@ JungleRoom jungle_path "Jungle Path"
                     available space of the jungle, this roughly cut path will
                     be indistinguishable from the rest in a few months.
                     ^^The river shore is back South, the jungle is North.",
-        n_to rock_boulder,
+        n_to a_clearing,
         s_to river_shore;
-
-JungleRoom rock_boulder "Giant Rock"
-    with
-        description "A large boulder sits contently on the ground.
-                    The path is grown much thicker here.
-                    ^^South leads back to the shore, a clearing is visible due West",
-        s_to jungle_path,
-        w_to a_clearing;
 
 JungleRoom a_clearing "In a Clearing"
     with
@@ -528,7 +535,6 @@ JungleRoom a_clearing "In a Clearing"
                     A large sycamore tree stands here proudly.
                     ^^A large rock is visible to the East.
                     You see a small opening in the foliage to the South.",
-        e_to rock_boulder,
         s_to old_hut,
         u_to top_of_tree;
 
