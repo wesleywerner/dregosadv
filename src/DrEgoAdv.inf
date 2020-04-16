@@ -30,6 +30,12 @@ Constant StoryStartTime 900; ! 15:00
 ! The number of turns to pass until the canoe ride ends
 Constant TurnsInCanoe 12;
 
+! When going to undefined direction while in a JungleRoom, the player gets lost.
+! Reading the compass returns them back on track, but if the player lost
+! the device or does not use it, these are the odds of finding their way back:
+! 1 in OddsOfFindingWayWhenLost.
+Constant OddsOfFindingWayWhenLost 16;
+
 ! Show the option to list AMUSING things you can try (at the End of the story)
 Constant AMUSING_PROVIDED;
 
@@ -38,8 +44,9 @@ Include "VerbLib";
 
 ! TODO
 ! + Get NewbieGrammar.h included
-! + Implement task_scores - DM$ $22
-! + Implement changing weather in the sky object
+! + Listen and smell senses in most rooms
+! + task_scores - DM$ $22
+! + Changing weather in the sky object
 
 ! [ =========================================================== Custom Actions ]
 
@@ -194,7 +201,7 @@ has scenery;
 
 Object canoe "canoe"
     with
-        name 'boat' 'canoe',
+        name 'boat' 'canoe' 'oar',
 
         ! Room Description when outside the canoe
         initial [;
@@ -520,7 +527,7 @@ with
     description "You don't know where you are.",
     before [;
         Go:
-            if (random(20) == 1) {
+            if (random(OddsOfFindingWayWhenLost) == 1) {
                 print "^You happen to find your way back.^";
                 PlayerTo(last_known_location);
                 return true;
