@@ -129,6 +129,10 @@ Global last_known_location = 0;
 
 ! [ ================================================================== Classes ]
 
+Class IndoorRoom
+with
+    cant_go "You bump into the stone wall. Ouch!";
+
 Class OutdoorRoom
     has light;
 
@@ -181,6 +185,10 @@ Class EssentialObject
             Taste, Eat:
                 print_ret (A) noun, " is not food.";
         ];
+
+! Provides the scenery attribute
+Class ScenicObject
+has scenery;
 
 ! [ ================================================================== Objects ]
 
@@ -327,6 +335,13 @@ EssentialObject journal "journal"
         name 'diary' 'journal' 'book',
         description "It is your journal filled with your research notes.
                     You can CONSULT IT ABOUT any TOPIC.";
+
+EssentialObject torch "torch"
+with
+    name 'torch',
+    description "It is a crude torch that you constructed from a stick and
+        some old cloth, dipped in an oily substance."
+    has ~light;
 
 ! The sky is visible in all outdoor areas.
 Object sky "sky"
@@ -501,112 +516,242 @@ NonPlayerCharacterObject boatman
 
 ! [ -------------------------------------------------------------- Lost Jungle ]
 JungleRoom lost_in_jungle "Lost in the Jungle"
-    with
-        description "You don't know where you are.",
-        before [;
-            Go:
-                if (random(20) == 1) {
-                    print "^You happen to find your way back.^";
-                    PlayerTo(last_known_location);
-                    return true;
-                }
-                else
-                    print_ret "You fumble through the jungle.";
-        ];
+with
+    description "You don't know where you are.",
+    before [;
+        Go:
+            if (random(20) == 1) {
+                print "^You happen to find your way back.^";
+                PlayerTo(last_known_location);
+                return true;
+            }
+            else
+                print_ret "You fumble through the jungle.";
+    ];
 
 ! [ --------------------------------------------------------------- Maro River ]
 OutdoorRoom river "The Maro River"
-    with
-        description [;
-                    print_ret "You are in ", (a) canoe, " on the Maro river. ",
-                                (A) boatman, " is with you, rowing the craft.";
-                    ];
+with
+    description [;
+        print_ret "You are in ", (a) canoe, " on the Maro river. ",
+                    (A) boatman, " is with you, rowing the craft.";
+    ];
 
 ! Scenic jungle when on the river
 Object distant_jungle_scenery "jungle" river
-    with
-        name 'jungle' 'foliage' 'plant' 'plants' 'bush' 'brush' 'shrub',
-        description "The jungle foliage is dense and lush.",
+with
+    name 'jungle' 'foliage' 'plant' 'plants' 'bush' 'brush' 'shrub',
+    description "The jungle foliage is dense and lush.",
     has scenery;
 
 ! [ -------------------------------------------------------------- River Shore ]
 OutdoorRoom river_shore "River Shore"
-    with
-        description [;
-                    if (player in canoe)
-                        print_ret "The canoe has stopped ashore, you can get out now.";
-                    else
-                        print_ret "You are on the river shore. A roughly cut path
-                                    leads North into the jungle.";
-                    ],
-        n_to jungle_path;
+with
+    description [;
+                if (player in canoe)
+                    print_ret "The canoe has stopped ashore, you can get out now.";
+                else
+                    print_ret "You are on the river shore. A roughly cut path
+                                leads North into the jungle.";
+                ],
+    n_to jungle_path;
 
 Object river_water "Maro River"
-    with
-        name 'maro' 'river' 'water',
-        article "the",
-        ! TODO move this detailed description to an entry in the journal.
-        description "The Maro river flows from north-east to south-west, into
-                    the Arafura Sea, it runs for over 200 km and is between 50 and
-                    900 m wide. The river is strongly tidal for most of its length
-                    and its lower reaches are affected by salt water. It is a
-                    complex system of swamps and oxbow lakes which hosts a large
-                    number of birds and reptiles.",
-        found_in  river river_shore,
-        after [;
-            Whip:
-                return fish.try_catch();
-        ],
+with
+    name 'maro' 'river' 'water',
+    article "the",
+    ! TODO move this detailed description to an entry in the journal.
+    description "The Maro river flows from north-east to south-west, into
+                the Arafura Sea, it runs for over 200 km and is between 50 and
+                900 m wide. The river is strongly tidal for most of its length
+                and its lower reaches are affected by salt water. It is a
+                complex system of swamps and oxbow lakes which hosts a large
+                number of birds and reptiles.",
+    found_in  river river_shore,
+    after [;
+        Whip:
+            return fish.try_catch();
+    ],
     has container open scenery;
 
 ! [ -------------------------------------------------------------- Jungle Path ]
 JungleRoom jungle_path "Jungle Path"
-    with
-        description "Trees of all sizes and leaves of all shapes fill every
-                    available space of the jungle, this roughly cut path will
-                    be indistinguishable from the rest in a few months.
-                    ^^The river shore is back South, you notice a clearing
-                    in the jungle to the East.",
-        e_to a_clearing,
-        s_to river_shore;
+with
+    description "Trees of all sizes and leaves of all shapes fill every
+                available space of the jungle, this roughly cut path will
+                be indistinguishable from the rest in a few months.
+                ^^The river shore is back South, you notice a clearing
+                in the jungle to the East.",
+    e_to clearing,
+    s_to river_shore;
 
 ! [ -------------------------------------------------- Clearing (with monkeys) ]
-JungleRoom a_clearing "In a Clearing"
-    with
-        description "You are in a natural clearing, the ground a part of a large
-                    bedrock providing some relief from the dense jungle.
-                    A large sycamore tree stands here proudly.
-                    ^^The jungle path you entered from is due West.
-                    A small structure is visible to the South.",
-        w_to jungle_path,
-        s_to old_hut,
-        u_to top_of_tree;
+JungleRoom clearing "In a Clearing"
+with
+    description "You are in a natural clearing, the ground a part of a large
+                bedrock providing some relief from the dense jungle.
+                A large sycamore tree stands here proudly.
+                ^^The jungle path you entered from is due West.
+                A small structure is visible to the South.",
+    n_to stone_stairs,
+    w_to jungle_path,
+    s_to old_hut,
+    u_to top_of_tree;
 
 ! [ ------------------------------------------------------------------ Old Hut ]
 OutdoorRoom old_hut "An Old Hut"
-    with
-        description "You are inside what appears to be a delapidated hut. The
-                    roof long since collapsed, it provides little protection
-                    from the elements.
-                    ^^You see a clearing to the North.
-                    An exit is to the Southwest.",
-        cant_go "The only exits are North and Southwest.",
-        n_to a_clearing,
-        sw_to garden;
+with
+    description "You are inside what appears to be a delapidated hut. The
+                roof long since collapsed, it provides little protection
+                from the elements.
+                ^^You see a clearing to the North.
+                An exit is to the Southwest.",
+    cant_go "The only exits are North and Southwest.",
+    n_to clearing,
+    sw_to garden;
 
 OutdoorRoom top_of_tree "Top of Tree"
-    with
-        description "You cling to the top branches.";
+with
+    description "You cling to the top branches.";
 
 ! [ ------------------------------------------------------------------- Garden ]
 OutdoorRoom garden "garden"
-    with
-        description "You stand in an unkempt garden, there are
-            vegetable plants in the ground and some fruit trees to the sides.
-            Whoever kept this garden hasn't been here for a very long time.
-            ^A hut is to the Northeast.",
-        ne_to old_hut;
+with
+    description "You stand in an unkempt garden, there are
+        vegetable plants in the ground and some fruit trees to the sides.
+        Whoever kept this garden hasn't been here for a very long time.
+        ^A hut is to the Northeast.",
+    ne_to old_hut;
 
+! [ ------------------------------------------------------------- Stone Stairs ]
+JungleRoom stone_stairs "Stone Stairs"
+with
+    description "Jungle foliage surround you from both sides, hundreds of steps
+        carved out of stone lead up to the top of a hill. A rough jungle path
+        leads back South.",
+    u_to rope_bridge,
+    s_to clearing,
+    cant_go "The only ways out are South or Up (the stairs).";
+
+! [ ------------------------------------------------------------- Rope Bridge  ]
+JungleRoom rope_bridge "Rope Bridge"
+with
+    description "You stand at one end of a rope bridge crossing a deep gorge.
+        Stone steps lead down a hill, the bridge crosses over to the East.",
+    d_to stone_stairs,
+    e_to waterfall;
+
+! [ --------------------------------------------------------------- Waterfall  ]
+JungleRoom waterfall "Waterfall"
+with
+    description "You stand beside a beautiful waterfall. The water rushes past
+        you from somewhere up above, it cascades over a rocky ledge to the South.
+        You see a rope bridge to the West.",
+    n_to;
+
+ScenicObject waterfall_ledge "ledge" waterfall
+with
+    name 'water' 'fall' 'waterfall' 'rocky' 'ledge' 'edge',
+    description "You peer over the waterfall edge and see the water cascading
+        down into a pool below. It seems to be safe to jump over.",
+    before [;
+        JumpOver:
+            print "You take a breath and jump over the edge of the
+                waterfall...^";
+            last_known_location = plunge_pool;
+            PlayerTo(plunge_pool);
+            return true;
+    ];
+
+! [ -------------------------------------------------------------- Plunge Pool ]
+JungleRoom plunge_pool "Plunge Pool"
+with
+    description [;
+        if (self hasnt visited)
+            print "^** SPLASH **^
+                ^You land safely in the pool below.
+                Wading to the shore, you wring out your shirt.
+                That was very refreshing!^^";
+        print_ret "There is a clear pool here, a beautiful waterfall cascades
+        down from above into it. A narrow rocky path leads South.";
+    ],
+
+    ! GO IN enters the alcove, if discovered.
+    in_to [;
+        if (alcove hasnt scenery)
+            <<Enter alcove>>;
+        else
+            "You don't feel like another swim.";
+    ],
+
+    s_to temple;
+
+ScenicObject alcove "alcove" plunge_pool
+with
+    ! discovered false, ! this is hidden at first
+    name 'secret' 'alcove',
+    initial "You notice an alcove behind the cascading water.",
+
+    description [;
+        print "This secret little alcove is not so secret anymore. ";
+        if (torch in player && torch has light)
+            print "You see the passage beyond the alcove leading underground.^";
+        else if (torch in player && torch hasnt light)
+            print "It is pitch black in there. If only your torch was lit.^";
+        else if (torch notin player)
+            print "It appears to lead underground, but it is pitch black in
+                there, you can't make out where it leads.^";
+    ],
+
+    before [;
+        Take:
+            print_ret "You would do better to try enter it.";
+        Enter:
+            if (torch in player && torch has light)
+                print "You steady your torch and head down the dark passage.^";
+            else if (torch in player && torch hasnt light)
+                print_ret "It is pitch black in there. If only your torch was lit.";
+            else if (torch notin player)
+                print_ret "You would rather not enter without a light.";
+    ],
+
+    after [;
+        Enter:
+            PlayerTo(tomb);
+            return true;
+        Whip:
+            print_ret "*SNAP* echos *snap* your *snap* whip.";
+    ],
+
+    has enterable static;
+
+! [ ------------------------------------------------------------------- Temple ]
+IndoorRoom temple "Temple"
+with
+    description "You are inside an old stone temple, large openings in the
+        ceiling provide ample natural light for you to see.
+        You hear water falling from the exit to the North.",
+    n_to plunge_pool,
+
+    before [;
+        Go:
+            if (alcove has scenery) {
+                give alcove ~scenery;
+                print_ret "You discover the secret alcove! (WIP).";
+            }
+    ],
+
+    has light;
+
+! [ --------------------------------------------------------------------- Tomb ]
+IndoorRoom tomb "Underground Tomb"
+with
+    description "You are inside an ancient tomb, the light of your torch
+        make engraved runes in the walls seem to dance all around you.
+        A narrow stone staircase leads up.",
+    has light;
+
+! [ -------------------------------------------------------------------  ]
 
 
 Include "Grammar";

@@ -21,7 +21,7 @@ This is a short story written in Inform 6 with the hope of learning how to imple
 * {Jungle} may only be travelled when holding a compass.
 
 ```
-                         +------ {Rope Bridge} --- Top of Waterfall
+                         +------ {Rope Bridge} ----- Waterfall
                         /                                |
                   (up) /                                 | (jump)
                       /                                  |
