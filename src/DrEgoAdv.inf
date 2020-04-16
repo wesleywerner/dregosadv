@@ -41,32 +41,69 @@ Include "VerbLib";
 ! + Implement task_scores - DM$ $22
 ! + Implement changing weather in the sky object
 
-!====================================================================
-! Routines
+! [ =========================================================== Custom Actions ]
+
+[ WhipSub;
+
+    if (bullwhip notin player)
+        "Not without your bullwhip.";
+
+    if (noun in player)
+        "You could hurt yourself.";
+
+    if (noun == player)
+        "You are not into that kind of thing.";
+
+    if (noun ofclass NonPlayerCharacterObject)
+        "You are not fond of hurting other living things.";
+
+    ! if (children(player) > 1)
+    !     "You need your hands free to use the whip effectively.";
+
+    ! Test if any custom after routines are handled.
+    if (AfterRoutines()) return;
+
+    ! Default response
+    "You crack the whip at ", (the) noun, " -- *SNAP*";
+
+];
+
+Verb 'whip' * noun -> Whip;
+
+! [ ================================================================= Routines ]
 
 [ Initialise;
+
     ! Set the clock and turn progression rate
     SetTime(StoryStartTime, 1);
+
     ! Set the timer on the canoe
     StartTimer(canoe, TurnsInCanoe);
+
     ! Set the starting location
     location = canoe;
+
     ! Move objects to their starting places
     move canoe to river;
     move boatman to canoe;
-    ! enable some debugging actions:
+
+    ! enable debugging actions:
     #ifdef DEBUG;
       ! allow skipping the long boat ride with GO FASTER
       move canoe_hasten to river;
     #endif;
+
     ! Give player inventory
     move lodestar to player;
     move bullwhip to player;
     move journal to player;
+
     ! Give the player a name and description
     player.short_name = "Dr Ego";
     player.description = "You are Dr Ego, Purveyor of Curiousities,
                             Explorer of Treasures, Adventurous Archeologist.";
+
+    ! Print the preface text
     print_ret "^April 10th, 1940.
             ^^Your journey started a few days ago after
             docking at Port Moresby, from there it was two day's ride on
@@ -90,8 +127,7 @@ Global last_known_location = 0;
             ^2) Get lost in the jungle, then look at your compass.";
 ];
 
-!====================================================================
-! Classes
+! [ ================================================================== Classes ]
 
 Class OutdoorRoom
     has light;
@@ -111,7 +147,6 @@ Class JungleRoom
         se_to lost_in_jungle,
         e_to lost_in_jungle,
         w_to lost_in_jungle,
-        ! cant_go "You can't go hacking in any direction and get yourself lost the jungle.",
         ! Record the last known good location
         after [;
             Go:
@@ -141,13 +176,13 @@ Class EssentialObject
         article "your",
         before [;
             Drop, ThrowAt:
-                print_ret "You would not dream of leaving ", (a) noun, " behind.";
+                print_ret "You would not dream of leaving ",
+                            (a) noun, " behind.";
             Taste, Eat:
                 print_ret (A) noun, " is not food.";
         ];
 
-!====================================================================
-! Objects
+! [ ================================================================== Objects ]
 
 Object canoe "canoe"
     with
@@ -155,8 +190,9 @@ Object canoe "canoe"
 
         ! Room Description when outside the canoe
         initial [;
-            print_ret (A) boatman, " sits in the canoe gazing out over the moving river,
-                        the salty water gently lapping the sides of his craft.";
+            print_ret (A) boatman, " sits in the canoe gazing out over the
+            moving river, the salty water gently lapping the sides of his
+            craft.";
         ],
 
         description "It is a small wooden canoe, it looks hand built.
@@ -177,14 +213,15 @@ Object canoe "canoe"
                 if (player in canoe)
                     print_ret "Did you forget, you are already in the canoe.";
                 else
-                    print_ret "You just got out, and you are eager to start looking for ",
-                            (the) golden_egg, ".";
+                    print_ret "You just got out, and you are eager to start
+                                looking for ", (the) golden_egg, ".";
         ],
 
         ! Print flavor text during the trip in the canoe
         each_turn [;
             if (self.time_left == 2 && location == river)
-                print_ret "^~We are almost there, ", (a) player, "~, ", (a) boatman, " says.";
+                print_ret "^~We are almost there, ", (a) player, "~, ",
+                            (a) boatman, " says.";
         ],
 
         ! Initialise TurnsInCanoe timer to 0
@@ -198,13 +235,12 @@ Object canoe "canoe"
                 PlayerTo(river_shore, 1);
                 move canoe to river_shore;
                 move player to canoe;
-                print "^~Here we are~, ", (a) boatman, " says -- the canoe comes to a stop on the shore.^";
+                print "^~Here we are~, ", (a) boatman,
+                        " says -- the canoe comes to a stop on the shore.^";
                 <<Look>>;
             }
         ],
-
-  has   enterable static container open
-;
+  has   enterable static container open;
 
 NotYourPropertyObject boatmans_spear "fishing spear" canoe
     with
@@ -264,19 +300,19 @@ EssentialObject lodestar "compass"
             ! Display a random text when examining this.
             self.rnd_no = random(5); ! 1..n
             switch (self.rnd_no) {
-                1: print "According to the needle, you are exactly where you need to be.^";
+                1: print "You are exactly where you need to be.^";
                 2: print "The needle points towards north.^";
-                default: print (A) self, " helps you navigate while in the jungle.^";
+                default:
+                    print (A) self, " helps you navigate while in the jungle.^";
             }
 
             ! The boatman notices your action.
             if (player in canoe && boatman.noticed_compass == false) {
                 boatman.noticed_compass = true;
-                print "^", (A) boatman, " notices ", (a) self, " -- ~My father had one just like that~
-                        he says.^";
+                print "^", (A) boatman, " notices ", (a) self, " -- ~My father
+                            had one just like that~ he says.^";
             }
-        ],
-;
+        ];
 
 ! Also see the custom 'WhipSub' action.
 EssentialObject bullwhip "bullwhip"
@@ -338,14 +374,16 @@ Object fish "fish"
         ],
 
         before [;
-            Take: print_ret "You decide to leave the fish for ", (a) boatman, ".";
+            Take: print_ret "You decide to leave the fish for ",
+                    (a) boatman, ".";
         ],
 
         after [;
             Insert:
                 if (second == river_water) {
                     print_ret "You put the fish back into ", (the) river_water,
-                                ". ~Ai, there goes supper~ ", (a) boatman, " says.";
+                                ". ~Ai, there goes supper~ ",
+                                (a) boatman, " says.";
                 }
         ],
 
@@ -355,8 +393,7 @@ Object fish "fish"
             }
         ];
 
-!====================================================================
-! Non Player Characters
+! [ ==================================================== Non Player Characters ]
 
 NonPlayerCharacterObject boatman
     with
@@ -419,9 +456,9 @@ NonPlayerCharacterObject boatman
                 print_ret (A) self, " looks baffled at your repeated greeting,
                             but he obliges you with a big grin anyway.";
             else {
-                print "You introduce yourself to ", (a) self, ".
-                        ^^~Nice to meet you, ", (a) player, "~, he says with a grin,
-                        ~I am Rompinjimp-Nanganbia Tiki~.^";
+                print "You introduce yourself to ", (a) self, ". ^^~Nice to meet
+                        you, ", (a) player, "~, he says with a grin, ~I am
+                        Rompinjimp-Nanganbia Tiki~.^";
                 boatman_rename();
                 print "^~You can call me ", (a) self, "~, he adds.^";
                 return true;
@@ -450,7 +487,8 @@ NonPlayerCharacterObject boatman
                 print "~We will have fish for dinner tonight~, ",
                     (a) boatman, " says hungrily.^";
         7:
-            print "^", (A) boatman, " looks across the salty water, into the distance.^";
+            print "^", (A) boatman, " looks across the salty water,
+                into the distance.^";
         9:
             if (random(2) == 1)
                 if (boatman.noticed_compass == true)
@@ -459,9 +497,9 @@ NonPlayerCharacterObject boatman
     }
 ];
 
-!====================================================================
-! Rooms
+! [ ==================================================================== Rooms ]
 
+! [ -------------------------------------------------------------- Lost Jungle ]
 JungleRoom lost_in_jungle "Lost in the Jungle"
     with
         description "You don't know where you are.",
@@ -476,11 +514,12 @@ JungleRoom lost_in_jungle "Lost in the Jungle"
                     print_ret "You fumble through the jungle.";
         ];
 
+! [ --------------------------------------------------------------- Maro River ]
 OutdoorRoom river "The Maro River"
     with
         description [;
-                    print_ret "You are in ", (a) canoe, " on the Maro river. ", (A) boatman,
-                    " is with you, rowing the craft.";
+                    print_ret "You are in ", (a) canoe, " on the Maro river. ",
+                                (A) boatman, " is with you, rowing the craft.";
                     ];
 
 ! Scenic jungle when on the river
@@ -490,6 +529,7 @@ Object distant_jungle_scenery "jungle" river
         description "The jungle foliage is dense and lush.",
     has scenery;
 
+! [ -------------------------------------------------------------- River Shore ]
 OutdoorRoom river_shore "River Shore"
     with
         description [;
@@ -519,6 +559,7 @@ Object river_water "Maro River"
         ],
     has container open scenery;
 
+! [ -------------------------------------------------------------- Jungle Path ]
 JungleRoom jungle_path "Jungle Path"
     with
         description "Trees of all sizes and leaves of all shapes fill every
@@ -529,6 +570,7 @@ JungleRoom jungle_path "Jungle Path"
         e_to a_clearing,
         s_to river_shore;
 
+! [ -------------------------------------------------- Clearing (with monkeys) ]
 JungleRoom a_clearing "In a Clearing"
     with
         description "You are in a natural clearing, the ground a part of a large
@@ -540,48 +582,32 @@ JungleRoom a_clearing "In a Clearing"
         s_to old_hut,
         u_to top_of_tree;
 
-JungleRoom old_hut "An Old Hut"
+! [ ------------------------------------------------------------------ Old Hut ]
+OutdoorRoom old_hut "An Old Hut"
     with
         description "You are inside what appears to be a delapidated hut. The
                     roof long since collapsed, it provides little protection
                     from the elements.
                     ^^You see a clearing to the North.
-                    A small paths leads Southwest.",
-        n_to a_clearing;
+                    An exit is to the Southwest.",
+        cant_go "The only exits are North and Southwest.",
+        n_to a_clearing,
+        sw_to garden;
 
 OutdoorRoom top_of_tree "Top of Tree"
     with
         description "You cling to the top branches.";
 
-!====================================================================
-! Custom Actions
+! [ ------------------------------------------------------------------- Garden ]
+OutdoorRoom garden "garden"
+    with
+        description "You stand in an unkempt garden, there are
+            vegetable plants in the ground and some fruit trees to the sides.
+            Whoever kept this garden hasn't been here for a very long time.
+            ^A hut is to the Northeast.",
+        ne_to old_hut;
 
-[ WhipSub;
 
-    if (bullwhip notin player)
-        "Not without your bullwhip.";
-
-    if (noun in player)
-        "You could hurt yourself.";
-
-    if (noun == player)
-        "You are not into that kind of thing.";
-
-    if (noun ofclass NonPlayerCharacterObject)
-        "You are not fond of hurting other living things.";
-
-    ! if (children(player) > 1)
-    !     "You need your hands free to use the whip effectively.";
-
-    ! Test if any custom after routines are handled.
-    if (AfterRoutines()) return;
-
-    ! Default response
-    "You crack the whip at ", (the) noun, " -- *SNAP*";
-
-];
-
-Verb 'whip' * noun -> Whip;
 
 Include "Grammar";
 ! Include "NewbieGrammar";
