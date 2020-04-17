@@ -6,5 +6,5 @@ again
 again
 again
 examine compass
-west
+southwest
 examine compass

@@ -18,28 +18,26 @@ This is a short story written in Inform 6 with the hope of learning how to imple
 
 # Map of the island
 
-* {Jungle} may only be travelled when holding a compass.
-
 ```
-                         +------ {Rope Bridge} ----- Waterfall
-                        /                                |
-                  (up) /                                 | (jump)
-                      /                                  |
-          Stone Stairs                              Water Spring
-               |                                         |      \       
-               |                                         |       \
-               |                                       Temple     Alcove
-               |                                                  (behind waterfall)
-           {Jungle}                                                |
-               |        Top of Tree                                |
-               |       / (up)                                     Tomb
-               |      /                                          (dark)
-               Clearing -------- Jungle Path
-                  |                   |
-               Old Hut                |
-              /      .                |
-          Garden      Stream     River Shore
-		                           (START)
+                        +- Rope Bridge ---- Waterfall                          
+                        ^                      .                               
+                        ^                      .                               
+                        ^                      . (jump)                        
+                        ^                      .                               
+                        ^                      .                               
+                        ^                      Plunge Pool                     
+                        ^                      &         &                     
+                        ^                  Temple       Alcove --> Tomb        
+                        ^                              (hidden)                
+      Tree Top     Stone Stairs                                                
+             ^      /                                                          
+             ^     /                                                           
+             ^ Clearing -------- Jungle Path                                   
+                  |                   |                                        
+               Old Hut                |                                        
+              /                       |                                        
+          Garden                 River Shore                                   
+                                   (START)                                     
 
 ```
 

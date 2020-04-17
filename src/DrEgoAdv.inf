@@ -588,8 +588,8 @@ with
                 available space of the jungle, this roughly cut path will
                 be indistinguishable from the rest in a few months.
                 ^^The river shore is back South, you notice a clearing
-                in the jungle to the East.",
-    e_to clearing,
+                in the jungle to the West.",
+    w_to clearing,
     s_to river_shore;
 
 ! [ -------------------------------------------------- Clearing (with monkeys) ]
@@ -598,9 +598,9 @@ with
     description "You are in a natural clearing, the ground a part of a large
                 bedrock providing some relief from the dense jungle.
                 A large sycamore tree stands here proudly.
-                ^^The jungle path you entered from is due West.
+                ^^A jungle path is due West.
                 A small structure is visible to the South.",
-    n_to stone_stairs,
+    ne_to stone_stairs,
     w_to jungle_path,
     s_to old_hut,
     u_to top_of_tree;
@@ -619,10 +619,11 @@ with
 
 OutdoorRoom top_of_tree "Top of Tree"
 with
-    description "You cling to the top branches.";
+    description "You cling to the top branches.",
+    d_to clearing;
 
 ! [ ------------------------------------------------------------------- Garden ]
-OutdoorRoom garden "garden"
+JungleRoom garden "garden"
 with
     description "You stand in an unkempt garden, there are
         vegetable plants in the ground and some fruit trees to the sides.
@@ -633,9 +634,8 @@ with
 ! [ ------------------------------------------------------------- Stone Stairs ]
 JungleRoom stone_stairs "Stone Stairs"
 with
-    description "Jungle foliage surround you from both sides, hundreds of steps
-        carved out of stone lead up to the top of a hill. A rough jungle path
-        leads back South.",
+    description "Jungle is all around you, except for some hundreds of steps
+        carved out of stone leading up a hill. A path leads back South.",
     u_to rope_bridge,
     s_to clearing,
     cant_go "The only ways out are South or Up (the stairs).";
@@ -643,8 +643,8 @@ with
 ! [ ------------------------------------------------------------- Rope Bridge  ]
 JungleRoom rope_bridge "Rope Bridge"
 with
-    description "You stand at one end of a rope bridge crossing a deep gorge.
-        Stone steps lead down a hill, the bridge crosses over to the East.",
+    description "You are atop a hill with jungle around you, a rope bridge
+        crosses a deep gorge to the East. Stone steps lead down the hill.",
     d_to stone_stairs,
     e_to waterfall;
 
