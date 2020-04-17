@@ -194,8 +194,22 @@ Class EssentialObject
         ];
 
 ! Provides the scenery attribute
-Class ScenicObject
-has scenery;
+Class ScenicRockObject
+with
+    before [;
+        Take:
+            print_ret (The) self, " is way too large and heavy to move.";
+    ],
+has scenery static;
+
+! Provides the scenery attribute
+Class ScenicTreeObject
+with
+    before [;
+        Take:
+            print_ret (The) self, " is too firmly rooted in the earth.";
+    ],
+has scenery static;
 
 ! [ ================================================================== Objects ]
 
@@ -592,18 +606,72 @@ with
     w_to clearing,
     s_to river_shore;
 
-! [ -------------------------------------------------- Clearing (with monkeys) ]
+! [ ----------------------------------------------------------------- Clearing ]
 JungleRoom clearing "In a Clearing"
 with
     description "You are in a natural clearing, the ground a part of a large
                 bedrock providing some relief from the dense jungle.
-                A large sycamore tree stands here proudly.
+                A large fig tree stands here proudly.
                 ^^A jungle path is due West.
                 A small structure is visible to the South.",
     ne_to stone_stairs,
     w_to jungle_path,
     s_to old_hut,
-    u_to top_of_tree;
+    u_to fig_tree_top,
+
+    before [;
+        ! climb up => go up
+        Climb:
+            if (noun == u_obj)
+                <<Go noun>>;
+        
+        ! Describe climbing up the tree
+        Go:
+            if (noun == u_obj)
+                print "^You climb up the strong branches of the fig tree.^";
+    ];
+
+ScenicTreeObject fig_tree "fig tree" clearing
+with
+    name 'fig' 'tree' 'ficus',
+    description "The fig tree, also known as Ficus Obliqua, is taller than 
+        most of the surrounding jungle. The view from up there must be great.",
+        
+    ! climb fig_tree => go up
+    before [;
+        Climb:
+            <<Go u_obj>>;
+    ],
+    has container open;
+
+! [ -------------------------------------------------------------- Top Of Tree ]
+
+OutdoorRoom fig_tree_top "Top of Tree"
+with
+    description [;
+        if (self hasnt visited)
+            print "The view from up here is breathtaking! ";
+        print_ret "The vantage point allows you to see in all directions.";
+    ],
+    cant_go "The only way is down.",
+    d_to clearing,
+    
+    before [;
+    
+        ! climb down => go down
+        Climb:
+            if (noun == d_obj)
+                <<Go d_obj>>;
+        
+        ! Look in directions
+        Examine:
+            if (noun == ne_obj) {
+                score = score + 1;
+                print_ret "There! Stone stairs up the hill, in the distance to ",
+                    (a) noun, ".";
+            }
+            print_ret "Only more jungle to ", (a) noun ;
+    ];
 
 ! [ ------------------------------------------------------------------ Old Hut ]
 OutdoorRoom old_hut "An Old Hut"
@@ -616,11 +684,6 @@ with
     cant_go "The only exits are North and Southwest.",
     n_to clearing,
     sw_to garden;
-
-OutdoorRoom top_of_tree "Top of Tree"
-with
-    description "You cling to the top branches.",
-    d_to clearing;
 
 ! [ ------------------------------------------------------------------- Garden ]
 JungleRoom garden "garden"
@@ -656,7 +719,7 @@ with
         You see a rope bridge to the West.",
     n_to;
 
-ScenicObject waterfall_ledge "ledge" waterfall
+ScenicRockObject waterfall_ledge "ledge" waterfall
 with
     name 'water' 'fall' 'waterfall' 'rocky' 'ledge' 'edge',
     description "You peer over the waterfall edge and see the water cascading
@@ -693,7 +756,7 @@ with
 
     s_to temple;
 
-ScenicObject alcove "alcove" plunge_pool
+ScenicRockObject alcove "alcove" plunge_pool
 with
     ! discovered false, ! this is hidden at first
     name 'secret' 'alcove',
@@ -711,8 +774,6 @@ with
     ],
 
     before [;
-        Take:
-            print_ret "You would do better to try enter it.";
         Enter:
             if (torch in player && torch has light)
                 print "You steady your torch and head down the dark passage.^";
