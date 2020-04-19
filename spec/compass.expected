@@ -19,6 +19,12 @@
   You are in a canoe on the Maro river. Your guide is with you, rowing the
   craft.
 . 
+> >   The Maro River                                 Time:  3:00 pm
+. 
+  Dr Ego and the Egg of Man-Toomba is now in its "superbrief" mode, which
+  always gives short descriptions of locations (even if you haven't been
+  there before).
+  
 > >   River Shore                                    Time:  3:01 pm
 . 
   You hasten your journey.
@@ -26,14 +32,12 @@
   "Here we are", your guide says -- the canoe comes to a stop on the shore.
   
   River Shore (in the canoe)
-  The canoe has stopped ashore, you can get out now.
 . 
 > >   River Shore                                    Time:  3:02 pm
 . 
   You get out of the canoe.
   
   River Shore
-  You are on the river shore. A roughly cut path leads North into the jungle.
   
   Your guide sits in the canoe gazing out over the moving river, the salty
   water gently lapping the sides of his craft.
@@ -41,17 +45,10 @@
 > >   Jungle Path                                    Time:  3:03 pm
 . 
   Jungle Path
-  Trees of all sizes and leaves of all shapes fill every available space of
-  the jungle, this roughly cut path will be indistinguishable from the rest
-  in a few months.
-  
-  The river shore is back South, you notice a clearing in the jungle to the
-  West.
   
 > >   Lost in the Jungle                             Time:  3:04 pm
 . 
   Lost in the Jungle
-  You don't know where you are.
   
 > >   Lost in the Jungle                             Time:  3:05 pm
 . 
@@ -70,30 +67,17 @@
   Your compass guides you back to safety.
   
   Jungle Path
-  Trees of all sizes and leaves of all shapes fill every available space of
-  the jungle, this roughly cut path will be indistinguishable from the rest
-  in a few months.
-  
-  The river shore is back South, you notice a clearing in the jungle to the
-  West.
   
   [The score has just gone up by one point.]
   
 > >   Lost in the Jungle                             Time:  3:09 pm
 . 
   Lost in the Jungle
-  You don't know where you are.
   
 > >   Jungle Path                                    Time:  3:10 pm
 . 
   Your compass guides you back to safety.
   
   Jungle Path
-  Trees of all sizes and leaves of all shapes fill every available space of
-  the jungle, this roughly cut path will be indistinguishable from the rest
-  in a few months.
-  
-  The river shore is back South, you notice a clearing in the jungle to the
-  West.
   
 > >

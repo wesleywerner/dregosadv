@@ -323,7 +323,8 @@ EssentialObject lodestar "compass"
                     score = score + 1;
                 }
                 print "^", (A) self, " guides you back to safety.^";
-                PlayerTo(last_known_location);
+                ! parameter "2" honors brief room descriptions - DM4 pg 21
+                PlayerTo(last_known_location, 2);
                 return true;
             }
 
@@ -544,7 +545,8 @@ with
         Go:
             if (random(OddsOfFindingWayWhenLost) == 1) {
                 print "^You happen to find your way back.^";
-                PlayerTo(last_known_location);
+                ! parameter "2" honors brief room descriptions - DM4 pg 21
+                PlayerTo(last_known_location, 2);
                 return true;
             }
             else
