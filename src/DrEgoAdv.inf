@@ -742,7 +742,17 @@ with
                 <<Go d_obj>>;
             }
     ];
-    
+
+Object "bridge" rope_bridge
+with
+    name 'rope' 'bridge',
+    description "The bridge is made from plait ropes and extends to the East.",
+    before [;
+        ! Enter also covers the 'cross' verb
+        Enter:
+            <<Go e_obj>>;
+    ]
+    has scenery;
 
 ! [ --------------------------------------------------------------- Waterfall  ]
 JungleRoom waterfall "Waterfall"
@@ -750,7 +760,13 @@ with
     description "You stand beside a beautiful waterfall. The water rushes past
         you from somewhere up above, it cascades over a rocky ledge to the South.
         You see a rope bridge to the West.",
-    n_to;
+    n_to,
+    
+    before [;
+        Go:
+            if (noun == s_obj)
+                <<JumpOver waterfall_ledge>>;
+    ];
 
 ScenicRockObject waterfall_ledge "ledge" waterfall
 with
