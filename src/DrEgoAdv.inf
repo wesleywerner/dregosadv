@@ -261,6 +261,7 @@ Object canoe "canoe"
             if (location == river) {
                 ! The "1" parameter moves player silently
                 ! so that we can reposition the canoe then call look.
+                ! DM4 pg 21
                 PlayerTo(river_shore, 1);
                 move canoe to river_shore;
                 move player to canoe;
@@ -771,14 +772,15 @@ with
 ScenicRockObject waterfall_ledge "ledge" waterfall
 with
     name 'water' 'fall' 'waterfall' 'rocky' 'ledge' 'edge',
-    description "You peer over the waterfall edge and see the water cascading
-        down into a pool below. It seems to be safe to jump over.",
+    description "You peer over the waterfall and see the water cascading
+        down into a pool below. It looks safe to jump over it.",
     before [;
         JumpOver:
             print "You take a breath and jump over the edge of the
                 waterfall...^";
             last_known_location = plunge_pool;
-            PlayerTo(plunge_pool);
+            ! parameter "2" honors brief room descriptions - DM4 pg 21
+            PlayerTo(plunge_pool, 2);
             return true;
     ];
 
@@ -792,18 +794,30 @@ with
                 Wading to the shore, you wring out your shirt.
                 That was very refreshing!^^";
         print_ret "There is a clear pool here, a beautiful waterfall cascades
-        down from above into it. A narrow rocky path leads South.";
+            down from above into it.";
     ],
 
     ! GO IN enters the alcove, if discovered.
-    in_to [;
-        if (alcove hasnt scenery)
-            <<Enter alcove>>;
-        else
-            "You don't feel like another swim.";
-    ],
+    ! in_to [;
+    !     if (alcove hasnt scenery)
+    !         <<Enter alcove>>;
+    !     else
+    !         "You don't feel like another swim.";
+    ! ],
+;
 
-    s_to temple;
+ScenicRockObject "temple" plunge_pool
+with
+    name 'temple' 'stone' 'building',
+    initial "There is an ancient temple here.",
+    description "The temple is built of carved stone blocks, there is an opening
+        that serve as the entry way.",
+    before [;
+        Enter:
+            ! parameter "2" honors brief room descriptions - DM4 pg 21
+            return PlayerTo(temple, 2);
+    ],
+    has ~scenery;
 
 ScenicRockObject alcove "alcove" plunge_pool
 with
@@ -834,8 +848,8 @@ with
 
     after [;
         Enter:
-            PlayerTo(tomb);
-            return true;
+            ! parameter "2" honors brief room descriptions - DM4 pg 21
+            return PlayerTo(tomb, 2);
         Whip:
             print_ret "*SNAP* echos *snap* your *snap* whip.";
     ],
@@ -851,11 +865,18 @@ with
     n_to plunge_pool,
 
     before [;
+        Exit:
+            ! Exit the temple
+            <<Go n_obj>>;
         Go:
-            if (alcove has scenery) {
-                give alcove ~scenery;
-                print_ret "You discover the secret alcove! (WIP).";
-            }
+            if (noun == out_obj)
+                <<Go n_obj>>;
+                
+        ! Go:
+        !     if (alcove has scenery) {
+        !         give alcove ~scenery;
+        !         print_ret "You discover the secret alcove! (WIP).";
+        !     }
     ],
 
     has light;

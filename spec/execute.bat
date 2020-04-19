@@ -14,5 +14,3 @@ echo [ Compass -----------------------------------------------------------] >> t
 diff --ignore-space-change compass.expected compass.actual >> test_results.txt
 echo [ Movement ----------------------------------------------------------] >> test_results.txt
 diff --ignore-space-change movement.expected movement.actual >> test_results.txt
-
-pause

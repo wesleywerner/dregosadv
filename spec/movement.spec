@@ -14,3 +14,9 @@ go down
 climb stairs
 cross bridge
 jump over waterfall
+go in temple
+north
+enter temple
+exit
+enter temple
+go out
