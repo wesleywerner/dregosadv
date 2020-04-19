@@ -93,6 +93,7 @@ Verb 'whip' * noun -> Whip;
     ! Move objects to their starting places
     move canoe to river;
     move boatman to canoe;
+    move monkey to fig_tree;
 
     ! enable debugging actions:
     #ifdef DEBUG;
@@ -165,11 +166,23 @@ Class JungleRoom
                     last_known_location = location;
         ];
 
-Class NonPlayerCharacterObject
+Class NonPlayerCharacterObject;
+
+Class NonPlayerHumanObject
+    class NonPlayerCharacterObject
     with
         before [;
             Take:
                 print_ret "You think human trafficing is deplorable.";
+        ],
+    has animate;
+
+Class NonPlayerAnimalObject
+    class NonPlayerCharacterObject
+    with
+        before [;
+            Take:
+                print_ret "You think animal trafficing is deplorable.";
         ],
     has animate;
 
@@ -433,7 +446,26 @@ Object fish "fish"
 
 ! [ ==================================================== Non Player Characters ]
 
-NonPlayerCharacterObject boatman
+! [ ------------------------------------------------------------------- Monkey ]
+NonPlayerAnimalObject monkey "monkey"
+with
+    name 'monkey',
+    initial "There is a small monkey here.",
+    description "The monkey stares back at you.",
+    
+    life [;
+        Answer:
+            print_ret "The monkey seems to laugh at you.";
+        Ask:
+            print_ret "~ook ook~";
+    ];
+
+[ MonkeySeenPlayer;
+    return clearing has visited;
+];
+
+! [ ------------------------------------------------------------------- Boatman ]
+NonPlayerHumanObject boatman
     with
         name 'guide' 'rom' 'man',
         article "your",
@@ -612,12 +644,17 @@ with
 ! [ ----------------------------------------------------------------- Clearing ]
 JungleRoom clearing "In a Clearing"
 with
-    description "You are in a natural clearing, the ground a part of a large
-                bedrock providing some relief from the dense jungle.
-                A large fig tree stands here proudly.
-                ^^A jungle path is due West.
-                A small structure is visible to the South.",
-    w_to jungle_path,
+    description [;
+        if (self hasnt visited)
+            print "You are in a natural clearing, the ground a part of a large
+                bedrock providing some relief from the dense jungle. ";
+        print "A large fig tree stands here proudly. ";
+        if (monkey in fig_tree)
+            print "A monkey sits in ", (the) fig_tree, ".";
+        print_ret "^^A jungle path is due East.
+            A small structure is visible to the South.";
+    ],
+    e_to jungle_path,
     s_to old_hut,
     u_to fig_tree_top,
 
@@ -630,8 +667,14 @@ with
         
         ! Describe climbing up the tree
         Go:
-            if (noun == u_obj)
-                print "You climb up the strong branches of the fig tree.^";
+            if (noun == u_obj) {
+                print "You climb up the strong branches of the fig tree. ";
+                if (monkey in fig_tree) {
+                    print "The monkey is not impressed, it climbs down the tree.";
+                    move monkey to clearing;
+                }
+                print "^";
+            }
     ];
 
 ! [ -------------------------------------------------------------- Top Of Tree ]
@@ -688,7 +731,7 @@ with
             if (location == fig_tree_top)
                 <<Go d_obj>>;
     ],
-    has container open;
+    has container open light;
     
 ! [ ------------------------------------------------------------------ Old Hut ]
 OutdoorRoom old_hut "An Old Hut"
