@@ -617,7 +617,6 @@ with
                 A large fig tree stands here proudly.
                 ^^A jungle path is due West.
                 A small structure is visible to the South.",
-    ne_to stone_stairs,
     w_to jungle_path,
     s_to old_hut,
     u_to fig_tree_top,
@@ -657,6 +656,7 @@ with
         ! Look in directions
         Examine:
             if (noun == ne_obj) {
+                clearing.ne_to = stone_stairs;
                 score = score + 1;
                 print_ret "There! Stone stairs up the hill, in the distance to ",
                     (a) noun, ".";

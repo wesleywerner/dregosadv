@@ -3,7 +3,10 @@ go faster
 exit
 north
 west
+go northeast
+examine compass
 go up
+look northeast
 go down
 climb tree
 climb down tree
