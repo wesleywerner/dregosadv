@@ -44,10 +44,12 @@ Include "VerbLib";
 
 ! TODO
 ! + Get NewbieGrammar.h included
+! + Look in directions in most rooms
 ! + Listen and smell senses in most rooms
 ! + task_scores - DM$ $22
 ! + Changing weather in the sky object
 ! + Optimize entry descriptions for all rooms
+! + Advent style "go to room" logic, DM4 $30 pg 220
 
 ! [ =========================================================== Custom Actions ]
 
@@ -141,6 +143,8 @@ Global last_known_location = 0;
             ^1) Whip the water while in the canoe.
             ^2) Get lost in the jungle, then look at your compass.";
 ];
+
+[ PressAnyKey k; @read_char 1 -> k; return k; ];
 
 ! [ ================================================================== Classes ]
 
@@ -369,6 +373,12 @@ EssentialObject lodestar "compass"
                 print "^", (A) boatman, " notices ", (a) self, " -- ~My father
                             had one just like that~ he says.^";
             }
+            
+            ! The monkey notices your action
+            if (~~ObjectIsUntouchable(monkey, true)) {
+                print (The) monkey, " seems very interested in the device.^";
+            }
+            
         ],
         
         before [;
@@ -504,23 +514,22 @@ with
     ],
     
     ! Monkey Movements:
-    ! 
     daemon [ rnd;
         ! No action if the two have not met.
         if (~~monkey_seen_player()) return;
-        ! No action if the player is not nearby.
-        if (~~player_near_monkey()) return;
         ! Move to the clearing if the player is in the tree
         if (self in fig_tree && parent(player) == fig_tree_top) {
             print "^The monkey is not impressed, it climbs down the tree.^";
             move self to clearing;
             return;
         }
+        ! No action if the player is not nearby.
+        if (~~player_near_monkey()) return;
         ! No action while in the fig tree.
         if (self in fig_tree) return;
         ! Let the monkey do some random actions.
         if (parent(self) == parent(player)) {
-            rnd = random(20);
+            rnd = random(10);
             ! The monkey has the compass
             if (lodestar in self) {
                 switch (rnd) {
@@ -539,7 +548,7 @@ with
             }
         } else {
             ! Move to the player's location
-            if (random(10) == 1) {
+            if (random(20) == 1) {
                 print (A) self, " follows you.^";
                 move self to parent(player);
             }
@@ -553,8 +562,7 @@ with
 
 [ player_near_monkey;
     return location == clearing || location == old_hut 
-        || location == garden || location == jungle_path
-        || location == fig_tree_top;
+        || location == garden || location == jungle_path;
 ];
 
 ! hoot, scream, howl, coo, rumble, bark, pant, grunt, whoop, screech, gibber.
@@ -758,8 +766,11 @@ with
         print "A large fig tree stands here proudly. ";
         if (monkey in fig_tree)
             print "A monkey sits in ", (the) fig_tree, ".";
-        print_ret "^^A jungle path is due East.
-            A small structure is visible to the South.";
+        print "^^A jungle path is due East.
+            A small structure is visible to the South. ";
+        if (self.ne_to ofclass JungleRoom)
+            print "Stone stairs are due Northeast.";
+        print_ret "";
     ],
     e_to jungle_path,
     s_to old_hut,
@@ -796,9 +807,12 @@ with
         Go:
             if (noun == d_obj && lodestar in player && ~~lodestar.has_dropped) {
                 print "^As you descend you drop ", (a) lodestar, 
-                    " to the ground below. CLINK!^";
+                    " to the ground below. CLINK!
+                    ^^ --- more ---^";
                 lodestar.has_dropped = true;
                 move lodestar to monkey;
+                PressAnyKey();
+                return false;
             }
     
         Climb:
