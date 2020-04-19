@@ -47,6 +47,7 @@ Include "VerbLib";
 ! + Listen and smell senses in most rooms
 ! + task_scores - DM$ $22
 ! + Changing weather in the sky object
+! + Optimize entry descriptions for all rooms
 
 ! [ =========================================================== Custom Actions ]
 
@@ -62,6 +63,9 @@ Include "VerbLib";
         "You are not into that kind of thing.";
 
     if (noun ofclass NonPlayerCharacterObject)
+        "You are not fond of hurting other living things.";
+
+    if (parent(noun) ofclass NonPlayerCharacterObject)
         "You are not fond of hurting other living things.";
 
     ! if (children(player) > 1)
@@ -365,6 +369,16 @@ EssentialObject lodestar "compass"
                 print "^", (A) boatman, " notices ", (a) self, " -- ~My father
                             had one just like that~ he says.^";
             }
+        ],
+        
+        before [;
+            Take, Remove:
+                if (self in monkey) {
+                    print "When you approach the small critter it deftly 
+                        moves out of your reach. ";
+                    monkey_speak(random(10));
+                    print_ret "";
+                }
         ];
 
 ! Also see the custom 'WhipSub' action.
@@ -459,29 +473,43 @@ Object fish "fish"
 NonPlayerAnimalObject monkey "monkey"
 with
     name 'monkey',
-    initial "There is a small monkey here.",
-    description "The monkey stares back at you.",
+    
+    initial [;
+        print "There is a monkey here. ";
+        if (lodestar in self)
+            print "It has ", (a) lodestar, ".";
+        print_ret "";
+    ],
+    
+    description [;
+        if (lodestar in self)
+            print_ret "The small creature is fascinated by ", (a) lodestar, ".";
+        else
+            print_ret "It is a small grey monkey with big brown eyes. 
+                It stares back at you.";
+    ],
     
     life [;
-        Answer:
-            print_ret "The monkey seems to laugh at you.";
-        Ask:
-            print_ret "~ook ook~";
+        Ask, Answer, Tell:
+            monkey_speak(random(10));
+            print_ret "";
     ],
     
     orders [;
         Give:
-            if (noun == lodestar)
-                print_ret "~Ook~, ", (the) self, " says, gripping the device tightly.";
+            if (noun == lodestar) {
+                monkey_speak(random(10));
+                print_ret " it replies, gripping the device tightly.";
+            }
     ],
     
     ! Monkey Movements:
     ! 
     daemon [ rnd;
         ! No action if the two have not met.
-        if (~~MonkeySeenPlayer()) return;
+        if (~~monkey_seen_player()) return;
         ! No action if the player is not nearby.
-        if (~~PlayerNearMonkey()) return;
+        if (~~player_near_monkey()) return;
         ! No action while in the fig tree.
         if (self in fig_tree) return;
         ! Move to the clearing if the player is in the tree
@@ -518,13 +546,27 @@ with
     ],
     has transparent;
 
-[ MonkeySeenPlayer;
+[ monkey_seen_player;
     return clearing has visited;
 ];
 
-[ PlayerNearMonkey;
+[ player_near_monkey;
     return location == clearing || location == old_hut 
         || location == garden || location == jungle_path;
+];
+
+! hoot, scream, howl, coo, rumble, bark, pant, grunt, whoop, screech, gibber.
+[ monkey_speak n;
+    switch (n) {
+        1: print "~*Coo*coo*~";
+        2: print "~*Whoop*whoop*~";
+        3: print "~*Howls*~";
+        4: print "~*Pants*Grunt*~";
+        4: print "~*Gibbers*~";
+        6: print "~*Screech*~";
+        7: print "~*Rumble*~";
+        default: print "~*Grunts*~"; 
+    }
 ];
 
 ! [ ------------------------------------------------------------------- Boatman ]
@@ -1013,11 +1055,21 @@ Include "Grammar";
 
 ! [ Extend Grammar ----------------------------------------------------------  ]
 
-! Provide help to the player when they type "go up the noun".
+! Print help when trying to "go up the noun".
 [ GoUpDownNounSub;
-    print "(To go up or down ", (the) noun, " simply type ~go up~ or ~go down~. 
-        To climb ", (the) noun, " type ~climb ", (name) noun, "~)^";
+    print "To go up or down ", (the) noun, " type ~go up~ or ~go down~. 
+        To climb ", (the) noun, " type ~climb ", (name) noun, "~^";
 ];
 
 Extend 	'go'		* 'up'/'down' noun				 -> GoUpDownNoun;
 Extend 	'climb'		* 'up'/'down' noun				 -> GoUpDownNoun;
+
+! Print help when trying to "talk to noun"
+[ TalkToNounHelpSub;
+    print "To ask ", (the) noun, " something type 
+        ~ask ", (the) noun, " about (thing or topic)~. 
+        To say something to ", (the) noun, " type
+        ~say (noun or topic)~.^";
+];
+
+Verb    'talk'      * 'to' noun                     -> TalkToNounHelp;
