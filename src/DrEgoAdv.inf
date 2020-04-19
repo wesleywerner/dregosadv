@@ -620,6 +620,7 @@ with
     u_to fig_tree_top,
 
     before [;
+    
         ! climb up => go up
         Climb:
             if (noun == u_obj)
@@ -628,21 +629,8 @@ with
         ! Describe climbing up the tree
         Go:
             if (noun == u_obj)
-                print "^You climb up the strong branches of the fig tree.^";
+                print "You climb up the strong branches of the fig tree.^";
     ];
-
-ScenicTreeObject fig_tree "fig tree" clearing
-with
-    name 'fig' 'tree' 'ficus',
-    description "The fig tree, also known as Ficus Obliqua, is taller than 
-        most of the surrounding jungle. The view from up there must be great.",
-        
-    ! climb fig_tree => go up
-    before [;
-        Climb:
-            <<Go u_obj>>;
-    ],
-    has container open;
 
 ! [ -------------------------------------------------------------- Top Of Tree ]
 
@@ -658,8 +646,8 @@ with
     
     before [;
     
-        ! climb down => go down
         Climb:
+            ! climb down => go down
             if (noun == d_obj)
                 <<Go d_obj>>;
         
@@ -670,9 +658,35 @@ with
                 print_ret "There! Stone stairs up the hill, in the distance to ",
                     (a) noun, ".";
             }
-            print_ret "Only more jungle to ", (a) noun ;
+            ! Any other direction gives a canned response.
+            ! Note that we *must* test for CompassDirection here
+            ! else the Examine intercept will catch examining nouns too.
+            if (noun ofclass CompassDirection)
+                print_ret "Only more jungle to ", (a) noun ;
     ];
 
+ScenicTreeObject fig_tree "fig tree"
+with
+    name 'fig' 'tree' 'ficus',
+    description [;
+        print "The fig tree, also known as Ficus Obliqua, is taller than 
+            most of the surrounding jungle.";
+        if (location == clearing)
+            print " The view from up there must be great.";
+        print "^";
+    ],
+    found_in clearing fig_tree_top,
+        
+    ! climb fig_tree => go up
+    before [;
+        Climb:
+            if (location == clearing)
+                <<Go u_obj>>;
+            if (location == fig_tree_top)
+                <<Go d_obj>>;
+    ],
+    has container open;
+    
 ! [ ------------------------------------------------------------------ Old Hut ]
 OutdoorRoom old_hut "An Old Hut"
 with
@@ -697,8 +711,8 @@ with
 ! [ ------------------------------------------------------------- Stone Stairs ]
 JungleRoom stone_stairs "Stone Stairs"
 with
-    description "Jungle is all around you, except for some hundreds of steps
-        carved out of stone leading up a hill. A path leads back South.",
+    description "You are at the bottom of a hill, stairs carved out of stone
+        lead up to the top. A path leads back South.",
     u_to rope_bridge,
     s_to clearing,
     cant_go "The only ways out are South or Up (the stairs).";
@@ -710,6 +724,25 @@ with
         crosses a deep gorge to the East. Stone steps lead down the hill.",
     d_to stone_stairs,
     e_to waterfall;
+
+ScenicRockObject "stairs"
+with
+    name 'stone' 'stairs' 'steps' 'hill',
+    description "The individual steps are carved from stone and laid out to
+        form a staircase on the hill.",
+    found_in stone_stairs rope_bridge,
+    before [;
+        Climb:
+            if (location == stone_stairs) {
+                print "You ascend the stone stairs.^";
+                <<Go u_obj>>;
+            }
+            if (location == rope_bridge) {
+                print "You descent the stone stairs.^";
+                <<Go d_obj>>;
+            }
+    ];
+    
 
 ! [ --------------------------------------------------------------- Waterfall  ]
 JungleRoom waterfall "Waterfall"
@@ -824,3 +857,14 @@ with
 
 Include "Grammar";
 ! Include "NewbieGrammar";
+
+! [ Extend Grammar ----------------------------------------------------------  ]
+
+! Provide help to the player when they type "go up the noun".
+[ GoUpDownNounSub;
+    print "(To go up or down ", (the) noun, " simply type ~go up~ or ~go down~. 
+        To climb ", (the) noun, " type ~climb ", (name) noun, "~)^";
+];
+
+Extend 	'go'		* 'up'/'down' noun				 -> GoUpDownNoun;
+Extend 	'climb'		* 'up'/'down' noun				 -> GoUpDownNoun;
