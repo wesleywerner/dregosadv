@@ -94,6 +94,9 @@ Verb 'whip' * noun -> Whip;
     move canoe to river;
     move boatman to canoe;
     move monkey to fig_tree;
+    
+    ! Start Daemons
+    StartDaemon(monkey);
 
     ! enable debugging actions:
     #ifdef DEBUG;
@@ -326,8 +329,14 @@ EssentialObject lodestar "compass"
 
         ! one-time bonus point when using the lodestar to navigate while lost.
         used_scored false,
+        
+        ! Track if the compass has been dropped before
+        has_dropped false,
 
         description [;
+        
+            ! Test for posession
+            if (self notin player) print_ret "You do not have ", (a) self, ".";
 
             ! Return the player to the last known good location
             if (location == lost_in_jungle) {
@@ -458,10 +467,64 @@ with
             print_ret "The monkey seems to laugh at you.";
         Ask:
             print_ret "~ook ook~";
-    ];
+    ],
+    
+    orders [;
+        Give:
+            if (noun == lodestar)
+                print_ret "~Ook~, ", (the) self, " says, gripping the device tightly.";
+    ],
+    
+    ! Monkey Movements:
+    ! 
+    daemon [ rnd;
+        ! No action if the two have not met.
+        if (~~MonkeySeenPlayer()) return;
+        ! No action if the player is not nearby.
+        if (~~PlayerNearMonkey()) return;
+        ! No action while in the fig tree.
+        if (self in fig_tree) return;
+        ! Move to the clearing if the player is in the tree
+        if (parent(player) == fig_tree_top) {
+            move self to clearing;
+            return;
+        }
+        ! Let the monkey do some random actions.
+        if (parent(self) == parent(player)) {
+            rnd = random(20);
+            ! The monkey has the compass
+            if (lodestar in self) {
+                switch (rnd) {
+                    1: print_ret (The) self, " fidgets with ", (a) lodestar, ".";
+                    2: print_ret (The) self, " taps ", (a) lodestar, " on the ground.";
+                    3: print_ret (The) self, " bites on ", (a) lodestar, ".";
+                    4: print_ret (The) self, " sniffs ", (a) lodestar, ".";
+                }
+            } else { ! The monkey does not have the compass
+                switch (rnd) {
+                    1: print_ret (The) self, " scratches itself.";
+                    2: print_ret (The) self, " picks something off the ground and eats it.";
+                    3: print_ret (The) self, " makes grunting noises.";
+                    4: print_ret "~Ook ook~ says ", (the) self, ".";
+                }
+            }
+        } else {
+            ! Move to the player's location
+            if (random(10) == 1) {
+                print (A) self, " follows you.^";
+                move self to parent(player);
+            }
+        }    
+    ],
+    has transparent;
 
 [ MonkeySeenPlayer;
     return clearing has visited;
+];
+
+[ PlayerNearMonkey;
+    return location == clearing || location == old_hut 
+        || location == garden || location == jungle_path;
 ];
 
 ! [ ------------------------------------------------------------------- Boatman ]
@@ -690,6 +753,14 @@ with
     d_to clearing,
     
     before [;
+    
+        Go:
+            if (noun == d_obj && lodestar in player && ~~lodestar.has_dropped) {
+                print "^As you descend you drop ", (a) lodestar, 
+                    " to the ground below. CLINK!^";
+                lodestar.has_dropped = true;
+                move lodestar to monkey;
+            }
     
         Climb:
             ! climb down => go down
