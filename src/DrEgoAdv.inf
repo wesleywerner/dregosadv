@@ -510,13 +510,14 @@ with
         if (~~monkey_seen_player()) return;
         ! No action if the player is not nearby.
         if (~~player_near_monkey()) return;
-        ! No action while in the fig tree.
-        if (self in fig_tree) return;
         ! Move to the clearing if the player is in the tree
-        if (parent(player) == fig_tree_top) {
+        if (self in fig_tree && parent(player) == fig_tree_top) {
+            print "^The monkey is not impressed, it climbs down the tree.^";
             move self to clearing;
             return;
         }
+        ! No action while in the fig tree.
+        if (self in fig_tree) return;
         ! Let the monkey do some random actions.
         if (parent(self) == parent(player)) {
             rnd = random(20);
@@ -552,7 +553,8 @@ with
 
 [ player_near_monkey;
     return location == clearing || location == old_hut 
-        || location == garden || location == jungle_path;
+        || location == garden || location == jungle_path
+        || location == fig_tree_top;
 ];
 
 ! hoot, scream, howl, coo, rumble, bark, pant, grunt, whoop, screech, gibber.
@@ -773,12 +775,7 @@ with
         ! Describe climbing up the tree
         Go:
             if (noun == u_obj) {
-                print "You climb up the strong branches of the fig tree. ";
-                if (monkey in fig_tree) {
-                    print "The monkey is not impressed, it climbs down the tree.";
-                    move monkey to clearing;
-                }
-                print "^";
+                print "You climb up the strong branches of the fig tree.^";
             }
     ];
 
