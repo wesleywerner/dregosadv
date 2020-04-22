@@ -51,6 +51,11 @@ Include "VerbLib";
 ! + Optimize entry descriptions for all rooms
 ! + Advent style "go to room" logic, DM4 $30 pg 220
 
+! [ ================================================================ Atributes ]
+
+! Applied to NPCs to indicate an active state of interest in the player.
+Attribute curious;
+
 ! [ =========================================================== Custom Actions ]
 
 [ WhipSub;
@@ -72,6 +77,9 @@ Include "VerbLib";
 
     ! if (children(player) > 1)
     !     "You need your hands free to use the whip effectively.";
+    
+    ! Whipping succeeded, frighten the monkey if it is nearby
+    monkey_frighten();
 
     ! Test if any custom after routines are handled.
     if (AfterRoutines()) return;
@@ -484,6 +492,9 @@ NonPlayerAnimalObject monkey "monkey"
 with
     name 'monkey',
     
+    ! Turns to keep distance from the player once frightened by the whip
+    fright_turns 0,
+    
     initial [;
         print "There is a monkey here. ";
         if (lodestar in self)
@@ -514,60 +525,113 @@ with
     ],
     
     ! Monkey Movements:
-    daemon [ rnd;
-        ! No action if the two have not met.
-        if (~~monkey_seen_player()) return;
+    daemon [;
+    
         ! Move to the clearing if the player is in the tree
-        if (self in fig_tree && parent(player) == fig_tree_top) {
+        if (self in fig_tree && location == fig_tree_top) {
             print "^The monkey is not impressed, it climbs down the tree.^";
+            give self curious;
             move self to clearing;
             return;
         }
-        ! No action if the player is not nearby.
-        if (~~player_near_monkey()) return;
-        ! No action while in the fig tree.
-        if (self in fig_tree) return;
-        ! Let the monkey do some random actions.
-        if (parent(self) == parent(player)) {
-            rnd = random(10);
-            ! The monkey has the compass
-            if (lodestar in self) {
-                switch (rnd) {
-                    1: print_ret (The) self, " fidgets with ", (a) lodestar, ".";
-                    2: print_ret (The) self, " taps ", (a) lodestar, " on the ground.";
-                    3: print_ret (The) self, " bites on ", (a) lodestar, ".";
-                    4: print_ret (The) self, " sniffs ", (a) lodestar, ".";
-                }
-            } else { ! The monkey does not have the compass
-                switch (rnd) {
-                    1: print_ret (The) self, " scratches itself.";
-                    2: print_ret (The) self, " picks something off the ground and eats it.";
-                    3: print_ret (The) self, " makes grunting noises.";
-                    4: print_ret "~Ook ook~ says ", (the) self, ".";
-                }
+        
+        ! No action if not curious
+        if (monkey hasnt curious) return;
+        
+        ! Flee when frightened
+        if (self.fright_turns > 0 && monkey_near_player(true)) {
+            move self to fig_tree;
+            if (location == clearing) {
+                print_ret (The) self, " scrambles up ", (the) fig_tree, ".";
+            } else {
+                print_ret (The) self, " scrambles out of sight.";
             }
+        }
+        
+        ! Rebuild confidence
+        if (self.fright_turns > 0) {
+            self.fright_turns = self.fright_turns - 1;
+            return;
+        }
+    
+        ! No action if the player is not nearby.
+        if (~~monkey_near_player(false)) return;
+        
+        ! Let the monkey do something when in the presence of the player
+        if (parent(self) == parent(player)) {
+            monkey_action();
         } else {
-            ! Move to the player's location
-            if (random(20) == 1) {
-                print (A) self, " follows you.^";
-                move self to parent(player);
+            ! For a random chance
+            if (random(10) == 1) {
+                
+                ! Climb down the tree
+                if (self in fig_tree) {
+                    move self to clearing;
+                    if (location == clearing) {
+                        print (The) self, " climbs down from ", 
+                                        (the) fig_tree, ".^";
+                    }
+                } else {
+                    ! Move to the player's location
+                    print (The) self, " appears nearby.^";
+                    move self to parent(player);
+                }
             }
         }    
     ],
     has transparent;
 
-[ monkey_seen_player;
-    return clearing has visited;
+[ monkey_frighten;
+    if (monkey_near_player(true)) {
+        monkey.fright_turns = 8;
+    }
 ];
 
-[ player_near_monkey;
-    return location == clearing || location == old_hut 
-        || location == garden || location == jungle_path;
+[ monkey_near_player same_room;
+    if (same_room) {
+        return parent(monkey) == parent(player);
+    }
+    else {
+        ! Test the Player's location
+        return location == clearing || location == old_hut 
+            || location == garden || location == jungle_path;
+    }
+];
+
+[ monkey_action n;
+
+    ! only some times
+    n = random(100);
+    if (n > 30) return;
+    
+    ! begin a new line
+    print "^";
+    
+    ! The monkey has the compass and half the time
+    if (lodestar in self && n > 15) {
+        switch (n % 5) {
+            0: print_ret (The) self, " stares at the moving needle on ", 
+                (a) lodestar, ".";
+            1: print_ret (The) self, " fidgets with ", (a) lodestar, ".";
+            2: print_ret (The) self, " taps ", (a) lodestar, " on the ground.";
+            3: print_ret (The) self, " bites on ", (a) lodestar, ".";
+            4: print_ret (The) self, " sniffs ", (a) lodestar, ".";
+        }
+    } 
+    else { ! The monkey does not have the compass, or the other half the time
+        switch (n % 4) {
+            0: print_ret (The) self, " scratches itself.";
+            1: print_ret (The) self, " picks something off the ground, 
+                and eats it.";
+            2: print_ret (The) self, " makes grunting noises.";
+            3: print_ret "~Ook ook~ says ", (the) self, ".";
+        }
+    }
 ];
 
 ! hoot, scream, howl, coo, rumble, bark, pant, grunt, whoop, screech, gibber.
 [ monkey_speak n;
-    switch (n) {
+    switch (n % 8) {
         1: print "~*Coo*coo*~";
         2: print "~*Whoop*whoop*~";
         3: print "~*Howls*~";
@@ -575,7 +639,7 @@ with
         4: print "~*Gibbers*~";
         6: print "~*Screech*~";
         7: print "~*Rumble*~";
-        default: print "~*Grunts*~"; 
+        default: print "~*Grunts*~";
     }
 ];
 
