@@ -243,6 +243,15 @@ with
     ],
 has scenery static;
 
+! Provides the scenery attribute
+Class ScenicPlantObject
+with
+    before [;
+        Take:
+            print_ret "You have no need for ", (the) self, ".";
+    ],
+has scenery static;
+
 ! [ ================================================================== Objects ]
 
 Object canoe "canoe"
@@ -485,6 +494,16 @@ Object fish "fish"
             }
         ];
 
+Object pumpkin "pumpkin"
+with
+    name 'pumpkin' 'pumpkins',
+    description "It is a small round and green pumpkin.",
+    before [;
+        Eat:
+            print_ret "It would be better served cooked.";
+    ],
+    has edible;
+
 ! [ ==================================================== Non Player Characters ]
 
 ! [ ------------------------------------------------------------------- Monkey ]
@@ -514,6 +533,9 @@ with
         Ask, Answer, Tell:
             monkey_speak(random(10));
             print_ret "";
+        Give:
+            print_ret "You offer ", (the) noun, " to the small critter, 
+                it pretends to ignore your good gesture.";
     ],
     
     orders [;
@@ -936,11 +958,30 @@ with
 ! [ ------------------------------------------------------------------- Garden ]
 JungleRoom garden "garden"
 with
-    description "You stand in an unkempt garden, there are
-        vegetable plants in the ground and some fruit trees to the sides.
+    description "You stand in an unkempt garden, there are some
+        vegetables here and some fruit trees to the side.
         Whoever kept this garden hasn't been here for a very long time.
         ^A hut is to the Northeast.",
     ne_to old_hut;
+
+ScenicPlantObject "vegetable plants" garden
+with
+    name 'veg' 'vegetables//p',
+    description "The vegetables have grown wild, you can see pumpkins and
+        green beans.";
+
+ScenicPlantObject "pumpkin" garden
+with
+    name 'pumpkin' 'pumpkins',
+    description "The pumpkins are small, round and green.",
+    before [;
+        Take:
+            if (pumpkin has moved) {
+                print_ret "You don't need to take another pumpkin.";
+            }
+            move pumpkin to player;
+            print_ret "You pick one of the small round pumpkins.";
+    ];
 
 ! [ ------------------------------------------------------------- Stone Stairs ]
 JungleRoom stone_stairs "Stone Stairs"
