@@ -949,20 +949,19 @@ with
 JungleRoom garden "garden"
 with
     description "You stand in an unkempt garden, whoever kept this garden hasn't
-                been here for a very long time.
-                You see some vegetable plants and fruit trees.
-                A hut is to the Northeast.",
+    been here for a very long time. You see some vegetable plants and fruit
+    trees. A hut is to the Northeast.",
     ne_to old_hut;
 
 ScenicPlantObject "vegetable plants" garden
 with
     name 'veg' 'vegetable' 'vegetables' 'plant' 'plants',
     description [;
-        print   "The vegetable plants in the garden have grown wild without
-                anybody around to harvest them. ";
+        print "The vegetable plants in the garden have grown wild without
+        anybody around to harvest them. ";
         if (pumpkin has concealed) {
-            print   "You notice a pumpkin on the ground, hiding under some large
-                    green leaves.";
+            print "You notice a pumpkin on the ground, hiding under some large
+            green leaves.";
         }
         print_ret "";
     ];
@@ -970,23 +969,35 @@ with
 ScenicPlantObject garden_trees "fruit trees" garden
 with
     name 'fruit' 'cherry' 'tree' 'trees',
-    description "You see a cherry tree but it is not bearing any fruit, 
-                the banana tree next to it however has a bunch of fruit.",
+    
+    description "You see a cherry tree but it is not bearing any fruit, the
+    banana tree next to it however has a bunch of fruit.",
+    
     before [;
         Whip:
             if (parent(banana) == garden_trees) {
                 move banana to garden;
-                print_ret   "*SNAP* you deftly whip a banana off the bunch,
-                            it falls to the ground.";
+                banana.whip_count = banana.whip_count + 1;
+                switch (banana.whip_count) {
+                    1: print_ret "You take careful aim at the bunch of bananas
+                    up in the tree, swing your arm in a smooth arch and *SNAP*
+                    -- a single banana drops to the ground.";
+                    2: print_ret "*SNAP* -- Another banana drops to the ground.
+                    Years of using your whip is finally paying off.";
+                    default: print_ret "*SNAP* -- You deftly whip a banana off
+                    the tree.";
                 }
+            }
             else
-                print_ret "You don't need another banana.";
+                print_ret "You don't need another banana right now.";
     ],
     has supporter;
 
 Object banana "banana" garden_trees
 with
-    name 'banana',
+    name 'banana' 'bananas',
+    whip_count 0,
+    eaten false,
     description [;
         if (parent(self) == garden_trees)
             print_ret "A bunch of wild bananas hang from the top of the tree.";
@@ -997,13 +1008,19 @@ with
         Take:
             if (parent(self) == garden_trees)
                 print_ret "The bananas are way up in the tree, out of reach.";
+        Eat:
+            if (self.eaten)
+                print_ret "You have had your fill of bananas.";
         Whip:
             <<Whip garden_trees>>;
     ],
     after [;
         Eat:
             move banana to garden_trees;
-            print_ret "You peel the banana and eat it in two bites. Very yummy!";
+            banana.eaten = true;
+            print_ret "You peel the banana and take a bite, the fruit is
+            firm and sweet with a subtle flavor. You finish eating the rest
+            of the delicious fruit - You feel revitalised.";
     ],
     has edible;
 
@@ -1013,15 +1030,15 @@ with
     description "It is a small round and green pumpkin.",
     before [;
         Eat:
-            print_ret   "It looks delicious and fresh, but would be better served
-                        cooked.";
+            print_ret "It looks delicious and fresh, but would be better served
+            cooked.";
     ],
     after [;
         Take:
         if (self hasnt moved) {
             give self ~concealed;
-            print_ret   "You carefully break the stem and take the small round
-                        pumpkin.";
+            print_ret "You carefully break the stem and take the small round
+            pumpkin.";
         }
     ],
     has concealed edible;
