@@ -494,16 +494,6 @@ Object fish "fish"
             }
         ];
 
-Object pumpkin "pumpkin"
-with
-    name 'pumpkin' 'pumpkins',
-    description "It is a small round and green pumpkin.",
-    before [;
-        Eat:
-            print_ret "It would be better served cooked.";
-    ],
-    has edible;
-
 ! [ ==================================================== Non Player Characters ]
 
 ! [ ------------------------------------------------------------------- Monkey ]
@@ -949,8 +939,8 @@ with
     description "You are inside what appears to be a delapidated hut. The
                 roof long since collapsed, it provides little protection
                 from the elements.
-                ^^You see a clearing to the North.
-                An exit is to the Southwest.",
+                You see a clearing to the North
+                and an exit to the Southwest.",
     cant_go "The only exits are North and Southwest.",
     n_to clearing,
     sw_to garden;
@@ -958,36 +948,89 @@ with
 ! [ ------------------------------------------------------------------- Garden ]
 JungleRoom garden "garden"
 with
-    description "You stand in an unkempt garden, there are some
-        vegetables here and some fruit trees to the side.
-        Whoever kept this garden hasn't been here for a very long time.
-        ^A hut is to the Northeast.",
+    description "You stand in an unkempt garden, whoever kept this garden hasn't
+                been here for a very long time.
+                You see some vegetable plants and fruit trees.
+                A hut is to the Northeast.",
     ne_to old_hut;
 
 ScenicPlantObject "vegetable plants" garden
 with
-    name 'veg' 'vegetables//p',
-    description "The vegetables have grown wild, you can see pumpkins and
-        green beans.";
+    name 'veg' 'vegetable' 'vegetables' 'plant' 'plants',
+    description [;
+        print   "The vegetable plants in the garden have grown wild without
+                anybody around to harvest them. ";
+        if (pumpkin has concealed) {
+            print   "You notice a pumpkin on the ground, hiding under some large
+                    green leaves.";
+        }
+        print_ret "";
+    ];
 
-ScenicPlantObject "pumpkin" garden
+ScenicPlantObject garden_trees "fruit trees" garden
 with
-    name 'pumpkin' 'pumpkins',
-    description "The pumpkins are small, round and green.",
+    name 'fruit' 'cherry' 'tree' 'trees',
+    description "You see a cherry tree but it is not bearing any fruit, 
+                the banana tree next to it however has a bunch of fruit.",
+    before [;
+        Whip:
+            if (parent(banana) == garden_trees) {
+                move banana to garden;
+                print_ret   "*SNAP* you deftly whip a banana off the bunch,
+                            it falls to the ground.";
+                }
+            else
+                print_ret "You don't need another banana.";
+    ],
+    has supporter;
+
+Object banana "banana" garden_trees
+with
+    name 'banana',
+    description [;
+        if (parent(self) == garden_trees)
+            print_ret "A bunch of wild bananas hang from the top of the tree.";
+        else
+            print_ret "It is a wild banana with a bright green and yellow skin.";
+    ],
     before [;
         Take:
-            if (pumpkin has moved) {
-                print_ret "You don't need to take another pumpkin.";
-            }
-            move pumpkin to player;
-            print_ret "You pick one of the small round pumpkins.";
-    ];
+            if (parent(self) == garden_trees)
+                print_ret "The bananas are way up in the tree, out of reach.";
+        Whip:
+            <<Whip garden_trees>>;
+    ],
+    after [;
+        Eat:
+            move banana to garden_trees;
+            print_ret "You peel the banana and eat it in two bites. Very yummy!";
+    ],
+    has edible;
+
+Object pumpkin "pumpkin" garden
+with
+    name 'pumpkin' 'pumpkins',
+    description "It is a small round and green pumpkin.",
+    before [;
+        Eat:
+            print_ret   "It looks delicious and fresh, but would be better served
+                        cooked.";
+    ],
+    after [;
+        Take:
+        if (self hasnt moved) {
+            give self ~concealed;
+            print_ret   "You carefully break the stem and take the small round
+                        pumpkin.";
+        }
+    ],
+    has concealed edible;
 
 ! [ ------------------------------------------------------------- Stone Stairs ]
 JungleRoom stone_stairs "Stone Stairs"
 with
     description "You are at the bottom of a hill, stairs carved out of stone
-        lead up to the top. A path leads back South.",
+                lead up to the top. A path leads back South.",
     u_to rope_bridge,
     s_to clearing,
     cant_go "The only ways out are South or Up (the stairs).";
@@ -1163,9 +1206,16 @@ with
         A narrow stone staircase leads up.",
     has light;
 
+! [ --------------------------------------------------------- Room Connections ]
+! [ For auxiliary objects the player can enter to travel between rooms ]
+
+! TODO add a hut_entry_obj found_in clearing and garden.
+!       use the initial property to display "a structure is to the south/north"
+!       depending which location is described.
+!       include this in movement.spec
+
+
 ! [ -------------------------------------------------------------------  ]
-
-
 Include "Grammar";
 ! Include "NewbieGrammar";
 
