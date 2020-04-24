@@ -877,6 +877,12 @@ with
             }
     ];
 
+! A debug gonear portal
+#ifdef DEBUG;
+ScenicRockObject clearing_portal clearing
+with name 'clearing_portal';
+#endif;
+
 ! [ -------------------------------------------------------------- Top Of Tree ]
 
 OutdoorRoom fig_tree_top "Top of Tree"
