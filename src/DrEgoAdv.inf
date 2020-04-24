@@ -70,10 +70,10 @@ Attribute curious;
         "You are not into that kind of thing.";
 
     if (noun ofclass NonPlayerCharacterObject)
-        "You are not fond of hurting other living things.";
+        <<Attack noun>>;
 
     if (parent(noun) ofclass NonPlayerCharacterObject)
-        "You are not fond of hurting other living things.";
+        <<Attack noun>>;
 
     ! if (children(player) > 1)
     !     "You need your hands free to use the whip effectively.";
@@ -128,7 +128,8 @@ Verb 'whip' * noun -> Whip;
     player.description = "You are Dr Ego, Purveyor of Curiousities,
                             Explorer of Treasures, Adventurous Archeologist.";
 
-    ! Print the preface text
+    ! Print the preface text (for non debug builds)
+    !#ifndef DEBUG;
     print_ret "^April 10th, 1940.
             ^^Your journey started a few days ago after
             docking at Port Moresby, from there it was two day's ride on
@@ -137,6 +138,7 @@ Verb 'whip' * noun -> Whip;
             ^^You met your guide and his canoe, who will take you up-river
             to your final destination -- a remote and relatively uncharted
             area in New Guinea -- to find the legendary ", (name) golden_egg;
+    !#endif;
 ];
 
 ! Remember the last known location of the player, before they get lost
@@ -185,7 +187,12 @@ Class JungleRoom
                     last_known_location = location;
         ];
 
-Class NonPlayerCharacterObject;
+Class NonPlayerCharacterObject
+with
+    life [;
+        Attack:
+            print_ret "You are not fond of hurting other living things.";
+    ];
 
 Class NonPlayerHumanObject
     class NonPlayerCharacterObject
@@ -251,6 +258,9 @@ with
             print_ret "You have no need for ", (the) self, ".";
     ],
 has scenery static;
+
+! Something edible
+Class EdibleFruitObject has edible;
 
 ! [ ================================================================== Objects ]
 
@@ -401,10 +411,16 @@ EssentialObject lodestar "compass"
         before [;
             Take, Remove:
                 if (self in monkey) {
-                    print "When you approach the small critter it deftly 
+                    if (parent(monkey) == location) {
+                        print "When you approach the small critter it deftly 
                         moves out of your reach. ";
-                    monkey_speak(random(10));
-                    print_ret "";
+                        ! monkey_forget_about_food();
+                        monkey_frighten();
+                        monkey_speak(random(10));
+                        print_ret "";
+                    } else {
+                        print_ret "It is out of your reach.";
+                    }
                 }
         ];
 
@@ -501,11 +517,14 @@ NonPlayerAnimalObject monkey "monkey"
 with
     name 'monkey',
     
-    ! Turns to keep distance from the player once frightened by the whip
+    ! Hiding away counter
     fright_turns 0,
     
-    ! Has the monkey been frightened before
+    ! First fright state
     first_fright true,
+    
+    ! When in the presence of a banana, take a few turns before taking it.
+    reach_for_food_counter 0,
     
     initial [;
         print "There is a monkey here. ";
@@ -527,8 +546,25 @@ with
             monkey_speak(random(10));
             print_ret "";
         Give:
-            print_ret "You offer ", (the) noun, " to the small critter, 
+            if (noun ofclass EssentialObject)
+                print_ret "There is no way are you giving ", (a) noun, 
+                " to ", (the) self, "!";
+            else
+                print_ret "You offer ", (the) noun, " to the small critter, 
                 it pretends to ignore your good gesture.";
+        Show:
+            if (noun ofclass EdibleFruitObject)
+                print_ret "The small monkey head swivels side-to-side as you
+                wave ", (the) noun, ", showing it off. ", (The) self, "
+                likes what it sees but looks hesitant to go near you.";
+            if (noun ofclass EssentialObject)
+                print_ret "It seems curious about ", (the) noun, ".";
+        ThrowAt:
+            if (noun ofclass EdibleFruitObject)
+                print_ret "Maybe it would be better to just drop ", (the) noun,
+                ".";
+            else
+                <<Attack self>>;
     ],
     
     orders [;
@@ -539,8 +575,9 @@ with
             }
     ],
     
-    ! Monkey Movements:
-    daemon [;
+    ! Monkey Movements
+    ! TODO routinize monkey daemon
+    daemon [look_item fruit;
     
         ! Move to the clearing if the player is in the tree
         if (self in fig_tree && location == fig_tree_top) {
@@ -557,7 +594,8 @@ with
         if (self.fright_turns > 0 && monkey_near_player(true)) {
             move self to fig_tree;
             ! Print flavor text when monkey is frightened the first time
-            if (self.first_fright) {
+            ! from a whip action.
+            if (self.first_fright && action == ##Whip) {
                 self.first_fright = false;
                 print "^The piercing sound startles ", (the) self, 
                 ", it launches up into the air and ";
@@ -576,37 +614,78 @@ with
             self.fright_turns = self.fright_turns - 1;
             return;
         }
+
+        ! Climb down the tree
+        if (self in fig_tree) {
+            move self to clearing;
+            if (location == clearing) {
+                print_ret "^", (The) self, " climbs down from ", (the) fig_tree, ".";
+            }
+        }
     
         ! No action if the player is not nearby.
         if (~~monkey_near_player(false)) return;
+        
+        ! Scan for any edibles in the room
+        fruit = nothing;
+        objectloop(look_item in parent(self)) {
+            if (look_item ofclass EdibleFruitObject)
+                fruit = look_item;
+        }
+        
+        ! If there is a fruit in reach
+        if (fruit && parent(self) == parent(fruit)) {
+            self.reach_for_food_counter = self.reach_for_food_counter + 1;
+            print "^";
+            switch (self.reach_for_food_counter) {
+                1:  
+                    print_ret (The) self, " stares at ", (the) fruit,
+                    ", then glares at you, looks at the banana again,
+                    smacking it's lips.";
+                2:  
+                    print_ret (The) self, " edges closer to ", (the) fruit,
+                    " while keeping one eye on you.";
+                3:  
+                    print (The) self, " grabs ", (the) fruit, 
+                    ", stuffing its face with the delicious fruit.";
+                    if (lodestar in self) {
+                        ! remove the fruit and return the player's posession
+                        move fruit to garden_trees;
+                        move lodestar to location;
+                        ! climb back into the tree and reset counters
+                        monkey_forget_about_food();
+                        ! move self to fig_tree;
+                        ! give self ~curious;
+                        print_ret " It seems distracted and left ", 
+                        (the) lodestar, " lying on the ground.";
+                    }
+                    print_ret "";
+            }
+        }
         
         ! Let the monkey do something when in the presence of the player
         if (parent(self) == parent(player)) {
             monkey_action();
         } else {
-            ! For a random chance
-            if (random(10) == 1) {
-                
-                ! Climb down the tree
-                if (self in fig_tree) {
-                    move self to clearing;
-                    if (location == clearing) {
-                        print (The) self, " climbs down from ", 
-                                        (the) fig_tree, ".^";
-                    }
-                } else {
-                    ! Move to the player's location
-                    print (The) self, " appears nearby.^";
-                    move self to parent(player);
-                }
+            ! When not with the player, follow the player.
+            if (random(4) == 1) {
+                ! Move to the player's location
+                print (The) self, " appears nearby.^";
+                move self to parent(player);
             }
         }    
     ],
     has transparent;
 
+[monkey_forget_about_food;
+    monkey.reach_for_food_counter = 0;
+];
+
 [ monkey_frighten;
     if (monkey_near_player(true)) {
-        monkey.fright_turns = 8;
+        monkey.fright_turns = 4;
+        ! Reset turn to reach for the banana
+        monkey_forget_about_food();
     }
 ];
 
@@ -877,12 +956,6 @@ with
             }
     ];
 
-! A debug gonear portal
-#ifdef DEBUG;
-ScenicRockObject clearing_portal clearing
-with name 'clearing_portal';
-#endif;
-
 ! [ -------------------------------------------------------------- Top Of Tree ]
 
 OutdoorRoom fig_tree_top "Top of Tree"
@@ -963,7 +1036,7 @@ with
     sw_to garden;
 
 ! [ ------------------------------------------------------------------- Garden ]
-JungleRoom garden "garden"
+JungleRoom garden "Garden"
 with
     description "You stand in an unkempt garden, whoever kept this garden hasn't
     been here for a very long time. You see some vegetable plants and fruit
@@ -1011,7 +1084,7 @@ with
     ],
     has supporter;
 
-Object banana "banana" garden_trees
+EdibleFruitObject banana "banana" garden_trees
 with
     name 'banana' 'bananas',
     whip_count 0,
@@ -1039,8 +1112,7 @@ with
             print_ret "You peel the banana and take a bite, the fruit is
             firm and sweet with a subtle flavor. You finish eating the rest
             of the delicious fruit - You feel revitalised.";
-    ],
-    has edible;
+    ];
 
 Object pumpkin "pumpkin" garden
 with
@@ -1241,7 +1313,7 @@ with
         A narrow stone staircase leads up.",
     has light;
 
-! [ --------------------------------------------------------- Room Connections ]
+! [ ========================================================= Room Connections ]
 ! [ For auxiliary objects the player can enter to travel between rooms ]
 
 ! TODO add a hut_entry_obj found_in clearing and garden.
@@ -1250,7 +1322,14 @@ with
 !       include this in movement.spec
 
 
-! [ -------------------------------------------------------------------  ]
+! [ ======================================================== Debugging Portals ]
+! These portals provide a way to quickly jump to locations in our spec scripts.
+#ifdef DEBUG;
+ScenicRockObject clearing_portal clearing with name 'clearing_portal';
+ScenicRockObject garden_portal garden with name 'garden_portal';
+#endif;
+
+! [ ================================================================== Grammar ]
 Include "Grammar";
 ! Include "NewbieGrammar";
 
