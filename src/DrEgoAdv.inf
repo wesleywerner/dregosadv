@@ -504,6 +504,9 @@ with
     ! Turns to keep distance from the player once frightened by the whip
     fright_turns 0,
     
+    ! Has the monkey been frightened before
+    first_fright true,
+    
     initial [;
         print "There is a monkey here. ";
         if (lodestar in self)
@@ -553,10 +556,18 @@ with
         ! Flee when frightened
         if (self.fright_turns > 0 && monkey_near_player(true)) {
             move self to fig_tree;
-            if (location == clearing) {
-                print_ret (The) self, " scrambles up ", (the) fig_tree, ".";
+            ! Print flavor text when monkey is frightened the first time
+            if (self.first_fright) {
+                self.first_fright = false;
+                print "^The piercing sound startles ", (the) self, 
+                ", it launches up into the air and ";
             } else {
-                print_ret (The) self, " scrambles out of sight.";
+                print "^", (The) self;
+            }
+            if (location == clearing) {
+                print_ret " scrambles up ", (the) fig_tree, ".";
+            } else {
+                print_ret " scrambles out of sight.";
             }
         }
         
@@ -975,21 +986,22 @@ with
     
     before [;
         Whip:
-            if (parent(banana) == garden_trees) {
-                move banana to garden;
-                banana.whip_count = banana.whip_count + 1;
-                switch (banana.whip_count) {
-                    1: print_ret "You take careful aim at the bunch of bananas
-                    up in the tree, swing your arm in a smooth arch and *SNAP*
-                    -- a single banana drops to the ground.";
-                    2: print_ret "*SNAP* -- Another banana drops to the ground.
-                    Years of using your whip is finally paying off.";
-                    default: print_ret "*SNAP* -- You deftly whip a banana off
-                    the tree.";
-                }
-            }
-            else
+            if (parent(banana) ~= garden_trees)
                 print_ret "You don't need another banana right now.";
+    ],
+    after [;
+        Whip:
+            move banana to garden;
+            banana.whip_count = banana.whip_count + 1;
+            switch (banana.whip_count) {
+                1: print_ret "You take careful aim at the bunch of bananas
+                up in the tree, swing your arm in a smooth arch and *SNAP*
+                -- a single banana drops to the ground.";
+                2: print_ret "*SNAP* -- Another banana drops to the ground.
+                Years of using your whip is finally paying off.";
+                default: print_ret "*SNAP* -- You deftly whip a banana off
+                the tree.";
+            }
     ],
     has supporter;
 
