@@ -1,4 +1,4 @@
-#marker-rule: /^(.+Room) (\w+) ("([^"])*")/i||%2 (%3)||Rooms
+#marker-rule: /^(.+Room) (\w+) ("([^"])*")/i||%3||Rooms
 #marker-rule: /^(\w*Object) (\w+)/i||%2||Objects
 #marker-rule: /^class (\w+)/i||%1||Classes
 #marker-rule: /^\[ (\w+)(;| *)/i||%1||Routines

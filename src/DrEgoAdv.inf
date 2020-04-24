@@ -129,7 +129,7 @@ Verb 'whip' * noun -> Whip;
                             Explorer of Treasures, Adventurous Archeologist.";
 
     ! Print the preface text (for non debug builds)
-    !#ifndef DEBUG;
+    #ifndef DEBUG;
     print_ret "^April 10th, 1940.
             ^^Your journey started a few days ago after
             docking at Port Moresby, from there it was two day's ride on
@@ -138,7 +138,7 @@ Verb 'whip' * noun -> Whip;
             ^^You met your guide and his canoe, who will take you up-river
             to your final destination -- a remote and relatively uncharted
             area in New Guinea -- to find the legendary ", (name) golden_egg;
-    !#endif;
+    #endif;
 ];
 
 ! Remember the last known location of the player, before they get lost
