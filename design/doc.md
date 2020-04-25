@@ -52,21 +52,21 @@ You start off with some basic items
 # Puzzles
 
 #### Find The Way
-_(Implemented, Tested)_
+_(Implemented, Tested - find_the_way.spec)_
 * Why: Find the way through the thick jungle.
 * What: No special items required.
 * How: Climb the tree in the clearing, look Northeast to see the stone steps.
 * Where: Top of tree.
 
 #### Get Bananas
-_(Implemented, Tested)_
+_(Implemented, Tested - get_bananas.spec)_
 * Why: required to distract the monkey.
 * What: bull whip (inventory item).
 * How: Use whip to drop a bunch of bananas from high up.
 * Where: Garden.
 
 #### Distract The Monkey
-_(Implemented, Not Tested)_
+_(Implemented, Tested - distract_monkey.spec)_
 * Why: to retrieve your compass.
 * What: banana.
 * How: show the monkey the banana, then drop it on the ground.
@@ -114,3 +114,13 @@ _(Not Implemented, Not Tested)_
 * What: Stone statue.
 * How: Place the stone statue on the pressure plate before taking the egg.
 * Where: Tomb (stone statue).
+
+# TODO
+* Get NewbieGrammar.h included
+* Look in directions in most rooms
+* Listen and smell senses in most rooms
+* task_scores - DM$ $22
+* Changing weather in the sky object
+* Optimize entry descriptions for all rooms
+* Advent style "go to room" logic, DM4 $30 pg 220
+

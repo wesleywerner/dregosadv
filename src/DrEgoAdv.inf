@@ -48,15 +48,6 @@ Constant AMUSING_PROVIDED;
 Include "Parser";
 Include "VerbLib";
 
-! TODO
-! + Get NewbieGrammar.h included
-! + Look in directions in most rooms
-! + Listen and smell senses in most rooms
-! + task_scores - DM$ $22
-! + Changing weather in the sky object
-! + Optimize entry descriptions for all rooms
-! + Advent style "go to room" logic, DM4 $30 pg 220
-
 ! [ ================================================================ Atributes ]
 
 ! Applied to NPCs to indicate an active state of interest in the player.
@@ -1159,38 +1150,6 @@ with
     d_to valley,
     e_to waterfall;
 
-ScenicRockObject stone_steps "stone steps"
-with
-    name 'stone' 'stairs' 'steps' 'hill',
-    description "The individual steps are carved from stone and laid out to form
-    a staircase on the hill.",
-    found_in valley cliff,
-    door_to [;
-        if (self in valley) return cliff;
-        return valley;
-    ],
-    door_dir [;
-        if (self in valley) return u_to;
-        return d_to;
-    ],
-    before [;
-        ! Allow climbing the steps to go their way
-        Climb:
-            <<Go (self.door_dir())>>;
-    ],
-    has pluralname door open;
-
-Object "bridge" cliff
-with
-    name 'rope' 'bridge',
-    description "The bridge is made from plait ropes and extends to the East.",
-    before [;
-        ! Enter also covers the 'cross' verb
-        Enter:
-            <<Go e_obj>>;
-    ]
-    has scenery;
-
 ! [ --------------------------------------------------------------- Waterfall  ]
 JungleRoom waterfall "Waterfall"
 with
@@ -1333,6 +1292,38 @@ with
 !       depending which location is described.
 !       include this in movement.spec
 
+! Connect the Valley and the Cliff with the Stone Steps.
+ScenicRockObject stone_steps "stone steps"
+with
+    name 'stone' 'stairs' 'steps' 'hill',
+    description "The individual steps are carved from stone and laid out to form
+    a staircase on the hill.",
+    found_in valley cliff,
+    door_to [;
+        if (self in valley) return cliff;
+        return valley;
+    ],
+    door_dir [;
+        if (self in valley) return u_to;
+        return d_to;
+    ],
+    before [;
+        ! Allow climbing the steps to go their way
+        Climb:
+            <<Go (self.door_dir())>>;
+    ],
+    has pluralname door open;
+
+Object "bridge" cliff
+with
+    name 'rope' 'bridge',
+    description "The bridge is made from plait ropes and extends to the East.",
+    before [;
+        ! Enter also covers the 'cross' verb
+        Enter:
+            <<Go e_obj>>;
+    ]
+    has scenery;
 
 ! [ ================================================================ Debugging ]
 ! These portals provide a way to quickly jump to locations in our spec scripts.
@@ -1340,6 +1331,7 @@ with
 ScenicRockObject clearing_portal clearing with name 'clearing' 'portal';
 ScenicRockObject garden_portal garden with name 'garden' 'portal';
 ScenicRockObject valley_portal valley with name 'valley' 'portal';
+ScenicRockObject cliff_portal cliff with name 'cliff' 'portal';
 #endif;
 
 ! [ ================================================================== Grammar ]
