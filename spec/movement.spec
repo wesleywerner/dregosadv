@@ -7,10 +7,9 @@ go northeast
 examine compass
 go up
 look northeast
-go down
-climb tree
 climb down tree
-climb down
+go down
+
 go northeast
 go up
 go down

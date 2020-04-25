@@ -1,5 +1,5 @@
 superbrief
-gonear clearing_portal
+gonear clearing portal
 read compass
 show compass to monkey
 talk to monkey
@@ -14,10 +14,10 @@ wait
 wait
 wait
 whip the sky
-gonear garden_portal
+gonear garden portal
 whip the tree
 take banana
-gonear clearing_portal
+gonear clearing portal
 show the banana to the monkey
 throw banana at monkey
 whip monkey

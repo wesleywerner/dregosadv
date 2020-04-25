@@ -13,23 +13,23 @@ This is a short story written in Inform 6 with the hope of learning how to imple
 
 # Implementation Notes
 
-* See DM4 pg 80 for STEPS example.
+* DM4 $13 Doors and steps and bridges. Pg 80 has steps example.
 * See DM4 pg 92 for adding custom verbs.
 
 # Map of the island
 
 ```
-                        +- Rope Bridge ---- Waterfall                          
+                      Cliff --- (bridge) --- Waterfall                         
                         ^                      .                               
                         ^                      .                               
                         ^                      . (jump)                        
                         ^                      .                               
                         ^                      .                               
-                        ^                      Plunge Pool                     
+                 (steps)^                      Plunge Pool                     
                         ^                      &         &                     
                         ^                  Temple       Alcove --> Tomb        
                         ^                              (hidden)                
-      Tree Top     Stone Stairs                                                
+      Tree Top     Valley                                                      
              ^      /                                                          
              ^     /                                                           
              ^ Clearing -------- Jungle Path                                   
