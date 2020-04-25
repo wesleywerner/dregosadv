@@ -83,7 +83,7 @@ drops the compass to go for the banana.
 #### Deadly Drop
 _(Not Implemented, Not Tested)_
 * Why: Save yourself from a deadly fall.
-* What: Crossing the Rope Bridge has a random chance in the bridge snapping, a message prints and gives the player one turn to act to save themselves.
+* What: Crossing the Rope Bridge has a random chance of a plank breaking, the player gets one turn to respond.
 * How: Whip the bridge to save yourself from falling.
 * Where: Rope Bridge
 
@@ -99,7 +99,7 @@ _(Not Implemented, Not Tested)_
 * Why: to enter the dark underground temple.
 * What: A stick, some old cloth, an oily substance, crowbar, flint stone.
 * How: tie cloth to stick, dip torch in oil, light torch with flint.
-* Where: Old Hut (cloth), Temple (oil), Stream & Water Spring (flint).
+* Where: Old Hut and Temple (cloth), Temple (oil), Stream & Water Spring (flint).
 
 #### Find the Alcove
 _(Not Implemented, Not Tested)_

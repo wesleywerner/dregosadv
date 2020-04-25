@@ -5,6 +5,7 @@
 cat find_the_way.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > find_the_way.actual
 cat get_bananas.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > get_bananas.actual
 cat distract_monkey.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > distract_monkey.actual
+cat deadly_drop.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > deadly_drop.actual
 cat catch_fish.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > catch_fish.actual
 cat compass.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > compass.actual
 
@@ -19,6 +20,9 @@ diff --ignore-space-change get_bananas.expected get_bananas.actual >> test_resul
 
 echo [ Puzzle: Distract The Monkey ---------------------------------------] >> test_results.txt
 diff --ignore-space-change distract_monkey.expected distract_monkey.actual >> test_results.txt
+
+echo [ Puzzle: Deadly Drop -----------------------------------------------] >> test_results.txt
+diff --ignore-space-change deadly_drop.expected deadly_drop.actual >> test_results.txt
 
 echo [ Catch Fish --------------------------------------------------------] >> test_results.txt
 diff --ignore-space-change catch_fish.expected catch_fish.actual >> test_results.txt

@@ -82,11 +82,20 @@ Attribute curious;
     if (AfterRoutines()) return;
 
     ! Default response
-    "You crack the whip at ", (the) noun, " -- *SNAP*";
+    "You crack the whip at ", (the) noun, " -- *SNAP*^";
 
 ];
-
 Verb 'whip' * noun -> Whip;
+
+! Provides a help verb when trying to "use noun".
+! Individual objects implement a Use action to describe their usage.
+[ UseSub;
+    ! Run any intercepted object actions
+    if (AfterRoutines()) return;
+    ! Default response
+    "Begin your sentence with a Verb.^";
+];
+Verb    'use'       * noun                          -> Use;
 
 ! [ ================================================================= Routines ]
 
@@ -430,13 +439,21 @@ EssentialObject bullwhip "bullwhip"
         name 'bullwhip' 'whip',
         description "A leather whip made of braided strips, you can use it to
                     WHIP SOMETHING to grab items out of reach, or to grip a
-                    fixture to swing and pull yourself over short distances.";
+                    fixture to swing and pull yourself over short distances.",
+    before [;
+        Use:
+            print_ret "Start your sentence with WHIP, like WHIP THE TREE.";
+    ];
 
 EssentialObject journal "journal"
     with
         name 'diary' 'journal' 'book',
         description "It is your journal filled with your research notes.
-                    You can CONSULT IT ABOUT any TOPIC.";
+                    You can CONSULT IT ABOUT any TOPIC.",
+    before [;
+        Use:
+            print_ret "TOFIX.";
+    ];
 
 EssentialObject torch "torch"
 with
@@ -1138,33 +1155,33 @@ JungleRoom valley "Valley"
 with
     description "You in a lush jungle valley, stairs carved out of stone
                 lead up to the top. A path leads back South.",
-    u_to cliff,
+    u_to Cliff,
     s_to clearing,
     cant_go "The only ways out are South or Up (the stairs).";
 
 ! [ -------------------------------------------------------------------- Cliff ]
-JungleRoom cliff "Cliff"
+JungleRoom Cliff "Cliff"
 with
     description "You are on top of a cliff, a rope bridge crosses a deep gorge
     to the East. Stone steps lead down the hill.",
     d_to valley,
-    e_to waterfall;
+    e_to rope_bridge;
 
 ! [ --------------------------------------------------------------- Waterfall  ]
-JungleRoom waterfall "Waterfall"
+JungleRoom Waterfall "Waterfall"
 with
     description "You stand beside a beautiful waterfall. The water rushes past
         you from somewhere up above, it cascades over a rocky ledge to the South.
-        You see a rope bridge to the West.",
+        A rope bridge is to the West.",
     n_to,
-    
+    w_to rope_bridge,
     before [;
         Go:
             if (noun == s_obj)
                 <<JumpOver waterfall_ledge>>;
     ];
 
-ScenicRockObject waterfall_ledge "ledge" waterfall
+ScenicRockObject waterfall_ledge "ledge" Waterfall
 with
     name 'water' 'fall' 'waterfall' 'rocky' 'ledge' 'edge',
     description "You peer over the waterfall and see the water cascading
@@ -1284,6 +1301,48 @@ with
         A narrow stone staircase leads up.",
     has light;
 
+OutdoorRoom DeadlyDrop "Deadly Drop"
+with
+    description "",
+    turn_count 0,
+    before [;
+        Whip:
+            ! Whip the bridge to save yourself
+            if (noun == rope_bridge) {
+                ! Reset puzzle state
+                ! self.turn_count = 0;
+                print "You swing your whip and -- *SNAP* snag it on the 
+                rope bridge. You dangle precariously, pulling yourself up
+                to safety. That was a close call!^";
+                playerTo(Waterfall);
+                return true;
+            }
+        Take:
+            if (noun == rope_bridge) {
+                print_ret "You try grabbing at the bridge but you are too slow.";
+            }
+        Jump, JumpOver:
+            print_ret "A rope bridge is a terrible place to decide to start jumping.";
+    ],
+    each_turn [;
+        if (self.turn_count == 0) {
+            print "You step on a rotten plank and it cracks under your weight,
+            you lose your balance!^";
+        }
+        if (self.turn_count == 1) {
+            print "You teeter the other way -- You are about to fall!^";
+        }
+        if (self.turn_count == 2) {
+            deadflag = 1;
+            print "^You plummet into the gorge below, cracking your head
+            on a rocky outcropping, far down below. Weeks pass before the small
+            search party discover your broken body. Luckily you did not suffer.
+            ^^(If only you tried your WHIP)";
+        }
+        self.turn_count = self.turn_count + 1;
+    ],
+has light;
+
 ! [ ========================================================= Room Connections ]
 ! [ For auxiliary objects the player can enter to travel between rooms ]
 
@@ -1298,9 +1357,9 @@ with
     name 'stone' 'stairs' 'steps' 'hill',
     description "The individual steps are carved from stone and laid out to form
     a staircase on the hill.",
-    found_in valley cliff,
+    found_in valley Cliff,
     door_to [;
-        if (self in valley) return cliff;
+        if (self in valley) return Cliff;
         return valley;
     ],
     door_dir [;
@@ -1314,16 +1373,26 @@ with
     ],
     has pluralname door open;
 
-Object "bridge" cliff
+! Connect the Cliff and Waterfall with a Bridge.
+Object rope_bridge "rope bridge"
 with
     name 'rope' 'bridge',
     description "The bridge is made from plait ropes and extends to the East.",
-    before [;
-        ! Enter also covers the 'cross' verb
-        Enter:
-            <<Go e_obj>>;
-    ]
-    has scenery;
+    found_in Cliff Waterfall DeadlyDrop,
+    door_to [;
+        ! Random chance of falling down.
+        ! We limit this deadly action to only occur once.
+        ! To allows this to happen repeatedly uncomment the "Reset puzzle state"
+        ! line in DeadlyDrop.
+        if (DeadlyDrop.turn_count==0 && random(2)==1) return DeadlyDrop;
+        if (self in Cliff) return Waterfall;
+        return Cliff;
+    ],
+    door_dir [;
+        if (self in Cliff) return e_to;
+        return w_to;
+    ],
+    has scenery door open;
 
 ! [ ================================================================ Debugging ]
 ! These portals provide a way to quickly jump to locations in our spec scripts.
@@ -1331,7 +1400,7 @@ with
 ScenicRockObject clearing_portal clearing with name 'clearing' 'portal';
 ScenicRockObject garden_portal garden with name 'garden' 'portal';
 ScenicRockObject valley_portal valley with name 'valley' 'portal';
-ScenicRockObject cliff_portal cliff with name 'cliff' 'portal';
+ScenicRockObject cliff_portal Cliff with name 'cliff' 'portal';
 #endif;
 
 ! [ ================================================================== Grammar ]
@@ -1356,5 +1425,4 @@ Extend 	'climb'		* 'up'/'down' noun				 -> GoUpDownNoun;
         To say something to ", (the) noun, " type
         ~say (noun or topic)~.^";
 ];
-
 Verb    'talk'      * 'to' noun                     -> TalkToNounHelp;
