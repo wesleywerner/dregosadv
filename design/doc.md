@@ -52,14 +52,14 @@ You start off with some basic items
 # Puzzles
 
 #### Find The Way
-_(Implemented, Not Tested)_
+_(Implemented, Tested)_
 * Why: Find the way through the thick jungle.
 * What: No special items required.
 * How: Climb the tree in the clearing, look Northeast to see the stone steps.
 * Where: Top of tree.
 
 #### Get Bananas
-_(Implemented, Not Tested)_
+_(Implemented, Tested)_
 * Why: required to distract the monkey.
 * What: bull whip (inventory item).
 * How: Use whip to drop a bunch of bananas from high up.

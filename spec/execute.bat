@@ -4,9 +4,9 @@
 ::REM Run Tests
 cat find_the_way.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > find_the_way.actual
 cat get_bananas.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > get_bananas.actual
+cat distract_monkey.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > distract_monkey.actual
 cat catch_fish.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > catch_fish.actual
 cat compass.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > compass.actual
-cat monkey.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > monkey.actual
 
 ::REM Diff Results
 if exist test_results.txt del test_results.txt
@@ -17,14 +17,14 @@ diff --ignore-space-change find_the_way.expected find_the_way.actual >> test_res
 echo [ Puzzle: Get Bananas -----------------------------------------------] >> test_results.txt
 diff --ignore-space-change get_bananas.expected get_bananas.actual >> test_results.txt
 
+echo [ Puzzle: Distract The Monkey ---------------------------------------] >> test_results.txt
+diff --ignore-space-change distract_monkey.expected distract_monkey.actual >> test_results.txt
+
 echo [ Catch Fish --------------------------------------------------------] >> test_results.txt
 diff --ignore-space-change catch_fish.expected catch_fish.actual >> test_results.txt
 
 echo [ Compass -----------------------------------------------------------] >> test_results.txt
 diff --ignore-space-change compass.expected compass.actual >> test_results.txt
-
-echo [ Monkey ------------------------------------------------------------] >> test_results.txt
-diff --ignore-space-change monkey.expected monkey.actual >> test_results.txt
 
 ::REM Output Results
 cat test_results.txt
