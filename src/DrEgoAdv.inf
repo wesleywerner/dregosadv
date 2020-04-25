@@ -39,6 +39,12 @@ Constant OddsOfFindingWayWhenLost 16;
 ! Show the option to list AMUSING things you can try (at the End of the story)
 Constant AMUSING_PROVIDED;
 
+! Hide status line for debug builds.
+! This streamlines the diffs used by unit tests.
+#ifdef DEBUG;
+[DrawStatusLine;];
+#endif;
+
 Include "Parser";
 Include "VerbLib";
 
@@ -1322,7 +1328,7 @@ with
 !       include this in movement.spec
 
 
-! [ ======================================================== Debugging Portals ]
+! [ ================================================================ Debugging ]
 ! These portals provide a way to quickly jump to locations in our spec scripts.
 #ifdef DEBUG;
 ScenicRockObject clearing_portal clearing with name 'clearing_portal';
