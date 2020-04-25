@@ -1,9 +1,5 @@
-brief
-gonear pumpkin
-look at vegetables
-examine pumpkin
-take it
-look at vegetables
+superbrief
+gonear garden portal
 examine trees
 examine bananas
 take banana
