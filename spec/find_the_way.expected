@@ -11,22 +11,9 @@
   always gives short descriptions of locations (even if you haven't been
   there before).
   
-> >  You hasten your journey.
-  
-  "Here we are", your guide says -- the canoe comes to a stop on the shore.
-  
-  River Shore (in the canoe)
-. 
-> >  You get out of the canoe.
-  
-  River Shore
-  
-  Your guide sits in the canoe gazing out over the moving river, the salty
-  water gently lapping the sides of his craft.
-  
-> >  Jungle Path
-  
 > >  In a Clearing
+  
+> >  ; == 57
   
 > >  Lost in the Jungle
   
@@ -46,9 +33,6 @@
   
   [The score has just gone up by one point.]
   
-> >  To go up or down the fig tree type "go up" or "go down". To climb the fig
-  tree type "climb fig tree"
-  
 > >  As you descend you drop your compass to the ground below. CLINK!
   
    --- more ---
@@ -59,37 +43,5 @@
   The monkey makes grunting noises.
   
 > >  Valley
-  
-> >  Cliff
-  
-> >  Valley
-  
-> >  Cliff
-  
-> >  Waterfall
-  
-> >  You take a breath and jump over the edge of the waterfall...
-  
-  Plunge Pool
-  
-  There is an ancient temple here.
-  
-> >  Temple
-  
-> >  Plunge Pool
-  
-  There is an ancient temple here.
-  
-> >  Temple
-  
-> >  Plunge Pool
-  
-  There is an ancient temple here.
-  
-> >  Temple
-  
-> >  Plunge Pool
-  
-  There is an ancient temple here.
   
 > >

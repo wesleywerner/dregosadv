@@ -52,22 +52,25 @@ You start off with some basic items
 # Puzzles
 
 #### Find The Way
-Why: find the way through the thick jungle.
-What: no special items required.
-How: look in directions to see the stone steps.
-Where: from the top of the tree.
+_(Implemented, Not Tested)_
+* Why: Find the way through the thick jungle.
+* What: No special items required.
+* How: Climb the tree in the clearing, look Northeast to see the stone steps.
+* Where: Top of tree.
 
 #### Get Bananas
-Why: required to distract the monkey.
-What: bull whip (inventory item).
-How: Use whip to drop a bunch of bananas from high up.
-Where: Garden.
+_(Implemented, Not Tested)_
+* Why: required to distract the monkey.
+* What: bull whip (inventory item).
+* How: Use whip to drop a bunch of bananas from high up.
+* Where: Garden.
 
 #### Distract The Monkey
-Why: to retrieve your compass.
-What: banana.
-How: show the monkey the banana, then drop it on the ground.
-Where: Wherever the monkey is present (drop the banana).
+_(Implemented, Not Tested)_
+* Why: to retrieve your compass.
+* What: banana.
+* How: show the monkey the banana, then drop it on the ground.
+* Where: Wherever the monkey is present (drop the banana).
 
 When the player climbs the tree to Find The Way, the compass falls by accident.
 The monkey grabs it and stays out of reach, it will (tauntingly) follow
@@ -78,37 +81,36 @@ When the player shows the banana to the monkey then drops it, the monkey
 drops the compass to go for the banana.
 
 #### Deadly Drop
-Why: Save yourself from a deadly fall.
-What: Crossing the Rope Bridge has a random chance in the bridge
-		snapping, if this happens a message prints and
-		gives the player one turn to act to save themselves.
-How: Whip the bridge to save yourself from falling.
-Where: Rope Bridge
+_(Not Implemented, Not Tested)_
+* Why: Save yourself from a deadly fall.
+* What: Crossing the Rope Bridge has a random chance in the bridge snapping, a message prints and gives the player one turn to act to save themselves.
+* How: Whip the bridge to save yourself from falling.
+* Where: Rope Bridge
 
 #### Find Oil
-Why: oil is needed to make the torch.
-What: crowbar, stone slab.
-How: pry the stone slab open.
-Where: Temple.
+_(Not Implemented, Not Tested)_
+* Why: oil is needed to make the torch.
+* What: crowbar, stone slab.
+* How: pry the stone slab open.
+* Where: Temple.
 
 #### Make a Torch
-Why: to enter the dark underground temple.
-What: A stick, some old cloth, an oily substance, crowbar, flint stone.
-How: tie cloth to stick, dip torch in oil, light torch with flint.
-Where: Old Hut (cloth), Temple (oil), Stream & Water Spring (flint).
+_(Not Implemented, Not Tested)_
+* Why: to enter the dark underground temple.
+* What: A stick, some old cloth, an oily substance, crowbar, flint stone.
+* How: tie cloth to stick, dip torch in oil, light torch with flint.
+* Where: Old Hut (cloth), Temple (oil), Stream & Water Spring (flint).
 
 #### Find the Alcove
-Why: to enter the underground temple.
-What: no special items required.
-How: examining stone carvings in the temple reveals a very noticeable
-	glyph, the player should consult / look up this glyph in the
-	journal to discover it translates
-	to "a door behind falling water". Search the waterfall
-	reveals the door.
-Where: Temple
+_(Not Implemented, Not Tested)_
+* Why: to enter the underground temple.
+* What: no special items required.
+* How: examining stone carvings in the temple reveals a very noticeable glyph, the player should consult / look up this glyph in the journal to discover it translates to "a door behind falling water". Searching the waterfall reveals the door.
+* Where: Temple
 
 #### Pressure Plate Booby Trap
-Why: get the golden egg without setting off the trap.
-What: Stone statue.
-How: Place the stone statue on the pressure plate before taking the egg.
-Where: Tomb (stone statue).
+_(Not Implemented, Not Tested)_
+* Why: get the golden egg without setting off the trap.
+* What: Stone statue.
+* How: Place the stone statue on the pressure plate before taking the egg.
+* Where: Tomb (stone statue).
