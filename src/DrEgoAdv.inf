@@ -250,6 +250,15 @@ with
     ],
 has scenery static;
 
+Class ScenicWaterObject
+with
+    before [;
+        Take:
+            "You cup your hand and take some of ", (the) self, 
+            ". You feel refreshed.";
+    ],
+has scenery static;
+
 ! Provides the scenery attribute
 Class ScenicTreeObject
 with
@@ -1190,7 +1199,7 @@ with
     w_to rope_bridge,
     s_to temple_door;
 
-ScenicRockObject waterfall_cascade "cascading water" Waterfall
+ScenicWaterObject waterfall_cascade "cascading water" Waterfall
 with
     name 'water' 'waterfall',
     description "TOFIX.",
@@ -1204,6 +1213,15 @@ with
             } else {
                 "You see the alcove behind the cascading water.";
             }
+    ];
+
+ScenicWaterObject waterfall_pool "clear pool water" Waterfall
+with
+    name 'clear' 'pool' 'water',
+    description "The water is clear and cool",
+    before [;
+        Search:
+            "You water is clear enough to see through to the bottom.";
     ];
 
 ! [ ------------------------------------------------------------------- Temple ]
@@ -1228,11 +1246,23 @@ with
 
 ScenicRockObject "glyphs" Temple
 with
-    name 'glyph' 'glyphs' 'symbol' 'symbols',
+    name 'glyph' 'glyphs' 'symbol' 'symbols' 'wall' 'walls',
     description "The engravings cover all of the wall surfaces, your attention
     is drawn to a circular pattern in the glyphs as they converge and surround
     one large glyph -- You recognize this glyph as ~air terjun~.",
+    before [;
+        Take: "You can't take the glyphs as they are engraved into the stone.";
+    ],
     has pluralname;
+
+ScenicRockObject "glyphs" Temple
+with
+    name 'air' 'terjun',
+    description "You may have some information about ~air terjun~ in your
+    journal.",
+    before [;
+        Take: "You can't take the glyphs as they are engraved into the stone.";
+    ];
 
 ! [ --------------------------------------------------------------------- Tomb ]
 IndoorRoom Tomb "Underground Tomb"
@@ -1339,7 +1369,7 @@ with
 ScenicRockObject temple_door "temple"
 with
     name 'temple' 'stone' 'building',
-    initial "A temple is to the South.",
+    initial "There is a temple here, to the South.",
     description "The temple is about three times your height, it is
     constructed of carved stone blocks and seems partially swallowed by vines
     and plant growth. An opening South in the front serves as a door.",
