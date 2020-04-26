@@ -18,20 +18,25 @@ This is a short story written in Inform 6 with the hope of learning how to imple
 
 # Map of the island
 
+> Legend
+> ^ climbable
+> & present in the connecting location
+> > enterable
+
 ```
                       Cliff --- (bridge) --- Waterfall                         
-                        ^                      .                               
-                        ^                      .                               
-                        ^                      . (jump)                        
-                        ^                      .                               
-                        ^                      .                               
-                 (steps)^                      Plunge Pool                     
-                        ^                      &         &                     
-                        ^                  Temple       Alcove --> Tomb        
-                        ^                              (hidden)                
-      Tree Top     Valley                                                      
-             ^      /                                                          
-             ^     /                                                           
+                        ^                     &      &                         
+                        ^                     &      &                         
+                        ^                Temple      Alcove > Tomb             
+                        ^                |                                     
+                        ^                |                                     
+                 (steps)^                |                                     
+                        ^                |                                     
+                        ^                |                                     
+                        ^                |                                     
+      Tree Top     Valley                .                                     
+             ^      /                    .                                     
+             ^     /                     .                                     
              ^ Clearing -------- Jungle Path                                   
                   |                   |                                        
                Old Hut                |                                        
@@ -81,7 +86,7 @@ When the player shows the banana to the monkey then drops it, the monkey
 drops the compass to go for the banana.
 
 #### Deadly Drop
-_(Not Implemented, Not Tested)_
+_(Implemented, Tested - deadly_drop.spec)_
 * Why: Save yourself from a deadly fall.
 * What: Crossing the Rope Bridge has a random chance of a plank breaking, the player gets one turn to respond.
 * How: Whip the bridge to save yourself from falling.

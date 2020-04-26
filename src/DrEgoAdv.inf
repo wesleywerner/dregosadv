@@ -1150,7 +1150,7 @@ with
     ],
     has concealed edible;
 
-! [ ------------------------------------------------------------- Stone Stairs ]
+! [ ------------------------------------------------------------------- Valley ]
 JungleRoom valley "Valley"
 with
     description "You in a lush jungle valley, stairs carved out of stone
@@ -1167,114 +1167,26 @@ with
     d_to valley,
     e_to rope_bridge;
 
-! [ --------------------------------------------------------------- Waterfall  ]
+! [ ---------------------------------------------------------------- Waterfall ]
 JungleRoom Waterfall "Waterfall"
 with
-    description "You stand beside a beautiful waterfall. The water rushes past
-        you from somewhere up above, it cascades over a rocky ledge to the South.
-        A rope bridge is to the West.",
-    n_to,
+    description [;
+        print "There is a beautiful waterfall here, the water cascades down
+        from somewhere up above into the clear pool. ";
+        if (self hasnt visited) print "A fine mist of water-spray fills the 
+            space above the pool with a vivid rainbow. ";
+        print_ret "A rope bridge is to the West.";
+    ],
     w_to rope_bridge,
-    before [;
-        Go:
-            if (noun == s_obj)
-                <<JumpOver waterfall_ledge>>;
-    ];
-
-ScenicRockObject waterfall_ledge "ledge" Waterfall
-with
-    name 'water' 'fall' 'waterfall' 'rocky' 'ledge' 'edge',
-    description "You peer over the waterfall and see the water cascading
-        down into a pool below. It looks safe to jump over it.",
-    before [;
-        JumpOver:
-            print "You take a breath and jump over the edge of the
-                waterfall...^";
-            last_known_location = plunge_pool;
-            ! parameter "2" honors brief room descriptions - DM4 pg 21
-            PlayerTo(plunge_pool, 2);
-            return true;
-    ];
-
-! [ -------------------------------------------------------------- Plunge Pool ]
-JungleRoom plunge_pool "Plunge Pool"
-with
-    description [;
-        if (self hasnt visited)
-            print "^** SPLASH **^
-                ^You land safely in the pool below.
-                Wading to the shore, you wring out your shirt.
-                That was very refreshing!^^";
-        print_ret "There is a clear pool here, a beautiful waterfall cascades
-            down from above into it.";
-    ],
-
-    ! GO IN enters the alcove, if discovered.
-    ! in_to [;
-    !     if (alcove hasnt scenery)
-    !         <<Enter alcove>>;
-    !     else
-    !         "You don't feel like another swim.";
-    ! ],
-;
-
-ScenicRockObject "temple" plunge_pool
-with
-    name 'temple' 'stone' 'building',
-    initial "There is an ancient temple here.",
-    description "The temple is built of carved stone blocks, there is an opening
-        that serve as the entry way.",
-    before [;
-        Enter:
-            ! parameter "2" honors brief room descriptions - DM4 pg 21
-            return PlayerTo(temple, 2);
-    ],
-    has ~scenery;
-
-ScenicRockObject alcove "alcove" plunge_pool
-with
-    ! discovered false, ! this is hidden at first
-    name 'secret' 'alcove',
-    initial "You notice an alcove behind the cascading water.",
-
-    description [;
-        print "This secret little alcove is not so secret anymore. ";
-        if (torch in player && torch has light)
-            print "You see the passage beyond the alcove leading underground.^";
-        else if (torch in player && torch hasnt light)
-            print "It is pitch black in there. If only your torch was lit.^";
-        else if (torch notin player)
-            print "It appears to lead underground, but it is pitch black in
-                there, you can't make out where it leads.^";
-    ],
-
-    before [;
-        Enter:
-            if (torch in player && torch has light)
-                print "You steady your torch and head down the dark passage.^";
-            else if (torch in player && torch hasnt light)
-                print_ret "It is pitch black in there. If only your torch was lit.";
-            else if (torch notin player)
-                print_ret "You would rather not enter without a light.";
-    ],
-
-    after [;
-        Enter:
-            ! parameter "2" honors brief room descriptions - DM4 pg 21
-            return PlayerTo(tomb, 2);
-        Whip:
-            print_ret "*SNAP* echos *snap* your *snap* whip.";
-    ],
-
-    has enterable static;
+    s_to temple_door;
 
 ! [ ------------------------------------------------------------------- Temple ]
-IndoorRoom temple "Temple"
+IndoorRoom Temple "Temple"
 with
     description "You are inside an old stone temple, large openings in the
         ceiling provide ample natural light for you to see.
         You hear water falling from the exit to the North.",
-    n_to plunge_pool,
+    n_to Waterfall,
 
     before [;
         Exit:
@@ -1394,6 +1306,57 @@ with
     ],
     has scenery door open;
 
+! Connect the Waterfall with the Temple via a door called the "temple"
+ScenicRockObject temple_door "temple"
+with
+    name 'temple' 'stone' 'building',
+    !initial "An ancient temple sits serenely.",
+    description "The temple is about three times your height, it is
+    constructed of carved stone blocks and seems partially swallowed by vines
+    and plant growth. An opening South in the front serves as a door.",
+    found_in Waterfall,
+    door_to Temple,
+    door_dir s_to,
+    has door open ~scenery;
+
+! Connect the Waterfall with the Tomb via an Alcove
+ScenicRockObject alcove_door "alcove"
+with
+    ! discovered false, ! this is hidden at first
+    name 'secret' 'alcove',
+    initial "You notice an alcove behind the cascading water.",
+    found_in Waterfall,
+    description [;
+        print "This secret little alcove is not so secret anymore. ";
+        if (torch in player && torch has light)
+            print "You see the passage beyond the alcove leading underground.^";
+        else if (torch in player && torch hasnt light)
+            print "It is pitch black in there. If only your torch was lit.^";
+        else if (torch notin player)
+            print "It appears to lead underground, but it is pitch black in
+                there, you can't make out where it leads.^";
+    ],
+
+    before [;
+        Enter:
+            if (torch in player && torch has light)
+                print "You steady your torch and head down the dark passage.^";
+            else if (torch in player && torch hasnt light)
+                print_ret "It is pitch black in there. If only your torch was lit.";
+            else if (torch notin player)
+                print_ret "You would rather not enter without a light.";
+    ],
+
+    after [;
+        Enter:
+            ! parameter "2" honors brief room descriptions - DM4 pg 21
+            return PlayerTo(tomb, 2);
+        Whip:
+            print_ret "*SNAP* echos *snap* your *snap* whip.";
+    ],
+
+    has enterable static;
+
 ! [ ================================================================ Debugging ]
 ! These portals provide a way to quickly jump to locations in our spec scripts.
 #ifdef DEBUG;
@@ -1401,6 +1364,7 @@ ScenicRockObject clearing_portal clearing with name 'clearing' 'portal';
 ScenicRockObject garden_portal garden with name 'garden' 'portal';
 ScenicRockObject valley_portal valley with name 'valley' 'portal';
 ScenicRockObject cliff_portal Cliff with name 'cliff' 'portal';
+ScenicRockObject waterfall_portal Waterfall with name 'waterfall' 'portal';
 #endif;
 
 ! [ ================================================================== Grammar ]
