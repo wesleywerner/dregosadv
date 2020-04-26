@@ -1190,7 +1190,7 @@ with
     w_to rope_bridge,
     s_to temple_door;
 
-ScenicRockObject cascading_water "cascading water" Waterfall
+ScenicRockObject waterfall_cascade "cascading water" Waterfall
 with
     name 'water' 'waterfall',
     description "TOFIX.",
@@ -1199,8 +1199,10 @@ with
             if (alcove_door notin Waterfall) {
                 move alcove_door to Waterfall;
                 score = score + 1;
-                print_ret "You lean into the narrow space behind the cascading
+                "You lean into the narrow space behind the cascading
                 water and see an alcove behind the waterfall.";
+            } else {
+                "You see the alcove behind the cascading water.";
             }
     ];
 
@@ -1337,7 +1339,7 @@ with
 ScenicRockObject temple_door "temple"
 with
     name 'temple' 'stone' 'building',
-    !initial "An ancient temple sits serenely.",
+    initial "A temple is to the South.",
     description "The temple is about three times your height, it is
     constructed of carved stone blocks and seems partially swallowed by vines
     and plant growth. An opening South in the front serves as a door.",
@@ -1421,3 +1423,10 @@ Extend 	'climb'		* 'up'/'down' noun				 -> GoUpDownNoun;
         ~say (noun or topic)~.^";
 ];
 Verb    'talk'      * 'to' noun                     -> TalkToNounHelp;
+
+! Add a synonymn for search, as "look behind the noun".
+! The default rules does not have "look behind".
+[ LookBehindSub;
+    <<Search noun>>;
+];
+Extend    'look'      * 'behind' noun                 -> LookBehind;
