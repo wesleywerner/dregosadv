@@ -449,10 +449,19 @@ EssentialObject journal "journal"
     with
         name 'diary' 'journal' 'book',
         description "It is your journal filled with your research notes.
-                    You can CONSULT IT ABOUT any TOPIC.",
-    before [;
+        You can ~look up <any topic> in journal~ or ~read about <any topic> in
+        journal~, or ~consult journal about <any topic>~.",
+    before [w1 w2;
+        Consult:
+            ! forward the word marker to the first word in the consult topic.
+            wn = consult_from;
+            w1 = NextWord();
+            w2 = NextWord();
+            if ((w1=='air' && w2 =='terjun') || (w1=='terjun'))
+                "You find the entry in your journal about air terjun, and learn
+                that it mean ~behind the waterfall~.";
         Use:
-            print_ret "TOFIX.";
+            <<Examine self>>;
     ];
 
 EssentialObject torch "torch"
@@ -1177,15 +1186,31 @@ with
             space above the pool with a vivid rainbow. ";
         print_ret "A rope bridge is to the West.";
     ],
+    n_to alcove_door,
     w_to rope_bridge,
     s_to temple_door;
+
+ScenicRockObject cascading_water "cascading water" Waterfall
+with
+    name 'water' 'waterfall',
+    description "TOFIX.",
+    before [;
+        Search:
+            if (alcove_door notin Waterfall) {
+                move alcove_door to Waterfall;
+                score = score + 1;
+                print_ret "You lean into the narrow space behind the cascading
+                water and see an alcove behind the waterfall.";
+            }
+    ];
 
 ! [ ------------------------------------------------------------------- Temple ]
 IndoorRoom Temple "Temple"
 with
-    description "You are inside an old stone temple, large openings in the
-        ceiling provide ample natural light for you to see.
-        You hear water falling from the exit to the North.",
+    description "You are inside the stone temple, large openings in the ceiling
+    provide ample natural light for you to see. The walls are covered in
+    engraved glyphs.
+    You hear water falling from the exit to the North.",
     n_to Waterfall,
 
     before [;
@@ -1195,18 +1220,20 @@ with
         Go:
             if (noun == out_obj)
                 <<Go n_obj>>;
-                
-        ! Go:
-        !     if (alcove has scenery) {
-        !         give alcove ~scenery;
-        !         print_ret "You discover the secret alcove! (WIP).";
-        !     }
     ],
 
     has light;
 
+ScenicRockObject "glyphs" Temple
+with
+    name 'glyph' 'glyphs' 'symbol' 'symbols',
+    description "The engravings cover all of the wall surfaces, your attention
+    is drawn to a circular pattern in the glyphs as they converge and surround
+    one large glyph -- You recognize this glyph as ~air terjun~.",
+    has pluralname;
+
 ! [ --------------------------------------------------------------------- Tomb ]
-IndoorRoom tomb "Underground Tomb"
+IndoorRoom Tomb "Underground Tomb"
 with
     description "You are inside an ancient tomb, the light of your torch
         make engraved runes in the walls seem to dance all around you.
@@ -1322,10 +1349,9 @@ with
 ! Connect the Waterfall with the Tomb via an Alcove
 ScenicRockObject alcove_door "alcove"
 with
-    ! discovered false, ! this is hidden at first
-    name 'secret' 'alcove',
-    initial "You notice an alcove behind the cascading water.",
-    found_in Waterfall,
+    name 'alcove',
+    initial "There is an alcove through the cascading water, to the North.",
+    
     description [;
         print "This secret little alcove is not so secret anymore. ";
         if (torch in player && torch has light)
@@ -1337,25 +1363,30 @@ with
                 there, you can't make out where it leads.^";
     ],
 
+    door_to [;
+        if (self notin Waterfall)
+            "That way is the waterfall -- You don't need a shower right now.";
+        if (torch in player && torch hasnt light)
+            "It is pitch black in there. If only your torch was lit.";
+        if (torch notin player)
+            "You would rather not enter without a light.";
+        print "You steady your torch and head down the dark passage.^";
+        return Tomb;
+    ],
+    
+    door_dir n_to,
+    
     before [;
-        Enter:
-            if (torch in player && torch has light)
-                print "You steady your torch and head down the dark passage.^";
-            else if (torch in player && torch hasnt light)
-                print_ret "It is pitch black in there. If only your torch was lit.";
-            else if (torch notin player)
-                print_ret "You would rather not enter without a light.";
+        Search:
+            <<Examine self>>;
     ],
 
     after [;
-        Enter:
-            ! parameter "2" honors brief room descriptions - DM4 pg 21
-            return PlayerTo(tomb, 2);
         Whip:
             print_ret "*SNAP* echos *snap* your *snap* whip.";
     ],
 
-    has enterable static;
+    has door open ~scenery;
 
 ! [ ================================================================ Debugging ]
 ! These portals provide a way to quickly jump to locations in our spec scripts.
@@ -1364,7 +1395,7 @@ ScenicRockObject clearing_portal clearing with name 'clearing' 'portal';
 ScenicRockObject garden_portal garden with name 'garden' 'portal';
 ScenicRockObject valley_portal valley with name 'valley' 'portal';
 ScenicRockObject cliff_portal Cliff with name 'cliff' 'portal';
-ScenicRockObject waterfall_portal Waterfall with name 'waterfall' 'portal';
+ScenicRockObject waterfall_portal Waterfall with name 'waterf' 'portal';
 #endif;
 
 ! [ ================================================================== Grammar ]
