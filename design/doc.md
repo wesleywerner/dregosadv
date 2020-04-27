@@ -75,7 +75,7 @@ _(Implemented, Tested - distract_monkey.spec)_
 * Why: to retrieve your compass.
 * What: banana.
 * How: show the monkey the banana, then drop it on the ground.
-* Where: Wherever the monkey is present (drop the banana).
+* Where: Wherever the monkey is present.
 
 When the player climbs the tree to Find The Way, the compass falls by accident.
 The monkey grabs it and stays out of reach, it will (tauntingly) follow
@@ -107,7 +107,7 @@ _(Not Implemented, Not Tested)_
 * Where: Old Hut and Temple (cloth), Temple (oil), Stream & Water Spring (flint).
 
 #### Find the Alcove
-_(Not Implemented, Not Tested)_
+_(Implemented, Tested - find_the_alcove.spec)_
 * Why: to enter the underground temple.
 * What: no special items required.
 * How: examining stone carvings in the temple reveals a very noticeable glyph, the player should consult / look up this glyph in the journal to discover it translates to "a door behind falling water". Searching the waterfall reveals the door.
@@ -128,4 +128,4 @@ _(Not Implemented, Not Tested)_
 * Changing weather in the sky object
 * Optimize entry descriptions for all rooms
 * Advent style "go to room" logic, DM4 $30 pg 220
-
+* Fill the journal with notes

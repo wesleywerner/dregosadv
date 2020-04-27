@@ -1423,11 +1423,11 @@ with
 ! [ ================================================================ Debugging ]
 ! These portals provide a way to quickly jump to locations in our spec scripts.
 #ifdef DEBUG;
-ScenicRockObject clearing_portal clearing with name 'clearing' 'portal';
-ScenicRockObject garden_portal garden with name 'garden' 'portal';
-ScenicRockObject valley_portal valley with name 'valley' 'portal';
-ScenicRockObject cliff_portal Cliff with name 'cliff' 'portal';
-ScenicRockObject waterfall_portal Waterfall with name 'waterf' 'portal';
+ScenicRockObject warpto_clearing clearing with name 'clearing' 'portal';
+ScenicRockObject warpto_garden garden with name 'garden' 'portal';
+ScenicRockObject warpto_valley valley with name 'valley' 'portal';
+ScenicRockObject warpto_cliff Cliff with name 'cliff' 'portal';
+ScenicRockObject warpto_waterfall Waterfall with name 'waterf' 'portal';
 #endif;
 
 ! [ ================================================================== Grammar ]
