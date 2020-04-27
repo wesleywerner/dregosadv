@@ -111,9 +111,9 @@ Verb    'use'       * noun                          -> Use;
     location = canoe;
 
     ! Move objects to their starting places
-    move canoe to river;
+    move canoe to River;
     move boatman to canoe;
-    move monkey to fig_tree;
+    move monkey to FigTree;
     
     ! Start Daemons
     StartDaemon(monkey);
@@ -121,7 +121,7 @@ Verb    'use'       * noun                          -> Use;
     ! enable debugging actions:
     #ifdef DEBUG;
       ! allow skipping the long boat ride with GO FASTER
-      move canoe_hasten to river;
+      move canoe_hasten to River;
     #endif;
 
     ! Give player inventory
@@ -173,23 +173,23 @@ Class OutdoorRoom
 
 ! The jungle room allows the player to "get lost" for a little while, but
 ! they always find their way back to the last known location.
-! The lost_in_jungle object handles returning the player back safely.
+! The LostInJungle object handles returning the player back safely.
 Class JungleRoom
     class OutdoorRoom
     with
         ! Get lost when going in undefined direction
-        n_to lost_in_jungle,
-        nw_to lost_in_jungle,
-        ne_to lost_in_jungle,
-        s_to lost_in_jungle,
-        sw_to lost_in_jungle,
-        se_to lost_in_jungle,
-        e_to lost_in_jungle,
-        w_to lost_in_jungle,
+        n_to LostInJungle,
+        nw_to LostInJungle,
+        ne_to LostInJungle,
+        s_to LostInJungle,
+        sw_to LostInJungle,
+        se_to LostInJungle,
+        e_to LostInJungle,
+        w_to LostInJungle,
         ! Record the last known good location
         after [;
             Go:
-                if (location ~= lost_in_jungle)
+                if (location ~= LostInJungle)
                     last_known_location = location;
         ];
 
@@ -253,7 +253,7 @@ has scenery static;
 Class ScenicWaterObject
 with
     before [;
-        Take:
+        Take, Drink:
             "You cup your hand and take some of ", (the) self, 
             ". You feel refreshed.";
     ],
@@ -300,7 +300,7 @@ Object canoe "canoe"
 
             ! Prevent the player from exiting the craft before it has shored.
             Go, Exit:
-                if (parent(canoe) == river) {
+                if (parent(canoe) == River) {
                     print "~We will reach your destination soon enough~ ",
                             (the) boatman, " says with a wide grin.^";
                     return 2;
@@ -317,7 +317,7 @@ Object canoe "canoe"
 
         ! Print flavor text during the trip in the canoe
         each_turn [;
-            if (self.time_left == 2 && location == river)
+            if (self.time_left == 2 && location == River)
                 print_ret "^~We are almost there, ", (a) player, "~, ",
                             (a) boatman, " says.";
         ],
@@ -327,12 +327,12 @@ Object canoe "canoe"
 
         ! called when TurnsInCanoe timer expires
         time_out [;
-            if (location == river) {
+            if (location == River) {
                 ! The "1" parameter moves player silently
                 ! so that we can reposition the canoe then call look.
                 ! DM4 pg 21
-                PlayerTo(river_shore, 1);
-                move canoe to river_shore;
+                PlayerTo(Shore, 1);
+                move canoe to Shore;
                 move player to canoe;
                 print "^~Here we are~, ", (a) boatman,
                         " says -- the canoe comes to a stop on the shore.^";
@@ -392,7 +392,7 @@ EssentialObject lodestar "compass"
             if (self notin player) print_ret "You do not have ", (a) self, ".";
 
             ! Return the player to the last known good location
-            if (location == lost_in_jungle) {
+            if (location == LostInJungle) {
                 if (~~self.used_scored) {
                     self.used_scored = true;
                     score = score + 1;
@@ -615,10 +615,10 @@ with
     daemon [look_item fruit;
     
         ! Move to the clearing if the player is in the tree
-        if (self in fig_tree && location == fig_tree_top) {
+        if (self in FigTree && location == TreeTop) {
             print "^The monkey is not impressed, it climbs down the tree.^";
             give self curious;
-            move self to clearing;
+            move self to Clearing;
             return;
         }
         
@@ -627,7 +627,7 @@ with
         
         ! Flee when frightened
         if (self.fright_turns > 0 && monkey_near_player(true)) {
-            move self to fig_tree;
+            move self to FigTree;
             ! Print flavor text when monkey is frightened the first time
             ! from a whip action.
             if (self.first_fright && action == ##Whip) {
@@ -637,8 +637,8 @@ with
             } else {
                 print "^", (The) self;
             }
-            if (location == clearing) {
-                print_ret " scrambles up ", (the) fig_tree, ".";
+            if (location == Clearing) {
+                print_ret " scrambles up ", (the) FigTree, ".";
             } else {
                 print_ret " scrambles out of sight.";
             }
@@ -651,10 +651,10 @@ with
         }
 
         ! Climb down the tree
-        if (self in fig_tree) {
-            move self to clearing;
-            if (location == clearing) {
-                print_ret "^", (The) self, " climbs down from ", (the) fig_tree, ".";
+        if (self in FigTree) {
+            move self to Clearing;
+            if (location == Clearing) {
+                print_ret "^", (The) self, " climbs down from ", (the) FigTree, ".";
             }
         }
     
@@ -689,7 +689,7 @@ with
                         move lodestar to location;
                         ! climb back into the tree and reset counters
                         monkey_forget_about_food();
-                        ! move self to fig_tree;
+                        ! move self to FigTree;
                         ! give self ~curious;
                         print_ret " It seems distracted and left ", 
                         (the) lodestar, " lying on the ground.";
@@ -730,8 +730,8 @@ with
     }
     else {
         ! Test the Player's location
-        return location == clearing || location == old_hut 
-            || location == garden || location == jungle_path;
+        return location == Clearing || location == Bungalow 
+            || location == Garden || location == JunglePath;
     }
 ];
 
@@ -797,8 +797,8 @@ NonPlayerHumanObject boatman
         ],
 
         each_turn [;
-            ! Only while on the river
-            if (parent(canoe) == river && self in canoe)
+            ! Only while on the River
+            if (parent(canoe) == River && self in canoe)
                 boatman_each_turn_action(random(10));
         ],
 
@@ -850,10 +850,10 @@ NonPlayerHumanObject boatman
                 return true;
             }
         'bye', 'goodbye', 'cheers':
-            if (location == river)
+            if (location == River)
                 print_ret "No need to say goodbye to ", (a) self, " before
                             you reach your destination.";
-            if (location == river_shore)
+            if (location == Shore)
                 print_ret "~Safe travels ", (a) player, ", I hope you find what
                             you are looking for!~, ", (a) self, " waves.";
     }
@@ -886,7 +886,7 @@ NonPlayerHumanObject boatman
 ! [ ==================================================================== Rooms ]
 
 ! [ -------------------------------------------------------------- Lost Jungle ]
-JungleRoom lost_in_jungle "Lost in the Jungle"
+JungleRoom LostInJungle "Lost in the Jungle"
 with
     description "You don't know where you are.",
     before [;
@@ -902,22 +902,22 @@ with
     ];
 
 ! [ --------------------------------------------------------------- Maro River ]
-OutdoorRoom river "The Maro River"
+OutdoorRoom River "The Maro River"
 with
     description [;
         print_ret "You are in ", (a) canoe, " on the Maro river. ",
                     (A) boatman, " is with you, rowing the craft.";
     ];
 
-! Scenic jungle when on the river
-Object distant_jungle_scenery "jungle" river
+! Scenic jungle when on the River
+Object distant_jungle_scenery "jungle" River
 with
     name 'jungle' 'foliage' 'plant' 'plants' 'bush' 'brush' 'shrub',
     description "The jungle foliage is dense and lush.",
     has scenery;
 
 ! [ -------------------------------------------------------------- River Shore ]
-OutdoorRoom river_shore "River Shore"
+OutdoorRoom Shore "River Shore"
 with
     description [;
                 if (player in canoe)
@@ -926,7 +926,7 @@ with
                     print_ret "You are on the river shore. A roughly cut path
                                 leads North into the jungle.";
                 ],
-    n_to jungle_path;
+    n_to JunglePath;
 
 Object river_water "Maro River"
 with
@@ -939,7 +939,7 @@ with
                 and its lower reaches are affected by salt water. It is a
                 complex system of swamps and oxbow lakes which hosts a large
                 number of birds and reptiles.",
-    found_in  river river_shore,
+    found_in  River Shore,
     after [;
         Whip:
             return fish.try_catch();
@@ -947,35 +947,35 @@ with
     has container open scenery;
 
 ! [ -------------------------------------------------------------- Jungle Path ]
-JungleRoom jungle_path "Jungle Path"
+JungleRoom JunglePath "Jungle Path"
 with
     description "Trees of all sizes and leaves of all shapes fill every
                 available space of the jungle, this roughly cut path will
                 be indistinguishable from the rest in a few months.
                 ^^The river shore is back South, you notice a clearing
                 in the jungle to the West.",
-    w_to clearing,
-    s_to river_shore;
+    w_to Clearing,
+    s_to Shore;
 
 ! [ ----------------------------------------------------------------- Clearing ]
-JungleRoom clearing "In a Clearing"
+JungleRoom Clearing "In a Clearing"
 with
     description [;
         if (self hasnt visited)
             print "You are in a natural clearing, the ground a part of a large
                 bedrock providing some relief from the dense jungle. ";
         print "A large fig tree stands here proudly. ";
-        if (monkey in fig_tree)
-            print "A monkey sits in ", (the) fig_tree, ".";
+        if (monkey in FigTree)
+            print "A monkey sits in ", (the) FigTree, ".";
         print "^^A jungle path is due East.
             A small structure is visible to the South. ";
         if (self.ne_to ofclass JungleRoom)
             print "Stone stairs are due Northeast.";
         print_ret "";
     ],
-    e_to jungle_path,
-    s_to old_hut,
-    u_to fig_tree_top,
+    e_to JunglePath,
+    s_to Bungalow,
+    u_to TreeTop,
 
     before [;
     
@@ -993,7 +993,7 @@ with
 
 ! [ -------------------------------------------------------------- Top Of Tree ]
 
-OutdoorRoom fig_tree_top "Top of Tree"
+OutdoorRoom TreeTop "Top of Tree"
 with
     description [;
         if (self hasnt visited)
@@ -1001,7 +1001,7 @@ with
         print_ret "The vantage point allows you to see in all directions.";
     ],
     cant_go "The only way is down.",
-    d_to clearing,
+    d_to Clearing,
     
     before [;
     
@@ -1024,7 +1024,7 @@ with
         ! Look in directions
         Examine:
             if (noun == ne_obj) {
-                clearing.ne_to = valley;
+                Clearing.ne_to = Valley;
                 score = score + 1;
                 print_ret "There! Stone stairs up the hill, in the distance to ",
                     (a) noun, ".";
@@ -1036,30 +1036,30 @@ with
                 print_ret "Only more jungle to ", (a) noun ;
     ];
 
-ScenicTreeObject fig_tree "fig tree"
+ScenicTreeObject FigTree "fig tree"
 with
     name 'fig' 'tree' 'ficus',
     description [;
         print "The fig tree, also known as Ficus Obliqua, is taller than 
             most of the surrounding jungle.";
-        if (location == clearing)
+        if (location == Clearing)
             print " The view from up there must be great.";
         print "^";
     ],
-    found_in clearing fig_tree_top,
+    found_in Clearing TreeTop,
         
-    ! climb fig_tree => go up
+    ! climb FigTree => go up
     before [;
         Climb:
-            if (location == clearing)
+            if (location == Clearing)
                 <<Go u_obj>>;
-            if (location == fig_tree_top)
+            if (location == TreeTop)
                 <<Go d_obj>>;
     ],
     has container open light;
     
 ! [ ------------------------------------------------------------------ Old Hut ]
-OutdoorRoom old_hut "An Old Hut"
+OutdoorRoom Bungalow "Bungalow"
 with
     description "You are inside what appears to be a delapidated hut. The
                 roof long since collapsed, it provides little protection
@@ -1067,18 +1067,18 @@ with
                 You see a clearing to the North
                 and an exit to the Southwest.",
     cant_go "The only exits are North and Southwest.",
-    n_to clearing,
-    sw_to garden;
+    n_to Clearing,
+    sw_to Garden;
 
 ! [ ------------------------------------------------------------------- Garden ]
-JungleRoom garden "Garden"
+JungleRoom Garden "Garden"
 with
     description "You stand in an unkempt garden, whoever kept this garden hasn't
     been here for a very long time. You see some vegetable plants and fruit
     trees. A hut is to the Northeast.",
-    ne_to old_hut;
+    ne_to Bungalow;
 
-ScenicPlantObject "vegetable plants" garden
+ScenicPlantObject "vegetable plants" Garden
 with
     name 'veg' 'vegetable' 'vegetables' 'plant' 'plants',
     description [;
@@ -1091,7 +1091,7 @@ with
         print_ret "";
     ];
 
-ScenicPlantObject garden_trees "fruit trees" garden
+ScenicPlantObject garden_trees "fruit trees" Garden
 with
     name 'fruit' 'cherry' 'tree' 'trees',
     
@@ -1105,7 +1105,7 @@ with
     ],
     after [;
         Whip:
-            move banana to garden;
+            move banana to Garden;
             banana.whip_count = banana.whip_count + 1;
             switch (banana.whip_count) {
                 1: print_ret "You take careful aim at the bunch of bananas
@@ -1149,7 +1149,7 @@ with
             of the delicious fruit - You feel revitalised.";
     ];
 
-Object pumpkin "pumpkin" garden
+Object pumpkin "pumpkin" Garden
 with
     name 'pumpkin' 'pumpkins',
     description "It is a small round and green pumpkin.",
@@ -1169,12 +1169,12 @@ with
     has concealed edible;
 
 ! [ ------------------------------------------------------------------- Valley ]
-JungleRoom valley "Valley"
+JungleRoom Valley "Valley"
 with
     description "You in a lush jungle valley, stairs carved out of stone
                 lead up to the top. A path leads back South.",
     u_to Cliff,
-    s_to clearing,
+    s_to Clearing,
     cant_go "The only ways out are South or Up (the stairs).";
 
 ! [ -------------------------------------------------------------------- Cliff ]
@@ -1182,7 +1182,7 @@ JungleRoom Cliff "Cliff"
 with
     description "You are on top of a cliff, a rope bridge crosses a deep gorge
     to the East. Stone steps lead down the hill.",
-    d_to valley,
+    d_to Valley,
     e_to rope_bridge;
 
 ! [ ---------------------------------------------------------------- Waterfall ]
@@ -1328,13 +1328,13 @@ with
     name 'stone' 'stairs' 'steps' 'hill',
     description "The individual steps are carved from stone and laid out to form
     a staircase on the hill.",
-    found_in valley Cliff,
+    found_in Valley Cliff,
     door_to [;
-        if (self in valley) return Cliff;
-        return valley;
+        if (self in Valley) return Cliff;
+        return Valley;
     ],
     door_dir [;
-        if (self in valley) return u_to;
+        if (self in Valley) return u_to;
         return d_to;
     ],
     before [;
@@ -1423,9 +1423,9 @@ with
 ! [ ================================================================ Debugging ]
 ! These portals provide a way to quickly jump to locations in our spec scripts.
 #ifdef DEBUG;
-ScenicRockObject warpto_clearing clearing with name 'clearing' 'portal';
-ScenicRockObject warpto_garden garden with name 'garden' 'portal';
-ScenicRockObject warpto_valley valley with name 'valley' 'portal';
+ScenicRockObject warpto_clearing Clearing with name 'clearing' 'portal';
+ScenicRockObject warpto_garden Garden with name 'garden' 'portal';
+ScenicRockObject warpto_valley Valley with name 'valley' 'portal';
 ScenicRockObject warpto_cliff Cliff with name 'cliff' 'portal';
 ScenicRockObject warpto_waterfall Waterfall with name 'waterf' 'portal';
 #endif;
