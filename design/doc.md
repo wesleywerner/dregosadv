@@ -92,19 +92,20 @@ _(Implemented, Tested - deadly_drop.spec)_
 * How: Whip the bridge to save yourself from falling.
 * Where: Rope Bridge
 
-#### Find Oil
-_(Not Implemented, Not Tested)_
-* Why: oil is needed to make the torch.
-* What: crowbar, stone slab.
-* How: pry the stone slab open.
-* Where: Temple.
-
 #### Make a Torch
 _(Not Implemented, Not Tested)_
 * Why: to enter the dark underground temple.
 * What: A stick, some old cloth, an oily substance, crowbar, flint stone.
 * How: tie cloth to stick, dip torch in oil, light torch with flint.
 * Where: Old Hut and Temple (cloth), Temple (oil), Stream & Water Spring (flint).
+
+1. Search the rubble in the hut to find a crowbar and some old cloth.
+2. Search the jungle to find a stick.
+3. Pry the stone slab in the Temple open with the crowbar, to find the oily substance and some bones.
+4. Tie/wrap the cloth around the stick or bone to make a torch.
+5. Dip the torch in the oil.
+5. Find the flint stone by the Waterfall (noticeable when carrying the torch).
+6. Light the torch with the flint (requires holding the crowbar to strike the flint).
 
 #### Find the Alcove
 _(Implemented, Tested - find_the_alcove.spec)_

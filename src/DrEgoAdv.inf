@@ -66,10 +66,10 @@ Attribute curious;
     if (noun == player)
         "You are not into that kind of thing.";
 
-    if (noun ofclass NonPlayerCharacterObject)
+    if (noun ofclass NonPlayerCharacter)
         <<Attack noun>>;
 
-    if (parent(noun) ofclass NonPlayerCharacterObject)
+    if (parent(noun) ofclass NonPlayerCharacter)
         <<Attack noun>>;
 
     ! if (children(player) > 1)
@@ -113,7 +113,12 @@ Verb    'use'       * noun                          -> Use;
     ! Move objects to their starting places
     move canoe to River;
     move boatman to canoe;
-    move monkey to FigTree;
+    move monkey to fig_tree;
+    move banana to garden_trees;
+    move pumpkin to Garden;
+    !move fishing_spear to canoe;
+    !move jungle_distant_scenery to River;
+    !move garden_trees to Garden;
     
     ! Start Daemons
     StartDaemon(monkey);
@@ -193,15 +198,15 @@ Class JungleRoom
                     last_known_location = location;
         ];
 
-Class NonPlayerCharacterObject
+Class NonPlayerCharacter
 with
     life [;
         Attack:
             print_ret "You are not fond of hurting other living things.";
     ];
 
-Class NonPlayerHumanObject
-    class NonPlayerCharacterObject
+Class HumanNPC
+    class NonPlayerCharacter
     with
         before [;
             Take:
@@ -209,8 +214,8 @@ Class NonPlayerHumanObject
         ],
     has animate;
 
-Class NonPlayerAnimalObject
-    class NonPlayerCharacterObject
+Class AnimalNPC
+    class NonPlayerCharacter
     with
         before [;
             Take:
@@ -250,6 +255,17 @@ with
     ],
 has scenery static;
 
+Class RockDoor
+with
+    before [;
+        Take:
+            if (noun has pluralname)
+                print_ret (The) self, " are way too large and heavy to move.";
+            else
+                print_ret (The) self, " is way too large and heavy to move.";
+    ],
+has scenery static door open;
+
 Class ScenicWaterObject
 with
     before [;
@@ -282,165 +298,36 @@ Class EdibleFruitObject has edible;
 
 ! [ ================================================================== Objects ]
 
-Object canoe "canoe"
-    with
-        name 'boat' 'canoe' 'oar',
-
-        ! Room Description when outside the canoe
-        initial [;
-            print_ret (A) boatman, " sits in the canoe gazing out over the
-            moving river, the salty water gently lapping the sides of his
-            craft.";
-        ],
-
-        description "It is a small wooden canoe, it looks hand built.
-                    A fishing spear lies inside the boat.",
-
-        before [;
-
-            ! Prevent the player from exiting the craft before it has shored.
-            Go, Exit:
-                if (parent(canoe) == River) {
-                    print "~We will reach your destination soon enough~ ",
-                            (the) boatman, " says with a wide grin.^";
-                    return 2;
-                }
-
-            ! Prevent the player from re-entering the craft.
-            Enter:
-                if (player in canoe)
-                    print_ret "Did you forget, you are already in the canoe.";
-                else
-                    print_ret "You just got out, and you are eager to start
-                                looking for ", (the) golden_egg, ".";
-        ],
-
-        ! Print flavor text during the trip in the canoe
-        each_turn [;
-            if (self.time_left == 2 && location == River)
-                print_ret "^~We are almost there, ", (a) player, "~, ",
-                            (a) boatman, " says.";
-        ],
-
-        ! Initialise TurnsInCanoe timer to 0
-        time_left,
-
-        ! called when TurnsInCanoe timer expires
-        time_out [;
-            if (location == River) {
-                ! The "1" parameter moves player silently
-                ! so that we can reposition the canoe then call look.
-                ! DM4 pg 21
-                PlayerTo(Shore, 1);
-                move canoe to Shore;
-                move player to canoe;
-                print "^~Here we are~, ", (a) boatman,
-                        " says -- the canoe comes to a stop on the shore.^";
-                <<Look>>;
-            }
-        ],
-  has   enterable static container open;
-
-NotYourPropertyObject boatmans_spear "fishing spear" canoe
-    with
-        name 'fishing' 'rod' 'spear' 'kalawai',
-        description "A traditional fishing spear made from wood, it has three
-                    metal prongs at the business end.",
-    has scenery;
-
-! A debug-only object that provides the GO FASTER command to skip the ride.
-Object canoe_hasten
-    with
-        name 'faster',
-        before [;
-            Enter:
-                canoe.time_left = 0;
-                print_ret "You hasten your journey.";
-        ],
-    has scenery enterable;
-
-Object golden_egg "Golden Egg of Man-Toomba"
-    with
-        name 'gold' 'golden' 'egg',
-        description "It shimmers with golden light.";
-
-! The word "compass" is a reserved keyword in Inform, as such we use "lodestar"
-! to identify the object as it lives in the player's inventory.
-! The literal, albeit archaic, meaning of "lodestar" is "a star that leads or
-! guides; especially : the North Star." (The first half of the word derives from
-! the Middle English word "lode," meaning "course.") Both the literal and the
-! figurative sense ("an inspiration or guide") date back to the 14th century, the
-! time of Geoffrey Chaucer. The literal sense fell out of use in the 17th century,
-! and so, for a while, did the figurative sense - but it appeared again 170 years
-! later, when Sir Walter Scott used it in his 1813 poem The Bridal of Triermain.
-EssentialObject lodestar "compass"
-    with
-        name 'compass',
-
-        ! display a random description
-        rnd_no 0,
-
-        ! one-time bonus point when using the lodestar to navigate while lost.
-        used_scored false,
-        
-        ! Track if the compass has been dropped before
-        has_dropped false,
-
-        description [;
-        
-            ! Test for posession
-            if (self notin player) print_ret "You do not have ", (a) self, ".";
-
-            ! Return the player to the last known good location
-            if (location == LostInJungle) {
-                if (~~self.used_scored) {
-                    self.used_scored = true;
-                    score = score + 1;
-                }
-                print "^", (A) self, " guides you back to safety.^";
-                ! parameter "2" honors brief room descriptions - DM4 pg 21
-                PlayerTo(last_known_location, 2);
-                return true;
-            }
-
-            ! Display a random text when examining this.
-            self.rnd_no = random(5); ! 1..n
-            switch (self.rnd_no) {
-                1: print "You are exactly where you need to be.^";
-                2: print "The needle points towards north.^";
-                default:
-                    print (A) self, " helps you navigate while in the jungle.^";
-            }
-
-            ! The boatman notices your action.
-            if (player in canoe && boatman.noticed_compass == false) {
-                boatman.noticed_compass = true;
-                print "^", (A) boatman, " notices ", (a) self, " -- ~My father
-                            had one just like that~ he says.^";
-            }
-            
-            ! The monkey notices your action
-            if (~~ObjectIsUntouchable(monkey, true)) {
-                print (The) monkey, " seems very interested in the device.^";
-            }
-            
-        ],
-        
-        before [;
-            Take, Remove:
-                if (self in monkey) {
-                    if (parent(monkey) == location) {
-                        print "When you approach the small critter it deftly 
-                        moves out of your reach. ";
-                        ! monkey_forget_about_food();
-                        monkey_frighten();
-                        monkey_speak(random(10));
-                        print_ret "";
-                    } else {
-                        print_ret "It is out of your reach.";
-                    }
-                }
-        ];
+!
+EdibleFruitObject banana "banana"
+with
+    name 'banana' 'bananas',
+    whip_count 0,
+    eaten false,
+    description [;
+        if (parent(self) == garden_trees)
+            print_ret "A bunch of wild bananas hang from the top of the tree.";
+        else
+            print_ret "It is a wild banana with a bright green and yellow skin.";
+    ],
+    before [;
+        Take:
+            if (parent(self) == garden_trees)
+                print_ret "The bananas are way up in the tree, out of reach.";
+        Eat:
+            if (self.eaten)
+                print_ret "You have had your fill of bananas.";
+        Whip:
+            <<Whip garden_trees>>;
+    ],
+    after [;
+        Eat:
+            move banana to garden_trees;
+            banana.eaten = true;
+            print_ret "You peel the banana and take a bite, the fruit is
+            firm and sweet with a subtle flavor. You finish eating the rest
+            of the delicious fruit - You feel revitalised.";
+    ];
 
 ! Also see the custom 'WhipSub' action.
 EssentialObject bullwhip "bullwhip"
@@ -454,6 +341,191 @@ EssentialObject bullwhip "bullwhip"
             print_ret "Start your sentence with WHIP, like WHIP THE TREE.";
     ];
 
+!
+Object canoe "canoe"
+with
+    name 'boat' 'canoe' 'oar',
+
+    ! Room Description when outside the canoe
+    initial [;
+        print_ret (A) boatman, " sits in the canoe gazing out over the
+        moving river, the salty water gently lapping the sides of his
+        craft.";
+    ],
+
+    description "It is a small wooden canoe, it looks hand built.
+    A fishing spear lies inside the boat.",
+    
+    before [;
+
+        ! Prevent the player from exiting the craft before it has shored.
+        Go, Exit:
+            if (parent(canoe) == River) {
+                print "~We will reach your destination soon enough~ ",
+                        (the) boatman, " says with a wide grin.^";
+                return 2;
+            }
+
+        ! Prevent the player from re-entering the craft.
+        Enter:
+            if (player in canoe)
+                print_ret "Did you forget, you are already in the canoe.";
+            else
+                print_ret "You just got out, and you are eager to start
+                            looking for ", (the) golden_egg, ".";
+    ],
+
+    ! Print flavor text during the trip in the canoe
+    each_turn [;
+        if (self.time_left == 2 && location == River)
+            print_ret "^~We are almost there, ", (a) player, "~, ",
+                        (a) boatman, " says.";
+    ],
+
+    ! Initialise TurnsInCanoe timer to 0
+    time_left,
+
+    ! called when TurnsInCanoe timer expires
+    time_out [;
+        if (location == River) {
+            ! The "1" parameter moves player silently
+            ! so that we can reposition the canoe then call look.
+            ! DM4 pg 21
+            PlayerTo(Shore, 1);
+            move canoe to Shore;
+            move player to canoe;
+            print "^~Here we are~, ", (a) boatman,
+                    " says -- the canoe comes to a stop on the shore.^";
+            <<Look>>;
+        }
+    ],
+    has   enterable static container open;
+
+! A debug-only object that provides the GO FASTER command to skip the ride.
+#ifdef DEBUG;
+Object canoe_hasten
+    with
+        name 'faster',
+        before [;
+            Enter:
+                canoe.time_left = 0;
+                print_ret "You hasten your journey.";
+        ],
+    has scenery enterable;
+#endif;
+
+!
+ScenicTreeObject fig_tree "fig tree"
+with
+    name 'fig' 'tree' 'ficus',
+    description [;
+        print "The fig tree, also known as Ficus Obliqua, is taller than 
+            most of the surrounding jungle.";
+        if (location == Clearing)
+            print " The view from up there must be great.";
+        print "^";
+    ],
+    found_in Clearing TreeTop,
+        
+    ! climb fig_tree => go up
+    before [;
+        Climb:
+            if (location == Clearing)
+                <<Go u_obj>>;
+            if (location == TreeTop)
+                <<Go d_obj>>;
+    ],
+    has container open light;
+
+!
+Object fish "fish"
+with
+    name 'fish',
+    initial "A fish flops around inside the canoe.",
+    description "It looks like a black bass.",
+
+    ! Tracks if the fish was caught
+    caught false,
+
+    ! try catch the fish with the whip
+    try_catch [;
+        if (self notin canoe && self.caught == false) {
+            move self to canoe;
+            self.caught = true;
+            print_ret "*SNAP* -- As you crack the whip into the water
+                    you snag a fish!
+                    ~Mogillo!~ ", (a) boatman, " shouts excitedly.
+                    ~What are the chances!~";
+        }
+    ],
+
+    before [;
+        Take: print_ret "You decide to leave the fish for ",
+                (a) boatman, ".";
+    ],
+
+    after [;
+        Insert:
+            if (second == river_water) {
+                print_ret "You put the fish back into ", (the) river_water,
+                            ". ~Ai, there goes supper~ ",
+                            (a) boatman, " says.";
+            }
+    ],
+
+    each_turn [;
+        if (self in canoe && random(3) == 1) {
+            print "^A fish flops around inside the canoe.^";
+        }
+    ];
+
+!
+NotYourPropertyObject fishing_spear "fishing spear"
+with
+    name 'fishing' 'rod' 'spear' 'kalawai',
+    description "A traditional fishing spear made from wood, it has three
+    metal prongs at the business end.",
+    found_in canoe,
+    has scenery;
+
+!
+ScenicPlantObject garden_trees "fruit trees"
+with
+    name 'fruit' 'cherry' 'tree' 'trees',
+
+    description "You see a cherry tree but it is not bearing any fruit, the
+    banana tree next to it however has a bunch of fruit.",
+    
+    found_in Garden,
+
+    before [;
+        Whip:
+            if (parent(banana) ~= garden_trees)
+                print_ret "You don't need another banana right now.";
+    ],
+    after [;
+        Whip:
+            move banana to Garden;
+            banana.whip_count = banana.whip_count + 1;
+            switch (banana.whip_count) {
+                1: print_ret "You take careful aim at the bunch of bananas
+                up in the tree, swing your arm in a smooth arch and *SNAP*
+                -- a single banana drops to the ground.";
+                2: print_ret "*SNAP* -- Another banana drops to the ground.
+                Years of using your whip is finally paying off.";
+                default: print_ret "*SNAP* -- You deftly whip a banana off
+                the tree.";
+            }
+    ],
+    has supporter;
+
+! The prized treasure you are looking for.
+Object golden_egg "Golden Egg of Man-Toomba"
+    with
+        name 'gold' 'golden' 'egg',
+        description "It shimmers with golden light.";
+
+!
 EssentialObject journal "journal"
     with
         name 'diary' 'journal' 'book',
@@ -473,21 +545,12 @@ EssentialObject journal "journal"
             <<Examine self>>;
     ];
 
-EssentialObject torch "torch"
+! Scenic jungle when on the River
+Object jungle_distant_scenery "jungle"
 with
-    name 'torch',
-    description "It is a crude torch that you constructed from a stick and
-        some old cloth, dipped in an oily substance."
-    has ~light;
-
-! The sky is visible in all outdoor areas.
-Object sky "sky"
-    with
-        name 'sky' 'clouds' 'weather' 'sun',
-        description "Rolling clouds move overhead.",
-        found_in [;
-            return (location ofclass OutdoorRoom);
-        ],
+    name 'jungle' 'foliage' 'plant' 'plants' 'bush' 'brush' 'shrub',
+    description "The jungle foliage is dense and lush.",
+    found_in River,
     has scenery;
 
 ! The jungle is visible in all JungleRooms
@@ -504,51 +567,145 @@ Object jungle_scenery "jungle"
         ],
     has scenery;
 
-Object fish "fish"
-    with
-        name 'fish',
-        initial "A fish flops around inside the canoe.",
-        description "It looks like a black bass.",
+! The word "compass" is a reserved keyword in Inform, as such we use "lodestar"
+! to identify the object as it lives in the player's inventory.
+! The literal, albeit archaic, meaning of "lodestar" is "a star that leads or
+! guides; especially : the North Star." (The first half of the word derives from
+! the Middle English word "lode," meaning "course.") Both the literal and the
+! figurative sense ("an inspiration or guide") date back to the 14th century, the
+! time of Geoffrey Chaucer. The literal sense fell out of use in the 17th century,
+! and so, for a while, did the figurative sense - but it appeared again 170 years
+! later, when Sir Walter Scott used it in his 1813 poem The Bridal of Triermain.
+EssentialObject lodestar "compass"
+with
+    name 'compass',
 
-        ! Tracks if the fish was caught
-        caught false,
+    ! display a random description
+    rnd_no 0,
 
-        ! try catch the fish with the whip
-        try_catch [;
-            if (self notin canoe && self.caught == false) {
-                move self to canoe;
-                self.caught = true;
-                print_ret "*SNAP* -- As you crack the whip into the water
-                        you snag a fish!
-                        ~Mogillo!~ ", (a) boatman, " shouts excitedly.
-                        ~What are the chances!~";
+    ! one-time bonus point when using the lodestar to navigate while lost.
+    used_scored false,
+    
+    ! Track if the compass has been dropped before
+    has_dropped false,
+
+    description [;
+    
+        ! Test for posession
+        if (self notin player) print_ret "You do not have ", (a) self, ".";
+
+        ! Return the player to the last known good location
+        if (location == LostInJungle) {
+            if (~~self.used_scored) {
+                self.used_scored = true;
+                score = score + 1;
             }
-        ],
+            print "^", (A) self, " guides you back to safety.^";
+            ! parameter "2" honors brief room descriptions - DM4 pg 21
+            PlayerTo(last_known_location, 2);
+            return true;
+        }
 
-        before [;
-            Take: print_ret "You decide to leave the fish for ",
-                    (a) boatman, ".";
-        ],
+        ! Display a random text when examining this.
+        self.rnd_no = random(5); ! 1..n
+        switch (self.rnd_no) {
+            1: print "You are exactly where you need to be.^";
+            2: print "The needle points towards north.^";
+            default:
+                print (A) self, " helps you navigate while in the jungle.^";
+        }
 
-        after [;
-            Insert:
-                if (second == river_water) {
-                    print_ret "You put the fish back into ", (the) river_water,
-                                ". ~Ai, there goes supper~ ",
-                                (a) boatman, " says.";
+        ! The boatman notices your action.
+        if (player in canoe && boatman.noticed_compass == false) {
+            boatman.noticed_compass = true;
+            print "^", (A) boatman, " notices ", (a) self, " -- ~My father
+                        had one just like that~ he says.^";
+        }
+        
+        ! The monkey notices your action
+        if (~~ObjectIsUntouchable(monkey, true)) {
+            print (The) monkey, " seems very interested in the device.^";
+        }
+        
+    ],
+    
+    before [;
+        Take, Remove:
+            if (self in monkey) {
+                if (parent(monkey) == location) {
+                    print "When you approach the small critter it deftly 
+                    moves out of your reach. ";
+                    ! monkey_forget_about_food();
+                    monkey_frighten();
+                    monkey_speak(random(10));
+                    print_ret "";
+                } else {
+                    print_ret "It is out of your reach.";
                 }
-        ],
-
-        each_turn [;
-            if (self in canoe && random(3) == 1) {
-                print "^A fish flops around inside the canoe.^";
             }
-        ];
+    ];
+
+!
+Object pumpkin "pumpkin"
+with
+    name 'pumpkin' 'pumpkins',
+    description "It is a small round and green pumpkin.",
+    before [;
+        Eat:
+            print_ret "It looks delicious and fresh, but would be better served
+            cooked.";
+    ],
+    after [;
+        Take:
+        if (self hasnt moved) {
+            give self ~concealed;
+            print_ret "You carefully break the stem and take the small round
+            pumpkin.";
+        }
+    ],
+    has concealed edible;
+
+!
+Object river_water "Maro River"
+with
+    name 'maro' 'river' 'water',
+    article "the",
+    ! TODO move this detailed description to an entry in the journal.
+    description "The Maro river flows from north-east to south-west, into
+                the Arafura Sea, it runs for over 200 km and is between 50 and
+                900 m wide. The river is strongly tidal for most of its length
+                and its lower reaches are affected by salt water. It is a
+                complex system of swamps and oxbow lakes which hosts a large
+                number of birds and reptiles.",
+    found_in  River Shore,
+    after [;
+        Whip:
+            return fish.try_catch();
+    ],
+    has container open scenery;
+
+! The sky is visible in all outdoor areas.
+Object sky "sky"
+    with
+        name 'sky' 'clouds' 'weather' 'sun',
+        description "Rolling clouds move overhead.",
+        found_in [;
+            return (location ofclass OutdoorRoom);
+        ],
+    has scenery;
+
+!
+EssentialObject torch "torch"
+with
+    name 'torch',
+    description "It is a crude torch that you constructed from a stick and
+        some old cloth, dipped in an oily substance."
+    has ~light;
 
 ! [ ==================================================== Non Player Characters ]
 
 ! [ ------------------------------------------------------------------- Monkey ]
-NonPlayerAnimalObject monkey "monkey"
+AnimalNPC monkey "monkey"
 with
     name 'monkey',
     
@@ -615,7 +772,7 @@ with
     daemon [look_item fruit;
     
         ! Move to the clearing if the player is in the tree
-        if (self in FigTree && location == TreeTop) {
+        if (self in fig_tree && location == TreeTop) {
             print "^The monkey is not impressed, it climbs down the tree.^";
             give self curious;
             move self to Clearing;
@@ -627,7 +784,7 @@ with
         
         ! Flee when frightened
         if (self.fright_turns > 0 && monkey_near_player(true)) {
-            move self to FigTree;
+            move self to fig_tree;
             ! Print flavor text when monkey is frightened the first time
             ! from a whip action.
             if (self.first_fright && action == ##Whip) {
@@ -638,7 +795,7 @@ with
                 print "^", (The) self;
             }
             if (location == Clearing) {
-                print_ret " scrambles up ", (the) FigTree, ".";
+                print_ret " scrambles up ", (the) fig_tree, ".";
             } else {
                 print_ret " scrambles out of sight.";
             }
@@ -651,10 +808,10 @@ with
         }
 
         ! Climb down the tree
-        if (self in FigTree) {
+        if (self in fig_tree) {
             move self to Clearing;
             if (location == Clearing) {
-                print_ret "^", (The) self, " climbs down from ", (the) FigTree, ".";
+                print_ret "^", (The) self, " climbs down from ", (the) fig_tree, ".";
             }
         }
     
@@ -689,7 +846,7 @@ with
                         move lodestar to location;
                         ! climb back into the tree and reset counters
                         monkey_forget_about_food();
-                        ! move self to FigTree;
+                        ! move self to fig_tree;
                         ! give self ~curious;
                         print_ret " It seems distracted and left ", 
                         (the) lodestar, " lying on the ground.";
@@ -781,7 +938,7 @@ with
 ];
 
 ! [ ------------------------------------------------------------------- Boatman ]
-NonPlayerHumanObject boatman
+HumanNPC boatman
     with
         name 'guide' 'rom' 'man',
         article "your",
@@ -885,77 +1042,17 @@ NonPlayerHumanObject boatman
 
 ! [ ==================================================================== Rooms ]
 
-! [ -------------------------------------------------------------- Lost Jungle ]
-JungleRoom LostInJungle "Lost in the Jungle"
+! [ ----------------------------------------------------------------- Bungalow ]
+OutdoorRoom Bungalow "Bungalow"
 with
-    description "You don't know where you are.",
-    before [;
-        Go:
-            if (random(OddsOfFindingWayWhenLost) == 1) {
-                print "^You happen to find your way back.^";
-                ! parameter "2" honors brief room descriptions - DM4 pg 21
-                PlayerTo(last_known_location, 2);
-                return true;
-            }
-            else
-                print_ret "You fumble through the jungle.";
-    ];
-
-! [ --------------------------------------------------------------- Maro River ]
-OutdoorRoom River "The Maro River"
-with
-    description [;
-        print_ret "You are in ", (a) canoe, " on the Maro river. ",
-                    (A) boatman, " is with you, rowing the craft.";
-    ];
-
-! Scenic jungle when on the River
-Object distant_jungle_scenery "jungle" River
-with
-    name 'jungle' 'foliage' 'plant' 'plants' 'bush' 'brush' 'shrub',
-    description "The jungle foliage is dense and lush.",
-    has scenery;
-
-! [ -------------------------------------------------------------- River Shore ]
-OutdoorRoom Shore "River Shore"
-with
-    description [;
-                if (player in canoe)
-                    print_ret "The canoe has stopped ashore, you can get out now.";
-                else
-                    print_ret "You are on the river shore. A roughly cut path
-                                leads North into the jungle.";
-                ],
-    n_to JunglePath;
-
-Object river_water "Maro River"
-with
-    name 'maro' 'river' 'water',
-    article "the",
-    ! TODO move this detailed description to an entry in the journal.
-    description "The Maro river flows from north-east to south-west, into
-                the Arafura Sea, it runs for over 200 km and is between 50 and
-                900 m wide. The river is strongly tidal for most of its length
-                and its lower reaches are affected by salt water. It is a
-                complex system of swamps and oxbow lakes which hosts a large
-                number of birds and reptiles.",
-    found_in  River Shore,
-    after [;
-        Whip:
-            return fish.try_catch();
-    ],
-    has container open scenery;
-
-! [ -------------------------------------------------------------- Jungle Path ]
-JungleRoom JunglePath "Jungle Path"
-with
-    description "Trees of all sizes and leaves of all shapes fill every
-                available space of the jungle, this roughly cut path will
-                be indistinguishable from the rest in a few months.
-                ^^The river shore is back South, you notice a clearing
-                in the jungle to the West.",
-    w_to Clearing,
-    s_to Shore;
+    description "You are inside what appears to be a delapidated hut. The
+                roof long since collapsed, it provides little protection
+                from the elements.
+                You see a clearing to the North
+                and an exit to the Southwest.",
+    cant_go "The only exits are North and Southwest.",
+    n_to Clearing,
+    sw_to Garden;
 
 ! [ ----------------------------------------------------------------- Clearing ]
 JungleRoom Clearing "In a Clearing"
@@ -965,8 +1062,8 @@ with
             print "You are in a natural clearing, the ground a part of a large
                 bedrock providing some relief from the dense jungle. ";
         print "A large fig tree stands here proudly. ";
-        if (monkey in FigTree)
-            print "A monkey sits in ", (the) FigTree, ".";
+        if (monkey in fig_tree)
+            print "A monkey sits in ", (the) fig_tree, ".";
         print "^^A jungle path is due East.
             A small structure is visible to the South. ";
         if (self.ne_to ofclass JungleRoom)
@@ -991,8 +1088,166 @@ with
             }
     ];
 
-! [ -------------------------------------------------------------- Top Of Tree ]
+! [ -------------------------------------------------------------------- Cliff ]
+JungleRoom Cliff "Cliff"
+with
+    description "You are on top of a cliff, a rope bridge crosses a deep gorge
+    to the East. Stone steps lead down the hill.",
+    d_to Valley,
+    e_to rope_bridge;
 
+! [ -------------------------------------------------------------- Deadly Drop ]
+OutdoorRoom DeadlyDrop "Deadly Drop"
+with
+    description "",
+    turn_count 0,
+    before [;
+        Whip:
+            ! Whip the bridge to save yourself
+            if (noun == rope_bridge) {
+                ! Reset puzzle state
+                ! self.turn_count = 0;
+                print "You swing your whip and -- *SNAP* snag it on the 
+                rope bridge. You dangle precariously, pulling yourself up
+                to safety. That was a close call!^";
+                playerTo(Waterfall);
+                return true;
+            }
+        Take:
+            if (noun == rope_bridge) {
+                print_ret "You try grabbing at the bridge but you are too slow.";
+            }
+        Jump, JumpOver:
+            print_ret "A rope bridge is a terrible place to decide to start jumping.";
+    ],
+    each_turn [;
+        if (self.turn_count == 0) {
+            print "You step on a rotten plank and it cracks under your weight,
+            you lose your balance!^";
+        }
+        if (self.turn_count == 1) {
+            print "You teeter the other way -- You are about to fall!^";
+        }
+        if (self.turn_count == 2) {
+            deadflag = 1;
+            print "^You plummet into the gorge below, cracking your head
+            on a rocky outcropping, far down below. Weeks pass before the small
+            search party discover your broken body. Luckily you did not suffer.
+            ^^(If only you tried your WHIP)";
+        }
+        self.turn_count = self.turn_count + 1;
+    ],
+has light;
+
+! [ ------------------------------------------------------------------- Garden ]
+JungleRoom Garden "Garden"
+with
+    description "You stand in an unkempt garden, whoever kept this garden hasn't
+    been here for a very long time. You see some vegetable plants and fruit
+    trees. A hut is to the Northeast.",
+    ne_to Bungalow;
+
+ScenicPlantObject "vegetable plants" Garden
+with
+    name 'veg' 'vegetable' 'vegetables' 'plant' 'plants',
+    description [;
+        print "The vegetable plants in the garden have grown wild without
+        anybody around to harvest them. ";
+        if (pumpkin has concealed) {
+            print "You notice a pumpkin on the ground, hiding under some large
+            green leaves.";
+        }
+        print_ret "";
+    ];
+
+! [ -------------------------------------------------------------- Jungle Path ]
+JungleRoom JunglePath "Jungle Path"
+with
+    description "Trees of all sizes and leaves of all shapes fill every
+                available space of the jungle, this roughly cut path will
+                be indistinguishable from the rest in a few months.
+                ^^The river shore is back South, you notice a clearing
+                in the jungle to the West.",
+    w_to Clearing,
+    s_to Shore;
+
+! [ -------------------------------------------------------------- Lost Jungle ]
+JungleRoom LostInJungle "Lost in the Jungle"
+with
+    description "You don't know where you are.",
+    before [;
+        Go:
+            if (random(OddsOfFindingWayWhenLost) == 1) {
+                print "^You happen to find your way back.^";
+                ! parameter "2" honors brief room descriptions - DM4 pg 21
+                PlayerTo(last_known_location, 2);
+                return true;
+            }
+            else
+                print_ret "You fumble through the jungle.";
+    ];
+
+! [ --------------------------------------------------------------- Maro River ]
+OutdoorRoom River "The Maro River"
+with
+    description [;
+        print_ret "You are in ", (a) canoe, " on the Maro river. ",
+                    (A) boatman, " is with you, rowing the craft.";
+    ];
+
+! [ -------------------------------------------------------------- River Shore ]
+OutdoorRoom Shore "River Shore"
+with
+    description [;
+                if (player in canoe)
+                    print_ret "The canoe has stopped ashore, you can get out now.";
+                else
+                    print_ret "You are on the river shore. A roughly cut path
+                                leads North into the jungle.";
+                ],
+    n_to JunglePath;
+
+! [ ------------------------------------------------------------------- Temple ]
+IndoorRoom Temple "Temple"
+with
+    description "You are inside the stone temple, large openings in the ceiling
+    provide ample natural light for you to see. The walls are covered in
+    engraved glyphs.
+    You hear water falling from the exit to the North.",
+    n_to Waterfall,
+
+    before [;
+        Exit:
+            ! Exit the temple
+            <<Go n_obj>>;
+        Go:
+            if (noun == out_obj)
+                <<Go n_obj>>;
+    ],
+
+    has light;
+
+ScenicRockObject "glyphs" Temple
+with
+    name 'glyph' 'glyphs' 'symbol' 'symbols' 'wall' 'walls',
+    description "The engravings cover all of the wall surfaces, your attention
+    is drawn to a circular pattern in the glyphs as they converge and surround
+    one large glyph -- You recognize this glyph as ~air terjun~.",
+    before [;
+        Take: "You can't take the glyphs as they are engraved into the stone.";
+    ],
+    has pluralname;
+
+ScenicRockObject "glyphs" Temple
+with
+    name 'air' 'terjun',
+    description "You may have some information about ~air terjun~ in your
+    journal.",
+    before [;
+        Take: "You can't take the glyphs as they are engraved into the stone.";
+    ];
+
+! [ -------------------------------------------------------------- Top Of Tree ]
 OutdoorRoom TreeTop "Top of Tree"
 with
     description [;
@@ -1036,137 +1291,13 @@ with
                 print_ret "Only more jungle to ", (a) noun ;
     ];
 
-ScenicTreeObject FigTree "fig tree"
+! [ --------------------------------------------------------------------- Tomb ]
+IndoorRoom Tomb "Underground Tomb"
 with
-    name 'fig' 'tree' 'ficus',
-    description [;
-        print "The fig tree, also known as Ficus Obliqua, is taller than 
-            most of the surrounding jungle.";
-        if (location == Clearing)
-            print " The view from up there must be great.";
-        print "^";
-    ],
-    found_in Clearing TreeTop,
-        
-    ! climb FigTree => go up
-    before [;
-        Climb:
-            if (location == Clearing)
-                <<Go u_obj>>;
-            if (location == TreeTop)
-                <<Go d_obj>>;
-    ],
-    has container open light;
-    
-! [ ------------------------------------------------------------------ Old Hut ]
-OutdoorRoom Bungalow "Bungalow"
-with
-    description "You are inside what appears to be a delapidated hut. The
-                roof long since collapsed, it provides little protection
-                from the elements.
-                You see a clearing to the North
-                and an exit to the Southwest.",
-    cant_go "The only exits are North and Southwest.",
-    n_to Clearing,
-    sw_to Garden;
-
-! [ ------------------------------------------------------------------- Garden ]
-JungleRoom Garden "Garden"
-with
-    description "You stand in an unkempt garden, whoever kept this garden hasn't
-    been here for a very long time. You see some vegetable plants and fruit
-    trees. A hut is to the Northeast.",
-    ne_to Bungalow;
-
-ScenicPlantObject "vegetable plants" Garden
-with
-    name 'veg' 'vegetable' 'vegetables' 'plant' 'plants',
-    description [;
-        print "The vegetable plants in the garden have grown wild without
-        anybody around to harvest them. ";
-        if (pumpkin has concealed) {
-            print "You notice a pumpkin on the ground, hiding under some large
-            green leaves.";
-        }
-        print_ret "";
-    ];
-
-ScenicPlantObject garden_trees "fruit trees" Garden
-with
-    name 'fruit' 'cherry' 'tree' 'trees',
-    
-    description "You see a cherry tree but it is not bearing any fruit, the
-    banana tree next to it however has a bunch of fruit.",
-    
-    before [;
-        Whip:
-            if (parent(banana) ~= garden_trees)
-                print_ret "You don't need another banana right now.";
-    ],
-    after [;
-        Whip:
-            move banana to Garden;
-            banana.whip_count = banana.whip_count + 1;
-            switch (banana.whip_count) {
-                1: print_ret "You take careful aim at the bunch of bananas
-                up in the tree, swing your arm in a smooth arch and *SNAP*
-                -- a single banana drops to the ground.";
-                2: print_ret "*SNAP* -- Another banana drops to the ground.
-                Years of using your whip is finally paying off.";
-                default: print_ret "*SNAP* -- You deftly whip a banana off
-                the tree.";
-            }
-    ],
-    has supporter;
-
-EdibleFruitObject banana "banana" garden_trees
-with
-    name 'banana' 'bananas',
-    whip_count 0,
-    eaten false,
-    description [;
-        if (parent(self) == garden_trees)
-            print_ret "A bunch of wild bananas hang from the top of the tree.";
-        else
-            print_ret "It is a wild banana with a bright green and yellow skin.";
-    ],
-    before [;
-        Take:
-            if (parent(self) == garden_trees)
-                print_ret "The bananas are way up in the tree, out of reach.";
-        Eat:
-            if (self.eaten)
-                print_ret "You have had your fill of bananas.";
-        Whip:
-            <<Whip garden_trees>>;
-    ],
-    after [;
-        Eat:
-            move banana to garden_trees;
-            banana.eaten = true;
-            print_ret "You peel the banana and take a bite, the fruit is
-            firm and sweet with a subtle flavor. You finish eating the rest
-            of the delicious fruit - You feel revitalised.";
-    ];
-
-Object pumpkin "pumpkin" Garden
-with
-    name 'pumpkin' 'pumpkins',
-    description "It is a small round and green pumpkin.",
-    before [;
-        Eat:
-            print_ret "It looks delicious and fresh, but would be better served
-            cooked.";
-    ],
-    after [;
-        Take:
-        if (self hasnt moved) {
-            give self ~concealed;
-            print_ret "You carefully break the stem and take the small round
-            pumpkin.";
-        }
-    ],
-    has concealed edible;
+    description "You are inside an ancient tomb, the light of your torch
+        make engraved runes in the walls seem to dance all around you.
+        A narrow stone staircase leads up.",
+    has light;
 
 ! [ ------------------------------------------------------------------- Valley ]
 JungleRoom Valley "Valley"
@@ -1176,14 +1307,6 @@ with
     u_to Cliff,
     s_to Clearing,
     cant_go "The only ways out are South or Up (the stairs).";
-
-! [ -------------------------------------------------------------------- Cliff ]
-JungleRoom Cliff "Cliff"
-with
-    description "You are on top of a cliff, a rope bridge crosses a deep gorge
-    to the East. Stone steps lead down the hill.",
-    d_to Valley,
-    e_to rope_bridge;
 
 ! [ ---------------------------------------------------------------- Waterfall ]
 JungleRoom Waterfall "Waterfall"
@@ -1224,97 +1347,8 @@ with
             "You water is clear enough to see through to the bottom.";
     ];
 
-! [ ------------------------------------------------------------------- Temple ]
-IndoorRoom Temple "Temple"
-with
-    description "You are inside the stone temple, large openings in the ceiling
-    provide ample natural light for you to see. The walls are covered in
-    engraved glyphs.
-    You hear water falling from the exit to the North.",
-    n_to Waterfall,
 
-    before [;
-        Exit:
-            ! Exit the temple
-            <<Go n_obj>>;
-        Go:
-            if (noun == out_obj)
-                <<Go n_obj>>;
-    ],
-
-    has light;
-
-ScenicRockObject "glyphs" Temple
-with
-    name 'glyph' 'glyphs' 'symbol' 'symbols' 'wall' 'walls',
-    description "The engravings cover all of the wall surfaces, your attention
-    is drawn to a circular pattern in the glyphs as they converge and surround
-    one large glyph -- You recognize this glyph as ~air terjun~.",
-    before [;
-        Take: "You can't take the glyphs as they are engraved into the stone.";
-    ],
-    has pluralname;
-
-ScenicRockObject "glyphs" Temple
-with
-    name 'air' 'terjun',
-    description "You may have some information about ~air terjun~ in your
-    journal.",
-    before [;
-        Take: "You can't take the glyphs as they are engraved into the stone.";
-    ];
-
-! [ --------------------------------------------------------------------- Tomb ]
-IndoorRoom Tomb "Underground Tomb"
-with
-    description "You are inside an ancient tomb, the light of your torch
-        make engraved runes in the walls seem to dance all around you.
-        A narrow stone staircase leads up.",
-    has light;
-
-OutdoorRoom DeadlyDrop "Deadly Drop"
-with
-    description "",
-    turn_count 0,
-    before [;
-        Whip:
-            ! Whip the bridge to save yourself
-            if (noun == rope_bridge) {
-                ! Reset puzzle state
-                ! self.turn_count = 0;
-                print "You swing your whip and -- *SNAP* snag it on the 
-                rope bridge. You dangle precariously, pulling yourself up
-                to safety. That was a close call!^";
-                playerTo(Waterfall);
-                return true;
-            }
-        Take:
-            if (noun == rope_bridge) {
-                print_ret "You try grabbing at the bridge but you are too slow.";
-            }
-        Jump, JumpOver:
-            print_ret "A rope bridge is a terrible place to decide to start jumping.";
-    ],
-    each_turn [;
-        if (self.turn_count == 0) {
-            print "You step on a rotten plank and it cracks under your weight,
-            you lose your balance!^";
-        }
-        if (self.turn_count == 1) {
-            print "You teeter the other way -- You are about to fall!^";
-        }
-        if (self.turn_count == 2) {
-            deadflag = 1;
-            print "^You plummet into the gorge below, cracking your head
-            on a rocky outcropping, far down below. Weeks pass before the small
-            search party discover your broken body. Luckily you did not suffer.
-            ^^(If only you tried your WHIP)";
-        }
-        self.turn_count = self.turn_count + 1;
-    ],
-has light;
-
-! [ ========================================================= Room Connections ]
+! [ ========================================================== Doors & Bridges ]
 ! [ For auxiliary objects the player can enter to travel between rooms ]
 
 ! TODO add a hut_entry_obj found_in clearing and garden.
@@ -1322,64 +1356,8 @@ has light;
 !       depending which location is described.
 !       include this in movement.spec
 
-! Connect the Valley and the Cliff with the Stone Steps.
-ScenicRockObject stone_steps "stone steps"
-with
-    name 'stone' 'stairs' 'steps' 'hill',
-    description "The individual steps are carved from stone and laid out to form
-    a staircase on the hill.",
-    found_in Valley Cliff,
-    door_to [;
-        if (self in Valley) return Cliff;
-        return Valley;
-    ],
-    door_dir [;
-        if (self in Valley) return u_to;
-        return d_to;
-    ],
-    before [;
-        ! Allow climbing the steps to go their way
-        Climb:
-            <<Go (self.door_dir())>>;
-    ],
-    has pluralname door open;
-
-! Connect the Cliff and Waterfall with a Bridge.
-Object rope_bridge "rope bridge"
-with
-    name 'rope' 'bridge',
-    description "The bridge is made from plait ropes and extends to the East.",
-    found_in Cliff Waterfall DeadlyDrop,
-    door_to [;
-        ! Random chance of falling down.
-        ! We limit this deadly action to only occur once.
-        ! To allows this to happen repeatedly uncomment the "Reset puzzle state"
-        ! line in DeadlyDrop.
-        if (DeadlyDrop.turn_count==0 && random(2)==1) return DeadlyDrop;
-        if (self in Cliff) return Waterfall;
-        return Cliff;
-    ],
-    door_dir [;
-        if (self in Cliff) return e_to;
-        return w_to;
-    ],
-    has scenery door open;
-
-! Connect the Waterfall with the Temple via a door called the "temple"
-ScenicRockObject temple_door "temple"
-with
-    name 'temple' 'stone' 'building',
-    initial "There is a temple here, to the South.",
-    description "The temple is about three times your height, it is
-    constructed of carved stone blocks and seems partially swallowed by vines
-    and plant growth. An opening South in the front serves as a door.",
-    found_in Waterfall,
-    door_to Temple,
-    door_dir s_to,
-    has door open ~scenery;
-
 ! Connect the Waterfall with the Tomb via an Alcove
-ScenicRockObject alcove_door "alcove"
+RockDoor alcove_door "alcove"
 with
     name 'alcove',
     initial "There is an alcove through the cascading water, to the North.",
@@ -1418,15 +1396,70 @@ with
             print_ret "*SNAP* echos *snap* your *snap* whip.";
     ],
 
-    has door open ~scenery;
+    has ~scenery;
+
+! Connect the Cliff and Waterfall with a Bridge.
+RockDoor rope_bridge "rope bridge"
+with
+    name 'rope' 'bridge',
+    description "The bridge is made from plait ropes and extends to the East.",
+    found_in Cliff Waterfall DeadlyDrop,
+    door_to [;
+        ! Random chance of falling down.
+        ! We limit this deadly action to only occur once.
+        ! To allows this to happen repeatedly uncomment the "Reset puzzle state"
+        ! line in DeadlyDrop.
+        if (DeadlyDrop.turn_count==0 && random(2)==1) return DeadlyDrop;
+        if (self in Cliff) return Waterfall;
+        return Cliff;
+    ],
+    door_dir [;
+        if (self in Cliff) return e_to;
+        return w_to;
+    ];
+
+! Connect the Valley and the Cliff with the Stone Steps.
+RockDoor stone_steps "stone steps"
+with
+    name 'stone' 'stairs' 'steps' 'hill',
+    description "The individual steps are carved from stone and laid out to form
+    a staircase on the hill.",
+    found_in Valley Cliff,
+    door_to [;
+        if (self in Valley) return Cliff;
+        return Valley;
+    ],
+    door_dir [;
+        if (self in Valley) return u_to;
+        return d_to;
+    ],
+    before [;
+        ! Allow climbing the steps to go their way
+        Climb:
+            <<Go (self.door_dir())>>;
+    ],
+    has pluralname;
+
+! Connect the Waterfall with the Temple via a door called the "temple"
+RockDoor temple_door "temple"
+with
+    name 'temple' 'stone' 'building',
+    initial "There is a temple here, to the South.",
+    description "The temple is about three times your height, it is
+    constructed of carved stone blocks and seems partially swallowed by vines
+    and plant growth. An opening South in the front serves as a door.",
+    found_in Waterfall,
+    door_to Temple,
+    door_dir s_to,
+    has ~scenery;
 
 ! [ ================================================================ Debugging ]
 ! These portals provide a way to quickly jump to locations in our spec scripts.
 #ifdef DEBUG;
 ScenicRockObject warpto_clearing Clearing with name 'clearing' 'portal';
+ScenicRockObject warpto_cliff Cliff with name 'cliff' 'portal';
 ScenicRockObject warpto_garden Garden with name 'garden' 'portal';
 ScenicRockObject warpto_valley Valley with name 'valley' 'portal';
-ScenicRockObject warpto_cliff Cliff with name 'cliff' 'portal';
 ScenicRockObject warpto_waterfall Waterfall with name 'waterf' 'portal';
 #endif;
 
