@@ -39,6 +39,11 @@ Constant OddsOfFindingWayWhenLost 16;
 ! Show the option to list AMUSING things you can try (at the End of the story)
 Constant AMUSING_PROVIDED;
 
+! Custom Attributes
+Attribute is_torch;
+Attribute wet;
+Attribute oily;
+
 ! Hide status line for debug builds.
 ! This streamlines the diffs used by unit tests.
 #ifdef DEBUG;
@@ -55,6 +60,7 @@ Attribute curious;
 
 ! [ =========================================================== Custom Actions ]
 
+! A new verb to use the bullwip.
 [ WhipSub;
 
     if (bullwhip notin player)
@@ -116,9 +122,10 @@ Verb    'use'       * noun                          -> Use;
     move monkey to fig_tree;
     move banana to garden_trees;
     move pumpkin to Garden;
-    !move fishing_spear to canoe;
-    !move jungle_distant_scenery to River;
-    !move garden_trees to Garden;
+    move crowbar to bungalow_rubble;
+    move cloth to bungalow_rubble;
+    move torch_of_wood to jungle_scenery;
+    move torch_of_bone to Temple;
     
     ! Start Daemons
     StartDaemon(monkey);
@@ -133,6 +140,7 @@ Verb    'use'       * noun                          -> Use;
     move lodestar to player;
     move bullwhip to player;
     move journal to player;
+    move matchbook to player;
 
     ! Give the player a name and description
     player.short_name = "Dr Ego";
@@ -166,6 +174,14 @@ Global last_known_location = 0;
 ];
 
 [ PressAnyKey k; @read_char 1 -> k; return k; ];
+
+! Test if the player is carrying an item with is_torch.
+! Get a torch object carried by the player.
+[ GetPlayerTorchObject n;
+    objectloop (n in player && n has is_torch)
+        return n;
+    return false;
+];
 
 ! [ ================================================================== Classes ]
 
@@ -266,6 +282,42 @@ with
     ],
 has scenery static door open;
 
+! An object that reveals its children when searched.
+! The search_lead property prints when the search is actioned
+! and search_concludes prints after the items are listed.
+! The auto_take flag will move the discovered items to the player, otherwise
+! the items are moved to the location of parent.
+! The object itself cannot be taken, but hints at it hiding something.
+Class SearchableObject
+with
+    search_lead "You find ",
+    search_concludes "",
+    auto_take false,
+    before [;
+        Take:
+            if (child(self))
+                "You don't want ", (the) self, ", but perhaps it hides
+                some other things that may be of use.";
+            else
+                "You don't want ", (the) self, ".";
+        Search:
+            ! we have no children to give
+            if (child(self)==nothing) 
+                print_ret "You find nothing in ", (the) self, ".";
+            ! list the things inside us
+            print (string) self.search_lead;
+            WriteListFrom(child(self), ENGLISH_BIT);
+            print ". ", (string) self.search_concludes, "^";
+            ! move them into scope
+            while (child(self)) {
+                if (self.auto_take)
+                    move child(self) to player;
+                else
+                    move child(self) to parent(self);
+            }
+            return true;
+];
+
 Class ScenicWaterObject
 with
     before [;
@@ -295,6 +347,106 @@ has scenery static;
 
 ! Something edible
 Class EdibleFruitObject has edible;
+
+! Can be STRIKED to make sparks.
+Class SparkThrowerObject;
+
+! A metal object is required to strike sparks on a SparkThrowerObject
+Class MetalObject;
+
+! A long straight object that can be made into a torch.
+! The material property describes what the torch is made of.
+Class TorchBaseObject 
+with
+
+    ! The default material that makes this object.
+    ! This value should be set on instances.
+    material "nondescript",
+    
+    ! The torch can be made of multiple things, display the material which
+    ! this torch is made of, in the display name.
+    short_name [;
+        if (self has is_torch) {
+            print (string) self.material, " torch";
+            return true;
+        }
+        else
+            rfalse;
+    ],
+    
+    before [;
+        Burn:
+            if (self has light)
+                "", (The) self, " is already lit.";
+            if (self notin player)
+                <Take self>;
+            if (second == nothing)
+                "(You need to say what you want to light ", (the) self, " with).";
+            if (~~second ofclass SparkThrowerObject)
+                "You can't light ", (the) self, " with that.";
+            if (second has wet)
+                "", (The) second, " is wet, you fail to light ", (the) self, ".";
+            if (self hasnt oily)
+                "", (The) self, " fails to burn -- The wick needs some kind of fuel.";
+            give self light;
+            print_ret "You strike ", (the) second, " and sparks fly onto the wick,
+            they catch and a small flame appears -- gradually the flame grows
+            until it covers the wick.";
+    ],
+    
+    ! Describe the wick tied to this object, if any.
+    after [;
+        Examine:
+            if (self has is_torch)
+                print_ret "A crude wick is tied to the one end.";
+        Take:
+            "You take ", (the) self, ".";
+    ],
+    
+    has;
+
+! A material that acts as a wick
+Class TorchWickObject
+with
+    before [;
+        PutOn:
+            if (second ofclass TorchBaseObject) {
+                print_ret "Perhaps you meant to TIE ", (the) self, " around ", (the) second, ".";
+            }
+        Tie:
+            ! Remove this wick when tying it on a TorchBase.
+            ! Then change the torch's name and give it the torch attribute.
+            if (second ofclass TorchBaseObject) {
+                print "You wrap ", (the) self, " around ", (the) second, " to
+                make a crude torch.^";
+                remove self;
+                give second is_torch;
+                second.&name-->0 = 'torch';
+                return true;
+            }
+    ];
+
+! A substance that acts as fuel for a torch.
+Class TorchFuelObject
+with
+    before [;
+        Take:
+            "You'd rather keep ", (the) self, " in it's container.";
+    ],
+    each_turn [n ;
+        ! cover other objects in oil if they are in the same parent as us
+        objectloop(n in parent(self)) {
+            if (n ~= self && n hasnt oily) {
+                give n oily;
+                print (The) n, " is now covered in a film of oil.";
+                if (n ofclass TorchBaseObject) score = score + 1;
+                if (~~n ofclass TorchBaseObject) print " This is a fine mess.";
+            }
+        }
+    ];
+
+! Items that can be taken and are used to solve some of the puzzles.
+Class UsefulObject;
 
 ! [ ================================================================== Objects ]
 
@@ -414,6 +566,18 @@ Object canoe_hasten
     has scenery enterable;
 #endif;
 
+TorchWickObject cloth "strip of canvas"
+with 
+    name 'cloth' 'canvas',
+    description "A strip of canvas cloth the length of your arm, it seems pretty
+    old since it is a pale dirty white.";
+
+MetalObject crowbar "crowbar"
+with
+    name 'crowbar' 'bar',
+    description "A multi-purpose short metal rod, a little rusted but it
+    works all the same.";
+
 !
 ScenicTreeObject fig_tree "fig tree"
 with
@@ -489,6 +653,32 @@ with
     has scenery;
 
 !
+SparkThrowerObject flint_stone "flint"
+with
+    name 'flint' 'stone' 'metallic' 'blue' 'glint',
+    initial "A metllic blue glint catches your eye.",
+    description [;
+        if (self has moved)
+            "A piece of flint stone, it can be sued to make sparks and create a
+            flame.";
+        else
+            "The glint is coming from a stone on the ground.";
+        ],
+    found_in [;
+        if (GetPlayerTorchObject())
+            return Waterfall;
+    ],
+    before [;
+        Use:
+            print_ret "It's a stone, not a zippo. Try LIGHT TORCH.";
+    ],
+    after [;
+        Take:
+            if (self hasnt moved)
+                print_ret "You pick up the stone, it is a piece of flint.";
+    ];
+
+!
 ScenicPlantObject garden_trees "fruit trees"
 with
     name 'fruit' 'cherry' 'tree' 'trees',
@@ -554,10 +744,11 @@ with
     has scenery;
 
 ! The jungle is visible in all JungleRooms
-Object jungle_scenery "jungle"
+SearchableObject jungle_scenery "jungle"
     with
         name 'jungle' 'foliage' 'plant' 'plants' 'bush' 'brush' 'shrub',
         description "The jungle foliage is dense and lush.",
+        auto_take true,
         found_in [;
             return (location ofclass JungleRoom);
         ],
@@ -645,6 +836,12 @@ with
             }
     ];
 
+SparkThrowerObject matchbook "matchbook"
+with 
+    name 'match' 'matches' 'matchbook',
+    description "A booklet of lucifer matches.",
+    has wet;
+
 !
 Object pumpkin "pumpkin"
 with
@@ -694,14 +891,20 @@ Object sky "sky"
         ],
     has scenery;
 
-!
-EssentialObject torch "torch"
+! A bone that can be made into a torch.
+TorchBaseObject torch_of_bone "bone"
 with
-    name 'torch',
-    description "It is a crude torch that you constructed from a stick and
-        some old cloth, dipped in an oily substance."
-    has ~light;
+    name 'bone' 'bone' 'femur',
+    material "bone",
+    description "It is a part of a human leg, a femur bone.";
 
+! A wooden stick that can be made into a torch.
+TorchBaseObject torch_of_wood "stick"
+with
+    name 'wood' 'wood' 'stick',
+    material "wooden",
+    description "A wooden stick about the length of your arm.";
+    
 ! [ ==================================================== Non Player Characters ]
 
 ! [ ------------------------------------------------------------------- Monkey ]
@@ -1045,14 +1248,25 @@ HumanNPC boatman
 ! [ ----------------------------------------------------------------- Bungalow ]
 OutdoorRoom Bungalow "Bungalow"
 with
-    description "You are inside what appears to be a delapidated hut. The
-                roof long since collapsed, it provides little protection
-                from the elements.
-                You see a clearing to the North
-                and an exit to the Southwest.",
+    description "You are inside a delapidated bungalow. The roof long since
+    collapsed, it provides little protection from the elements.
+    You see a clearing to the North
+    and an exit to the Southwest.",
     cant_go "The only exits are North and Southwest.",
     n_to Clearing,
     sw_to Garden;
+
+SearchableObject bungalow_rubble "rubble"
+with 
+    name 'rubble' 'detritus' 'junk' 'debris' 'roof' 'floor' 'bungalow' 'hut' 'room',
+    found_in Bungalow,
+    description "A pile of debris litters the floor, made up of chunks of roof thatching and
+    broken remnants of furniture.",
+    search_lead "You scrounge amid the rubble and disturb a giant centipede -
+    The critter scurries out of sight. You continue your search and find ",
+    search_concludes "You take them.",
+    auto_take true,
+    has pluralname;
 
 ! [ ----------------------------------------------------------------- Clearing ]
 JungleRoom Clearing "In a Clearing"
@@ -1247,6 +1461,18 @@ with
         Take: "You can't take the glyphs as they are engraved into the stone.";
     ];
 
+Object urn "urn" Temple
+with
+    name 'urn',
+    description "A clay vessel.",
+    has container openable;
+
+TorchFuelObject "oil" urn 
+with 
+    name 'oil',
+    article "some",
+    description "You are not sure what this was used for, but it distinctly oily.";
+
 ! [ -------------------------------------------------------------- Top Of Tree ]
 OutdoorRoom TreeTop "Top of Tree"
 with
@@ -1347,7 +1573,6 @@ with
             "You water is clear enough to see through to the bottom.";
     ];
 
-
 ! [ ========================================================== Doors & Bridges ]
 ! [ For auxiliary objects the player can enter to travel between rooms ]
 
@@ -1362,24 +1587,26 @@ with
     name 'alcove',
     initial "There is an alcove through the cascading water, to the North.",
     
-    description [;
+    description [ torch;
         print "This secret little alcove is not so secret anymore. ";
-        if (torch in player && torch has light)
-            print "You see the passage beyond the alcove leading underground.^";
-        else if (torch in player && torch hasnt light)
+        torch = GetPlayerTorchObject();
+        if (~~torch)
+            print_ret "It appears to lead underground, but it is pitch black in
+            there, you can't make out where it leads.";
+        if (torch hasnt light)
             print "It is pitch black in there. If only your torch was lit.^";
-        else if (torch notin player)
-            print "It appears to lead underground, but it is pitch black in
-                there, you can't make out where it leads.^";
+        if (torch has light)
+            print "You see the passage beyond the alcove leading underground.^";
     ],
 
-    door_to [;
+    door_to [ torch;
         if (self notin Waterfall)
             "That way is the waterfall -- You don't need a shower right now.";
-        if (torch in player && torch hasnt light)
+        torch = GetPlayerTorchObject();
+        if (~~torch)
+            print_ret "You would rather not enter without a light.";
+        if (torch hasnt light)
             "It is pitch black in there. If only your torch was lit.";
-        if (torch notin player)
-            "You would rather not enter without a light.";
         print "You steady your torch and head down the dark passage.^";
         return Tomb;
     ],
@@ -1443,7 +1670,7 @@ with
 ! Connect the Waterfall with the Temple via a door called the "temple"
 RockDoor temple_door "temple"
 with
-    name 'temple' 'stone' 'building',
+    name 'temple' 'building',
     initial "There is a temple here, to the South.",
     description "The temple is about three times your height, it is
     constructed of carved stone blocks and seems partially swallowed by vines
@@ -1459,6 +1686,7 @@ with
 ScenicRockObject warpto_clearing Clearing with name 'clearing' 'portal';
 ScenicRockObject warpto_cliff Cliff with name 'cliff' 'portal';
 ScenicRockObject warpto_garden Garden with name 'garden' 'portal';
+ScenicRockObject warpto_bungalow Bungalow with name 'bungalow' 'portal';
 ScenicRockObject warpto_valley Valley with name 'valley' 'portal';
 ScenicRockObject warpto_waterfall Waterfall with name 'waterf' 'portal';
 #endif;

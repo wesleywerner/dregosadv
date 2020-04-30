@@ -105,7 +105,10 @@ _(Not Implemented, Not Tested)_
 4. Tie/wrap the cloth around the stick or bone to make a torch.
 5. Dip the torch in the oil.
 5. Find the flint stone by the Waterfall (noticeable when carrying the torch).
-6. Light the torch with the flint (requires holding the crowbar to strike the flint).
+
+To light the torch:
+1. USE FLINT will redirects to LIGHT TORCH.
+2. BURN TORCH will light it.
 
 #### Find the Alcove
 _(Implemented, Tested - find_the_alcove.spec)_
@@ -128,5 +131,6 @@ _(Not Implemented, Not Tested)_
 * task_scores - DM$ $22
 * Changing weather in the sky object
 * Optimize entry descriptions for all rooms
+* Include "Scenic";
 * Advent style "go to room" logic, DM4 $30 pg 220
 * Fill the journal with notes
