@@ -103,6 +103,13 @@ Verb 'whip' * noun -> Whip;
 ];
 Verb    'use'       * noun                          -> Use;
 
+! Provides a "Dip" synonym for inserting things.
+! Note that dipping implies insert something into the *parent* of the thing.
+[ DipSub;
+    <<Insert noun parent(second)>>;
+];
+Verb    'dip'       * noun 'in'/'into' noun         -> Dip;
+
 ! [ ================================================================= Routines ]
 
 [ Initialise;
@@ -1715,7 +1722,7 @@ Extend 	'climb'		* 'up'/'down' noun				 -> GoUpDownNoun;
 ];
 Verb    'talk'      * 'to' noun                     -> TalkToNounHelp;
 
-! Add a synonymn for search, as "look behind the noun".
+! Add a synonym for search, as "look behind the noun".
 ! The default rules does not have "look behind".
 [ LookBehindSub;
     <<Search noun>>;

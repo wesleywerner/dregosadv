@@ -93,7 +93,7 @@ _(Implemented, Tested - deadly_drop.spec)_
 * Where: Rope Bridge
 
 #### Make a Torch
-_(Not Implemented, Not Tested)_
+_(Implemented, make_a_torch.spec)_
 * Why: to enter the dark underground temple.
 * What: A stick, some old cloth, an oily substance, crowbar, flint stone.
 * How: tie cloth to stick, dip torch in oil, light torch with flint.

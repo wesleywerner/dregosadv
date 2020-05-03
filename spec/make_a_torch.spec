@@ -16,6 +16,6 @@ take stone
 light torch with stone
 enter temple
 open urn
-put torch in urn
+dip torch in oil
 light torch with stone
 go out
