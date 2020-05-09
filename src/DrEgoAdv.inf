@@ -1431,6 +1431,10 @@ with
                 be indistinguishable from the rest in a few months.
                 ^^The river shore is back South, you notice a clearing
                 in the jungle to the West.",
+    n_to [;
+        if (Temple has visited) return path_to_temple;
+        return LostInJungle;
+    ],
     w_to Clearing,
     s_to Shore;
 
@@ -1484,7 +1488,7 @@ with
         print_ret "You hear water falling from the exit to the North.";
     ],
     n_to Waterfall,
-
+    s_to path_to_temple,
     before [;
         Exit:
             ! Exit the temple
@@ -1789,6 +1793,30 @@ with
     door_to Temple,
     door_dir s_to,
     has ~scenery;
+
+! Connect the inside of the Temple with a path back to the Jungle Path.
+! This connection only becomes visible if the player has visited the Temple.
+RockDoor path_to_temple "Path to Temple"
+with
+    initial [;
+        if (location == Temple) 
+            print "An exit to the South leads into the jungle.^";
+        if (location == JunglePath) 
+            print "A trail to the North leads to a distant Temple.^";
+    ],
+    found_in [;
+        if (location == Temple) return Temple;
+        if (location == JunglePath && Temple has visited) return JunglePath;
+    ],
+    door_to [;
+        if (location == Temple) return JunglePath;
+        if (location == JunglePath) return Temple;
+    ],
+    door_dir [; ! Only used for ENTER actions
+        if (self in Temple) return s_to;
+        if (self in JunglePath) return n_to;
+    ],
+    has door open ~scenery static;
 
 ! [ ================================================================ Debugging ]
 #ifdef DEBUG;
