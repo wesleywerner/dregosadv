@@ -14,10 +14,9 @@ look in alcove
 enter alcove
 take stone
 light torch with stone
-enter temple
+purloin urn
 open urn
 dip torch in oil
 light torch with stone
-go out
 look in alcove
 enter alcove

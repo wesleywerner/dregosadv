@@ -118,7 +118,7 @@ _(Implemented, Tested - find_the_alcove.spec)_
 * Where: Temple
 
 #### Pressure Plate Booby Trap
-_(Not Implemented, Not Tested)_
+_(Implemented, - pressure_plate_trap.spec)_
 * Why: get the golden egg without setting off the trap.
 * What: Stone statue.
 * How: Place the stone statue on the pressure plate before taking the egg.

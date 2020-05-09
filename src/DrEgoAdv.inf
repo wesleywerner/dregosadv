@@ -132,7 +132,10 @@ Verb    'dip'       * noun 'in'/'into' noun         -> Dip;
     move crowbar to bungalow_rubble;
     move cloth to bungalow_rubble;
     move torch_of_wood to jungle_scenery;
-    move torch_of_bone to Temple;
+    move golden_egg to stone_altar;
+    move stone_egg to temple_stone_box;
+    move urn to temple_stone_box;
+    move torch_of_bone to temple_stone_box;
     
     ! Start Daemons
     StartDaemon(monkey);
@@ -266,15 +269,39 @@ Class EssentialObject
                 print_ret (A) noun, " is not food.";
         ];
 
+! Provides a feature to print additional text when a scenic item is examined
+! the first time.
+Class ScenicBase
+with
+    examined false,
+    description_lead "",
+    before [;
+        Examine:
+            if (~~self.examined) {
+                self.examined = true;
+                print (string) self.description_lead;
+            }
+    ];
+
 ! Provides the scenery attribute
 Class ScenicRockObject
 with
     before [;
-        Take:
+        Take, Push, Pull:
             if (noun has pluralname)
                 print_ret (The) self, " are way too large and heavy to move.";
             else
                 print_ret (The) self, " is way too large and heavy to move.";
+    ],
+has scenery static;
+
+Class ScenicEngravingObject
+class ScenicBase
+with
+    before [;
+        Take:
+            print_ret "You can't take ", (the) self, " as they are part of the
+            stone.";
     ],
 has scenery static;
 
@@ -454,6 +481,8 @@ with
 
 ! Items that can be taken and are used to solve some of the puzzles.
 Class UsefulObject;
+
+Class WeightedObject;
 
 ! [ ================================================================== Objects ]
 
@@ -717,10 +746,17 @@ with
     has supporter;
 
 ! The prized treasure you are looking for.
-Object golden_egg "Golden Egg of Man-Toomba"
+EssentialObject golden_egg "Golden Egg of Man-Toomba"
     with
+        article "the",
         name 'gold' 'golden' 'egg',
-        description "It shimmers with golden light.";
+        description "It shimmers with golden light.",
+        after [;
+            Take:
+                if (~~self has moved)
+                    print_ret "You lift ", (the) self, " carefully from it's
+                    resting place.";
+        ];
 
 !
 EssentialObject journal "journal"
@@ -897,6 +933,12 @@ Object sky "sky"
             return (location ofclass OutdoorRoom);
         ],
     has scenery;
+
+WeightedObject stone_egg "stone egg"
+with 
+    name 'stone' 'egg',
+    description "The stone is carved in the shape of an egg, it is the size of a
+    head.";
 
 ! A bone that can be made into a torch.
 TorchBaseObject torch_of_bone "bone"
@@ -1431,10 +1473,16 @@ with
 ! [ ------------------------------------------------------------------- Temple ]
 IndoorRoom Temple "Temple"
 with
-    description "You are inside the stone temple, large openings in the ceiling
-    provide ample natural light for you to see. The walls are covered in
-    engraved glyphs.
-    You hear water falling from the exit to the North.",
+    description [;
+        print "You are inside the stone temple, large openings in the ceiling
+        provide ample natural light for you to see the walls covered in
+        symbols. ";
+        if (temple_stone_box has open)
+            print "You see a hole in the floor. ";
+        else
+            print "A stone slab is on the floor. ";
+        print_ret "You hear water falling from the exit to the North.";
+    ],
     n_to Waterfall,
 
     before [;
@@ -1448,7 +1496,7 @@ with
 
     has light;
 
-ScenicRockObject "glyphs" Temple
+ScenicEngravingObject "glyphs" Temple
 with
     name 'glyph' 'glyphs' 'symbol' 'symbols' 'wall' 'walls',
     description "The engravings cover all of the wall surfaces, your attention
@@ -1468,7 +1516,18 @@ with
         Take: "You can't take the glyphs as they are engraved into the stone.";
     ];
 
-Object urn "urn" Temple
+ScenicRockObject temple_stone_box "stone lid" Temple
+with
+    name 'stone' 'slab' 'hole',
+    description "It is a square slab of stone flush with the floor, finger-sized
+    holes carved in the top make it possible to open it.",
+    before [;
+        Take:
+            <<Open self>>;
+    ],
+    has container openable;
+
+Object urn "urn"
 with
     name 'urn',
     description "A clay vessel.",
@@ -1527,10 +1586,45 @@ with
 ! [ --------------------------------------------------------------------- Tomb ]
 IndoorRoom Tomb "Underground Tomb"
 with
-    description "You are inside an ancient tomb, the light of your torch
-        make engraved runes in the walls seem to dance all around you.
-        A narrow stone staircase leads up.",
-    has light;
+    description "You are in a small dark room, engravings on the walls dance
+    under the flicker of your torch.
+    A narrow stone staircase leads up.",
+    u_to tomb_stairs;
+
+ScenicEngravingObject "runes" Tomb
+with
+    name 'rune' 'runes' 'engraving' 'engravings' 'wall' 'walls',
+    description_lead "You lean in toward the engravings and raise your torch up
+    to get a better look. ",
+    description "Runes are carved into the stone wall, you recognize some as
+    mannaz, ehwaz, gebo, peorth.";
+! mannaz Mankind, Intelligence, forethought, create, skill, ability
+! ehwaz Horse, Movement and change for the better. Gradual development and steady progress are indicated.
+! gebo Gifts, both in the sense of sacrifice and of generosity
+! peorth, Something Concealed, A Secret Thing
+
+ScenicRockObject stone_altar "altar" Tomb
+with
+    name 'altar',
+    initial "There is an altar in the center of the room.",
+    description "The altar is made of stone and wood, it is fixed to the floor
+    and extrudes up to the height of your chest. The top surface is a wooden
+    plate inset into the stone base.",
+    each_turn [n is_weighted;
+        is_weighted = false;
+        objectloop (n in self) {
+            if (n ofclass WeightedObject) is_weighted = true;
+            if (n == golden_egg) is_weighted = true;
+        }
+        if (~~is_weighted) {
+            deadflag = 1;
+            "^The weight lifted from the altar triggers a pressure plate booby
+            trap, tens of tiny poisoned darts shoot out from holes hidden in the
+            runed walls. You slump to the floor paralized, never to wake up
+            again.";
+    }
+    ],
+    has ~scenery supporter;
 
 ! [ ------------------------------------------------------------------- Valley ]
 JungleRoom Valley "Valley"
@@ -1587,6 +1681,15 @@ with
 !       use the initial property to display "a structure is to the south/north"
 !       depending which location is described.
 !       include this in movement.spec
+
+! Connect the inside of the Tomb with the Waterfall
+RockDoor tomb_stairs "stairs"
+with
+    name 'stair' 'stairs',
+    description "Carved out of the stone, they lead up.",
+    found_in Tomb,
+    door_dir u_to,
+    door_to Waterfall;
 
 ! Connect the Waterfall with the Tomb via an Alcove
 RockDoor alcove_door "alcove"
@@ -1688,14 +1791,17 @@ with
     has ~scenery;
 
 ! [ ================================================================ Debugging ]
-! These portals provide a way to quickly jump to locations in our spec scripts.
 #ifdef DEBUG;
+! These portals provide a way to quickly jump to locations in our spec scripts.
 ScenicRockObject warpto_clearing Clearing with name 'clearing' 'portal';
 ScenicRockObject warpto_cliff Cliff with name 'cliff' 'portal';
 ScenicRockObject warpto_garden Garden with name 'garden' 'portal';
 ScenicRockObject warpto_bungalow Bungalow with name 'bungalow' 'portal';
 ScenicRockObject warpto_valley Valley with name 'valley' 'portal';
 ScenicRockObject warpto_waterfall Waterfall with name 'waterf' 'portal';
+ScenicRockObject warpto_tomb Tomb with name 'tomb' 'portal';
+! Some useful items used in test specifications
+Object debugger_wand "Wizard's Wand" with name 'wizard' 'wand' has light;
 #endif;
 
 ! [ ================================================================== Grammar ]

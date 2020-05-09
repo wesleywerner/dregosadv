@@ -8,6 +8,7 @@ cat distract_monkey.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > distract_monkey.actua
 cat deadly_drop.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > deadly_drop.actual
 cat find_the_alcove.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > find_the_alcove.actual
 cat make_a_torch.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > make_a_torch.actual
+cat pressure_plate_trap.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > pressure_plate_trap.actual
 cat catch_fish.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > catch_fish.actual
 cat compass.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > compass.actual
 
@@ -31,6 +32,9 @@ diff --ignore-space-change find_the_alcove.expected find_the_alcove.actual >> te
 
 echo [ Puzzle: Make a Torch ----------------------------------------------] >> test_results.txt
 diff --ignore-space-change make_a_torch.expected make_a_torch.actual >> test_results.txt
+
+echo [ Puzzle: Pressure Plate Trap ---------------------------------------] >> test_results.txt
+diff --ignore-space-change pressure_plate_trap.expected pressure_plate_trap.actual >> test_results.txt
 
 echo [ Amusing: Catch Fish -----------------------------------------------] >> test_results.txt
 diff --ignore-space-change catch_fish.expected catch_fish.actual >> test_results.txt
