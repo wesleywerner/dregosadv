@@ -7,14 +7,11 @@
   You are in a canoe on the Maro river. Your guide is with you, rowing the
   craft.
 . 
-> >  Dr Ego and the Egg of Man-Toomba is now in its "brief" printing mode, which
-  gives long descriptions of places never before visited and short
-  descriptions otherwise.
+> >  Dr Ego and the Egg of Man-Toomba is now in its "superbrief" mode, which
+  always gives short descriptions of locations (even if you haven't been
+  there before).
   
 > >  Bungalow
-  You are inside a delapidated bungalow. The roof long since collapsed, it
-  provides little protection from the elements. You see a clearing to the
-  North and an exit to the Southwest.
   
   You can see some rubble here.
   
@@ -23,15 +20,8 @@
   and a crowbar. You take them.
   
 > >  In a Clearing
-  You are in a natural clearing, the ground a part of a large bedrock
-  providing some relief from the dense jungle. A large fig tree stands here
-  proudly. A monkey sits in the fig tree.
-  
-  A jungle path is due East. A small structure is visible to the South. Stone
-  stairs are due Northeast.
   
 > >  Lost in the Jungle
-  You don't know where you are.
   
 > >  You find a stick.
   
@@ -51,9 +41,6 @@
     your compass
   
 > >  Waterfall
-  There is a beautiful waterfall here, the water cascades down from somewhere
-  up above into the clear pool. A fine mist of water-spray fills the space
-  above the pool with a vivid rainbow. A rope bridge is to the West.
   
   There is a temple here, to the South.
   
@@ -74,9 +61,6 @@
 > >  The wooden torch fails to burn -- The wick needs some kind of fuel.
   
 > >  Temple
-  You are inside the stone temple, large openings in the ceiling provide
-  ample natural light for you to see. The walls are covered in engraved
-  glyphs. You hear water falling from the exit to the North.
   
   You can see a bone and an urn (which is closed) here.
   
@@ -95,5 +79,12 @@
   There is a temple here, to the South.
   
   There is an alcove through the cascading water, to the North.
+  
+> >  This secret little alcove is not so secret anymore. You see the passage
+  beyond the alcove leading underground.
+  
+> >  You steady your torch and head down the dark passage.
+  
+  Underground Tomb
   
 > >

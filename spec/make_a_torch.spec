@@ -1,4 +1,4 @@
-brief
+superbrief
 gonear bungalow portal
 search rubble
 go north
@@ -19,3 +19,5 @@ open urn
 dip torch in oil
 light torch with stone
 go out
+look in alcove
+enter alcove
