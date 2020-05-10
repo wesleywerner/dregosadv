@@ -124,13 +124,28 @@ _(Implemented, - pressure_plate_trap.spec)_
 * How: Place the stone statue on the pressure plate before taking the egg.
 * Where: Tomb (stone statue).
 
+# Scores
+
+Using the task scoring system, these tasks are Achievable. See the `task_scores` variable in the source.
+
++ 0: User your compass when lost in the jungle.
++ 1: See the stairs from the top of the tree. (puzzle)
++ 2: Whip a banana off the tree. (puzzle)
++ 3: Retrieve your compass from the monkey. (puzzle)
++ 4: Made a torch. (puzzle)
++ 5: Discover the alcove behind the waterfall. (puzzle)
++ 6: Get the golden egg without setting off the dart trap. (puzzle)
++ 7: Catch a fish with your whip
+
 # TODO
 * Get NewbieGrammar.h included
 * Look in directions in most rooms
 * Listen and smell senses in most rooms
-* task_scores - DM$ $22
 * Changing weather in the sky object
 * Optimize entry descriptions for all rooms
 * Include "Scenic";
 * Advent style "go to room" logic, DM4 $30 pg 220
 * Fill the journal with notes
+
+### Done
+* task_scores - DM$ $22

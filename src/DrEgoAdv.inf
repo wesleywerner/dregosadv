@@ -15,8 +15,24 @@ Statusline time;
 ! Mention to dead players that they can UNDO the last action.
 Constant DEATH_MENTION_UNDO;
 
-! Maximum score possible
-Constant MAX_SCORE = 10;
+! Set up the game score
+Constant TASKS_PROVIDED;
+Constant NUMBER_TASKS = 8;
+Constant MAX_SCORE = 8;
+Array task_scores -> 1 1 1 1 1 1 1 1;
+
+[ PrintTaskName task_number;
+    switch (task_number) {
+        0: "User your compass when lost in the jungle";
+        1: "See the stairs from the top of the tree";
+        2: "Whip a banana off the tree";
+        3: "Retrieve your compass from the monkey";
+        4: "Made a torch";
+        5: "Discover the alcove behind the waterfall";
+        6: "Get the golden egg without setting off the dart trap";
+        7: "Catch a fish with your whip";
+    }
+];
 
 ! Points for visiting a room or taking an item with the "scored" attribute.
 Constant OBJECT_SCORE 1;
@@ -482,7 +498,7 @@ with
             if (n ~= self && n hasnt oily) {
                 give n oily;
                 print (The) n, " is now covered in a film of oil.";
-                if (n ofclass TorchBaseObject) score = score + 1;
+                if (n ofclass TorchBaseObject) Achieved(4);
                 if (~~n ofclass TorchBaseObject) print " This is a fine mess.";
             }
         }
@@ -659,6 +675,7 @@ with
     ! try catch the fish with the whip
     try_catch [;
         if (self notin canoe && self.caught == false) {
+            Achieved(7);
             move self to canoe;
             self.caught = true;
             print_ret "*SNAP* -- As you crack the whip into the water
@@ -740,6 +757,7 @@ with
     ],
     after [;
         Whip:
+            Achieved(2);
             move banana to Garden;
             banana.whip_count = banana.whip_count + 1;
             switch (banana.whip_count) {
@@ -763,6 +781,7 @@ EssentialObject golden_egg "Golden Egg of Man-Toomba"
         after [;
             Take:
                 if (~~self has moved)
+                    Achieved(6);
                     print_ret "You lift ", (the) self, " carefully from it's
                     resting place.";
         ];
@@ -877,7 +896,7 @@ with
         if (location == LostInJungle) {
             if (~~self.used_scored) {
                 self.used_scored = true;
-                score = score + 1;
+                Achieved(0);
             }
             print "^", (A) self, " guides you back to safety.^";
             ! parameter "2" honors brief room descriptions - DM4 pg 21
@@ -922,6 +941,11 @@ with
                     print_ret "It is out of your reach.";
                 }
             }
+    ],
+    
+    after [;
+        Take:
+            Achieved(3);
     ];
 
 SparkThrowerObject matchbook "matchbook"
@@ -1624,7 +1648,7 @@ with
         Examine:
             if (noun == ne_obj) {
                 Clearing.ne_to = Valley;
-                score = score + 1;
+                Achieved(1);
                 print_ret "There! Stone stairs up the hill, in the distance to ",
                     (a) noun, ".";
             }
@@ -1705,7 +1729,7 @@ with
         Search:
             if (alcove_door notin Waterfall) {
                 move alcove_door to Waterfall;
-                score = score + 1;
+                Achieved(5);
                 "You lean into the narrow space behind the cascading
                 water and see an alcove behind the waterfall.";
             } else {
