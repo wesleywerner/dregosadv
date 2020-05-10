@@ -305,6 +305,15 @@ with
     ],
 has scenery static;
 
+! A door that is too far to touch
+Class DistantDoor
+with
+    before [;
+        Take:
+            print_ret (The) self, " is way too far away.";
+    ],
+has scenery static door open;
+
 Class RockDoor
 with
     before [;
@@ -1020,7 +1029,6 @@ with
     ],
     
     ! Monkey Movements
-    ! TODO routinize monkey daemon
     daemon [look_item fruit;
     
         ! Move to the clearing if the player is in the tree
@@ -1200,7 +1208,6 @@ HumanNPC boatman
         noticed_compass false,
 
         ! Hide the room description (in the boat you see your guide)
-        ! TODO move desccriptions from rooms into here.
         initial [;
             return true;
         ],
@@ -1327,14 +1334,12 @@ with
         print "A large fig tree stands here proudly. ";
         if (monkey in fig_tree)
             print "A monkey sits in ", (the) fig_tree, ".";
-        print "^^A jungle path is due East.
-            A small structure is visible to the South. ";
-        if (self.ne_to ofclass JungleRoom)
-            print "Stone stairs are due Northeast.";
-        print_ret "";
+        if (self.ne_to ~= LostInJungle)
+            print "The way to the stone stairs is Northeast. ";
+        print "^^A jungle path is East.";
     ],
     e_to JunglePath,
-    s_to Bungalow,
+    s_to bungalow_way,
     u_to TreeTop,
 
     before [;
@@ -1407,8 +1412,8 @@ JungleRoom Garden "Garden"
 with
     description "You stand in an unkempt garden, whoever kept this garden hasn't
     been here for a very long time. You see some vegetable plants and fruit
-    trees. A hut is to the Northeast.",
-    ne_to Bungalow;
+    trees.",
+    ne_to bungalow_way;
 
 ScenicPlantObject "vegetable plants" Garden
 with
@@ -1695,10 +1700,25 @@ with
 ! [ ========================================================== Doors & Bridges ]
 ! [ For auxiliary objects the player can enter to travel between rooms ]
 
-! TODO add a hut_entry_obj found_in clearing and garden.
-!       use the initial property to display "a structure is to the south/north"
-!       depending which location is described.
-!       include this in movement.spec
+! Connect both the Clearing and Garden with the Bungalow.
+DistantDoor bungalow_way "small hut"
+with
+    name 'structure' 'hut' 'building' 'bungalow',
+    initial [;
+        print_ret (A) self, " is to the ", (name) self.door_dir(), ".";
+    ],
+    description "From this distance, the walls of the small structure seem to be
+    made of clay and mud, there is no roof and the general appearance of the hut
+    gives the impression that its abandoned.",
+    found_in Clearing Garden,
+    door_to Bungalow,
+    door_dir [;
+        ! south from the clearing
+        if (self in Clearing) return s_to;
+        ! northeast from the garden
+        return ne_to;
+    ],
+    has ~scenery static;
 
 ! Connect the inside of the Tomb with the Waterfall
 RockDoor tomb_stairs "stairs"
