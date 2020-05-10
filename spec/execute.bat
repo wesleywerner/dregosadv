@@ -11,6 +11,7 @@ cat make_a_torch.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > make_a_torch.actual
 cat pressure_plate_trap.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > pressure_plate_trap.actual
 cat catch_fish.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > catch_fish.actual
 cat compass.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > compass.actual
+cat ending.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > ending.actual
 
 ::REM Diff Results
 if exist test_results.txt del test_results.txt
@@ -41,6 +42,9 @@ diff --ignore-space-change catch_fish.expected catch_fish.actual >> test_results
 
 echo [ Device: Compass ---------------------------------------------------] >> test_results.txt
 diff --ignore-space-change compass.expected compass.actual >> test_results.txt
+
+echo [ Ending ------------------------------------------------------------] >> test_results.txt
+diff --ignore-space-change ending.expected ending.actual >> test_results.txt
 
 ::REM Output Results
 cat test_results.txt

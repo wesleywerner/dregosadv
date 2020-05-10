@@ -1472,7 +1472,21 @@ with
                     print_ret "You are on the river shore. A roughly cut path
                                 leads North into the jungle.";
                 ],
-    n_to JunglePath;
+    n_to JunglePath,
+    
+    each_turn [;
+        ! Win condition
+        if (golden_egg in player) {
+            deadflag = 2;
+            print "^Your guide's eyes light up as you show ", (the) golden_egg, " to
+            him, you get in ", (the) canoe, " and spend the journey 
+            telling him of your adventure. ";
+            if (fish in canoe) print "That evening ", (a) boatman, " prepares 
+            the fish you caught, you both enjoy it. ";
+            print "^^You spend the next week cataloguing the precious artifact,
+            before you donate ", (the) golden_egg, " to the archeology museum.";
+        }
+    ];
 
 ! [ ------------------------------------------------------------------- Temple ]
 IndoorRoom Temple "Temple"
