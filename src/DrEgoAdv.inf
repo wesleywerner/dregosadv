@@ -752,7 +752,7 @@ with
                 the tree.";
             }
     ],
-    has supporter;
+    has container open;
 
 ! The prized treasure you are looking for.
 EssentialObject golden_egg "Golden Egg of Man-Toomba"
