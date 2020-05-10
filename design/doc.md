@@ -138,7 +138,7 @@ Using the task scoring system, these tasks are Achievable. See the `task_scores`
 + 7: Catch a fish with your whip
 
 # TODO
-* Get NewbieGrammar.h included
+* Add HELP, ABOUT, HINT
 * Look in directions in most rooms
 * Listen and smell senses in most rooms
 * Changing weather in the sky object

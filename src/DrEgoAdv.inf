@@ -58,6 +58,9 @@ Attribute is_torch;
 Attribute wet;
 Attribute oily;
 
+! Define default responses for the five senses.
+Constant LOOK_DOWN_REPLY = "The ground is below you -- thank heavens!";
+
 ! Hide status line for debug builds.
 ! This streamlines the diffs used by unit tests.
 #ifdef DEBUG;
@@ -215,30 +218,46 @@ Class IndoorRoom
 with
     cant_go "You bump into the stone wall. Ouch!";
 
+! The outdoor room always contains the sky object, looking up examines the sky.
 Class OutdoorRoom
+with
+    before [;
+        Examine:
+            if (noun == u_obj) <<Examine sky>>;
+    ],
     has light;
 
 ! The jungle room allows the player to "get lost" for a little while, but
 ! they always find their way back to the last known location.
 ! The LostInJungle object handles returning the player back safely.
 Class JungleRoom
-    class OutdoorRoom
-    with
-        ! Get lost when going in undefined direction
-        n_to LostInJungle,
-        nw_to LostInJungle,
-        ne_to LostInJungle,
-        s_to LostInJungle,
-        sw_to LostInJungle,
-        se_to LostInJungle,
-        e_to LostInJungle,
-        w_to LostInJungle,
-        ! Record the last known good location
-        after [;
-            Go:
-                if (location ~= LostInJungle)
-                    last_known_location = location;
-        ];
+class OutdoorRoom
+with
+    ! Get lost when going in undefined direction
+    n_to LostInJungle,
+    nw_to LostInJungle,
+    ne_to LostInJungle,
+    s_to LostInJungle,
+    sw_to LostInJungle,
+    se_to LostInJungle,
+    e_to LostInJungle,
+    w_to LostInJungle,
+    ! Record the last known good location
+    after [;
+        Go:
+            if (location ~= LostInJungle)
+                last_known_location = location;
+    ],
+    ! See the jungle when looking in any compass direction.
+    before [;
+        Examine:
+            if (noun == u_obj)
+                <<Examine sky>>;
+            if (noun == d_obj)
+                print_ret (string) LOOK_DOWN_REPLY;
+            if (noun in compass)
+                print_ret "You see the jungle that way.";
+    ];
 
 Class NonPlayerCharacter
 with
@@ -252,7 +271,7 @@ Class HumanNPC
     with
         before [;
             Take:
-                print_ret "You think human trafficing is deplorable.";
+                print_ret "You think human trafficking is deplorable.";
         ],
     has animate;
 
@@ -261,7 +280,7 @@ Class AnimalNPC
     with
         before [;
             Take:
-                print_ret "You think animal trafficing is deplorable.";
+                print_ret "You think animal trafficking is deplorable.";
         ],
     has animate;
 
@@ -846,8 +865,13 @@ EssentialObject journal "journal"
 Object jungle_distant_scenery "jungle"
 with
     name 'jungle' 'foliage' 'plant' 'plants' 'bush' 'brush' 'shrub',
-    description "The jungle foliage is dense and lush.",
+    description "The jungle looks green and lush from this distance.",
     found_in River,
+    before [;
+        Take:
+            print_ret "It is too far to reach the jungle, you are still on the
+            river, you know!";
+    ],
     has scenery;
 
 ! The jungle is visible in all JungleRooms
@@ -1360,10 +1384,21 @@ HumanNPC boatman
 ! [ ----------------------------------------------------------------- Bungalow ]
 OutdoorRoom Bungalow "Bungalow"
 with
-    description "You are inside a delapidated bungalow. The roof long since
+    description "You are inside a dilapidated bungalow. The roof long since
     collapsed, it provides little protection from the elements.
     You see a clearing to the North
     and an exit to the Southwest.",
+    before [;
+        Examine:
+            if (noun == d_obj)
+                print_ret "The ground is strewn with rubble.";
+            if (noun == n_obj)
+                print_ret "You see a clearing beyond the exit.";
+            if (noun == sw_obj)
+                print_ret "You see a small garden beyond the exit.";
+            if (noun in compass)
+                print_ret "A wall is that way.";
+    ],
     cant_go "The only exits are North and Southwest.",
     n_to Clearing,
     sw_to Garden;
@@ -1492,6 +1527,13 @@ with
                 be indistinguishable from the rest in a few months.
                 ^^The river shore is back South, you notice a clearing
                 in the jungle to the West.",
+    before [;
+        Examine:
+            if (noun == s_obj)
+                print_ret "You see a river that way.";
+            if (noun == w_obj)
+                print_ret "You see a clearing in the jungle that way.";
+    ],
     n_to [;
         if (Temple has visited) return path_to_temple;
         return LostInJungle;
@@ -1521,6 +1563,17 @@ with
     description [;
         print_ret "You are in ", (a) canoe, " on the Maro river. ",
                     (A) boatman, " is with you, rowing the craft.";
+    ],
+    
+    before [;
+        ! Senses
+        Examine:
+            if (noun == u_obj)
+                <<Examine sky>>;
+            if (noun == d_obj)
+                <<Examine canoe>>;
+            if (noun in compass)
+                print_ret "You see the jungle across the water.";
     ];
 
 ! [ -------------------------------------------------------------- River Shore ]
