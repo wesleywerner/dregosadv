@@ -770,7 +770,7 @@ EssentialObject golden_egg "Golden Egg of Man-Toomba"
 !
 EssentialObject journal "journal"
     with
-        name 'diary' 'journal' 'book',
+        name 'your' 'diary' 'journal' 'book',
         description "It is your journal filled with your research notes.
         You can ~look up <any topic> in journal~ or ~read about <any topic> in
         journal~, or ~consult journal about <any topic>~.",
@@ -780,9 +780,45 @@ EssentialObject journal "journal"
             wn = consult_from;
             w1 = NextWord();
             w2 = NextWord();
+            
+            if (w1=='Papua' || w2=='Guinea')
+                "You leaf through your notes and come to an entry about Papua
+                New Guinea: It is a country in Oceania that occupies the eastern
+                half of the island. Its capital, located along its southeastern
+                coast, is Port Moresby. It is the world's 3rd largest island
+                country. It is known to have numerous groups of uncontacted
+                peoples, and researchers believe there are many undiscovered
+                species of plants and animals in the interior.";
+            
+            if (w1=='maro' || w1=='river' || w2=='river')
+                "The Maro river flows from north-east to south-west into the
+                Arafura Sea. It runs over 124 miles or 200 kilometers in length,
+                and is up to 1 kilometer or two thirds of a mile wide.
+                It is a complex system of swamps and oxbow lakes which hosts a
+                large number of birds and reptiles.";
+            
             if ((w1=='air' && w2 =='terjun') || (w1=='terjun'))
-                "You find the entry in your journal about air terjun, and learn
-                that it mean ~behind the waterfall~.";
+                "You page through your journal until you find your notes about
+                glyphs, and find an underlined passage about air terjun -- you
+                learn that the symbol indicates a hidden thing ~behind the
+                falling water~.";
+            
+            if (w1=='Mogillo' || w1=='fish' || w1=='bass' || w2=='bass')
+                "Lutjanus goldiei, the Papuan black bass known locally as
+                mogillo, is a large snapper species native to the Pacific Ocean
+                from New Guinea all the way to Malaysia and known to inhabit
+                thick, jungle rivers and brackish river mouths.";
+            
+            if (w1=='gold' || w1=='golden' || w1=='egg' || w2=='egg')
+                "The golden egg is a mysterious artifact";
+            
+            if (w1=='glyph' || w1=='glyphs' || w1=='mannaz' 
+                || w1=='ehwaz' || w1=='gebo' || w1=='peorth')
+                "You find some notes on the meanings of these glyphs: 
+                Mannaz means mankind, intelligence and forethought.
+                Ehwaz means horse, Movement and change for the better.
+                Gebo means gifts or treasure.
+                Peorth means something concealed or a secret.";
         Use:
             <<Examine self>>;
     ];
@@ -919,13 +955,9 @@ Object river_water "Maro River"
 with
     name 'maro' 'river' 'water',
     article "the",
-    ! TODO move this detailed description to an entry in the journal.
-    description "The Maro river flows from north-east to south-west, into
-                the Arafura Sea, it runs for over 200 km and is between 50 and
-                900 m wide. The river is strongly tidal for most of its length
-                and its lower reaches are affected by salt water. It is a
-                complex system of swamps and oxbow lakes which hosts a large
-                number of birds and reptiles.",
+    description "The cold water laps up against the sides of the craft. You
+    remember writing facts about the river in your journal, you can READ ABOUT
+    RIVER IN JOURNAL if you want to see what you have written.",
     found_in  River Shore,
     after [;
         Whip:
@@ -1522,12 +1554,9 @@ with
 ScenicEngravingObject "glyphs" Temple
 with
     name 'glyph' 'glyphs' 'symbol' 'symbols' 'wall' 'walls',
-    description "The engravings cover all of the wall surfaces, your attention
+    description "The engravings cover all of the walls. Your attention
     is drawn to a circular pattern in the glyphs as they converge and surround
     one large glyph -- You recognize this glyph as ~air terjun~.",
-    before [;
-        Take: "You can't take the glyphs as they are engraved into the stone.";
-    ],
     has pluralname;
 
 ScenicRockObject "glyphs" Temple
@@ -1614,17 +1643,13 @@ with
     A narrow stone staircase leads up.",
     u_to tomb_stairs;
 
-ScenicEngravingObject "runes" Tomb
+ScenicEngravingObject "glyphs" Tomb
 with
-    name 'rune' 'runes' 'engraving' 'engravings' 'wall' 'walls',
+    name 'glyph' 'glyphs' 'engraving' 'engravings' 'wall' 'walls',
     description_lead "You lean in toward the engravings and raise your torch up
     to get a better look. ",
-    description "Runes are carved into the stone wall, you recognize some as
+    description "The engravings cover all of the walls, you recognize some as
     mannaz, ehwaz, gebo, peorth.";
-! mannaz Mankind, Intelligence, forethought, create, skill, ability
-! ehwaz Horse, Movement and change for the better. Gradual development and steady progress are indicated.
-! gebo Gifts, both in the sense of sacrifice and of generosity
-! peorth, Something Concealed, A Secret Thing
 
 ScenicRockObject stone_altar "altar" Tomb
 with
