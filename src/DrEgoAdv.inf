@@ -156,6 +156,7 @@ Verb    'dip'       * noun 'in'/'into' noun         -> Dip;
     
     ! Start Daemons
     StartDaemon(monkey);
+    StartDaemon(sky);
 
     ! enable debugging actions:
     #ifdef DEBUG;
@@ -1021,6 +1022,22 @@ with
     ],
     has container open scenery;
 
+! Weather states
+Constant WEATHER_DRY 1;
+Constant WEATHER_RAIN 2;
+! Turns in dry state before rain may start
+Constant RAIN_START_T 40;
+! Turns in wet state before rain may stop
+Constant RAIN_STOP_T 20;
+! Chance of thunder in dry weather (1 in n)
+Constant THUNDER_ROLL 10;
+! Multiplier for chance of thunder in dry state (1 in n*THUNDER_ROLL)
+Constant THUNDER_MULTIPLIER 3;
+! Chance of rain (1 in n)
+Constant RAIN_START_ROLL 60;
+! Chance of rain stop (1 in n)
+Constant RAIN_STOP_ROLL 30;
+
 ! The sky is visible in all outdoor areas.
 Object sky "sky"
     with
@@ -1029,6 +1046,72 @@ Object sky "sky"
         found_in [;
             return (location ofclass OutdoorRoom);
         ],
+        ! Weather state - WEATHER_DRY, WEATHER_RAIN
+        state WEATHER_DRY,
+        ! Turns passed in current state
+        counter,
+        ! Thunder delay, heard after lightning
+        thunder_in,
+    daemon [;
+        
+        ! Add the counter
+        self.counter = self.counter + 1;
+        
+        ! Do nothing if the sky is not in the location
+        if (~~self in location) {
+            return;
+        }
+
+        ! Expect rolling thunder on the way
+        if (self.thunder_in > 0) {
+            self.thunder_in = self.thunder_in - 1;
+            if (self.thunder_in == 0) {
+                print (string) random("Loud thunder rolls overhead.",
+                "The sky vibrates with rolling thunder.",
+                "Your ears ring with the sudden clap of thunder."), "^";
+            }
+            ! No more processing while thunder is on the way
+            return;
+        }
+                
+        if (self.state == WEATHER_DRY) {
+            ! Lighting
+            if (random(THUNDER_ROLL * THUNDER_MULTIPLIER) == 1) {
+                self.thunder_in = random(3);
+                print (string) random("Lightning arcs across the sky.",
+                "Lightning flashes in the distance.",
+                "Clouds flicker menacingly with lightning."), "^";
+            }
+            ! Chance of rain
+            if (self.counter > RAIN_START_T && random(RAIN_START_ROLL) == 1) {
+                self.counter = 0;
+                self.state = WEATHER_RAIN;
+                print "You feel the cold spatter of raindrops.^";
+            }
+        } else if (self.state == WEATHER_RAIN) {
+            ! Rain messages
+            if (random(5) == 1) {
+                print "Cold drops ", 
+                (string) random("fall", "land", "spatter"),
+                " on your ",
+                (string) random("head", "arms", "neck", "face", "cheek", "back"),
+                ".^";
+            }
+            ! Lightning
+            if (self.thunder_in == 0 && random(THUNDER_ROLL) == 1) {
+                self.thunder_in = random(3);
+                print (string) random("Lightning arcs across the sky.",
+                "Lightning flashes in the distance.",
+                "Clouds flicker menacingly with lightning."), "^";
+            }
+            ! Clears up
+            if (self.counter > RAIN_STOP_T && self.thunder_in == 0 && random(RAIN_STOP_ROLL) == 1) {
+                self.counter = 0;
+                self.state = WEATHER_DRY;
+                print "The rain stops.^";
+            }
+        }
+    ],
     has scenery;
 
 WeightedObject stone_egg "stone egg"
