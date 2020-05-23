@@ -248,7 +248,8 @@ with
             if (location ~= LostInJungle)
                 last_known_location = location;
     ],
-    ! See the jungle when looking in any compass direction.
+    
+    ! Senses
     before [;
         Examine:
             if (noun == u_obj)
@@ -257,6 +258,10 @@ with
                 print_ret (string) LOOK_DOWN_REPLY;
             if (noun in compass)
                 print_ret "You see the jungle that way.";
+        Listen:
+            print_ret "You hear the sounds of the jungle - faint rustling of
+            leaves in the wind, faint chirps of insects, and occasionally some
+            small critter moving under cover of the dense foliage.";
     ];
 
 Class NonPlayerCharacter
@@ -340,14 +345,17 @@ with
     ],
 has scenery static;
 
-! A door that is too far to touch
-Class DistantDoor
+! A door that is listed in the room description.
+Class DoorWay
 with
+    initial [;
+        print (A) self, " is to the ", (name) self.door_dir(), ".";
+    ],
     before [;
         Take:
-            print_ret (The) self, " is way too far away.";
+            print_ret (The) self, " is not something you can take.";
     ],
-has scenery static door open;
+has static door open;
 
 Class RockDoor
 with
@@ -1386,8 +1394,7 @@ OutdoorRoom Bungalow "Bungalow"
 with
     description "You are inside a dilapidated bungalow. The roof long since
     collapsed, it provides little protection from the elements.
-    You see a clearing to the North
-    and an exit to the Southwest.",
+    You see a clearing to the North.",
     before [;
         Examine:
             if (noun == d_obj)
@@ -1396,12 +1403,16 @@ with
                 print_ret "You see a clearing beyond the exit.";
             if (noun == sw_obj)
                 print_ret "You see a small garden beyond the exit.";
+            if (noun == u_obj) {
+                print "Since the roof is no longer there you can see the sky.^";
+                <<Examine sky>>;
+            }
             if (noun in compass)
                 print_ret "A wall is that way.";
     ],
     cant_go "The only exits are North and Southwest.",
-    n_to Clearing,
-    sw_to Garden;
+    n_to clearing_way,
+    sw_to garden_way;
 
 SearchableObject bungalow_rubble "rubble"
 with 
@@ -1413,21 +1424,27 @@ with
     The critter scurries out of sight. You continue your search and find ",
     search_concludes "You take them.",
     auto_take true,
+    before [;
+        ! Alias Dig as searching
+        Dig:
+            <<Search self>>;
+        ! Hide the rubble from the room description when searched
+        Search:
+            give self scenery;
+    ],
     has pluralname;
 
 ! [ ----------------------------------------------------------------- Clearing ]
-JungleRoom Clearing "In a Clearing"
+JungleRoom Clearing "Clearing"
 with
     description [;
+        ! TODO provide flavor text for unvisited places via class
         if (self hasnt visited)
             print "You are in a natural clearing, the ground a part of a large
                 bedrock providing some relief from the dense jungle. ";
         print "A large fig tree stands here proudly. ";
         if (monkey in fig_tree)
             print "A monkey sits in ", (the) fig_tree, ".";
-        if (self.ne_to ~= LostInJungle)
-            print "The way to the stone stairs is Northeast. ";
-        print "^^A jungle path is East.";
     ],
     e_to JunglePath,
     s_to bungalow_way,
@@ -1574,6 +1591,9 @@ with
                 <<Examine canoe>>;
             if (noun in compass)
                 print_ret "You see the jungle across the water.";
+        Listen:
+            print_ret "You hear the sound of water splashing as ", (a) boatman,
+            " paddles with his oar.";
     ];
 
 ! [ -------------------------------------------------------------- River Shore ]
@@ -1586,7 +1606,7 @@ with
                     print_ret "You are on the river shore. A roughly cut path
                                 leads North into the jungle.";
                 ],
-    n_to JunglePath,
+    n_to jungle_path_way,
     
     each_turn [;
         ! Win condition
@@ -1600,6 +1620,21 @@ with
             print "^^You spend the next week cataloguing the precious artifact,
             before you donate ", (the) golden_egg, " to the archeology museum.";
         }
+    ],
+
+    before [;
+        ! Senses
+        Examine:
+            if (noun == u_obj)
+                <<Examine sky>>;
+            if (noun == d_obj)
+                print_ret "You see the ground beneath you.";
+            if (noun == n_obj || noun == ne_obj || noun == nw_obj)
+                print_ret "You see a jungle in that direction.";
+            if (noun in compass)
+                print_ret "You see the river.";
+        Listen:
+            print_ret "You hear the sound of water lapping the canoe.";
     ];
 
 ! [ ------------------------------------------------------------------- Temple ]
@@ -1700,7 +1735,8 @@ with
         ! Look in directions
         Examine:
             if (noun == ne_obj) {
-                Clearing.ne_to = Valley;
+                Clearing.ne_to = valley_way;
+                move valley_way to Clearing;
                 Achieved(1);
                 print_ret "There! Stone stairs up the hill, in the distance to ",
                     (a) noun, ".";
@@ -1802,13 +1838,38 @@ with
 ! [ ========================================================== Doors & Bridges ]
 ! [ For auxiliary objects the player can enter to travel between rooms ]
 
-! Connect both the Clearing and Garden with the Bungalow.
-DistantDoor bungalow_way "small hut"
+! Way to the jungle path
+DoorWay jungle_path_way "jungle path"
+with
+    name 'path',
+    description "It is a narrow path through the dense jungle.",
+    found_in Clearing Shore,
+    door_to JunglePath,
+    door_dir [;
+        ! east from the Clearing
+        if (self in Clearing) return e_to;
+        ! north from the Shore
+        return n_to;
+    ];
+
+! Way to the Clearing
+DoorWay clearing_way "clearing"
+with
+    name 'clearing',
+    description "It looks like the dense jungle opens up over there.",
+    found_in Bungalow JunglePath,
+    door_to Clearing,
+    door_dir [;
+        ! east from jungle path
+        if (self in JunglePath) return w_to;
+        ! north from Bungalow
+        return n_to;
+    ];
+
+! Way to the Bungalow (from both the Clearing and the Garden)
+DoorWay bungalow_way "hut"
 with
     name 'structure' 'hut' 'building' 'bungalow',
-    initial [;
-        print_ret (A) self, " is to the ", (name) self.door_dir(), ".";
-    ],
     description "From this distance, the walls of the small structure seem to be
     made of clay and mud, there is no roof and the general appearance of the hut
     gives the impression that its abandoned.",
@@ -1819,8 +1880,24 @@ with
         if (self in Clearing) return s_to;
         ! northeast from the garden
         return ne_to;
-    ],
-    has ~scenery static;
+    ];
+
+! Way to the Garden.
+DoorWay garden_way "garden"
+with
+    name 'garden',
+    description "You see a section of garden beyond the doorway.",
+    door_to Garden,
+    found_in Bungalow,
+    door_dir sw_to;
+
+! Way to the Valley
+DoorWay valley_way "valley"
+with
+    name 'valley',
+    description "You can't see the valley from here, but the way leads there.",
+    door_to Valley,
+    door_dir ne_to;
 
 ! Connect the inside of the Tomb with the Waterfall
 RockDoor tomb_stairs "stairs"

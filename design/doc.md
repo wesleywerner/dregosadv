@@ -139,6 +139,7 @@ Using the task scoring system, these tasks are Achievable. See the `task_scores`
 
 # TODO
 * Add HELP, ABOUT, HINT
+* Add doorways to all directions so player can GO WAY
 * Look in directions in most rooms
 * Listen and smell senses in most rooms
 * Changing weather in the sky object
