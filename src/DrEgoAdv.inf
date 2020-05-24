@@ -635,7 +635,7 @@ with
 
     ! Room Description when outside the canoe
     initial [;
-        print_ret (A) boatman, " sits in the canoe gazing out over the
+        print (A) boatman, " sits in the canoe gazing out over the
         moving river, the salty water gently lapping the sides of his
         craft.";
     ],
@@ -817,7 +817,7 @@ with
 !
 ScenicPlantObject garden_trees "fruit trees"
 with
-    name 'fruit' 'cherry' 'tree' 'trees',
+    name 'fruit' 'fruits' 'cherry' 'tree' 'trees',
 
     description "You see a cherry tree but it is not bearing any fruit, the
     banana tree next to it however has a bunch of fruit.",
@@ -1535,9 +1535,15 @@ HumanNPC boatman
 ! [ ----------------------------------------------------------------- Bungalow ]
 OutdoorRoom Bungalow "Bungalow"
 with
-    description "You are inside a dilapidated bungalow. The roof long since
-    collapsed, it provides little protection from the elements.
-    You see a clearing to the North.",
+    description [;
+        if (self hasnt visited) {
+            print "You enter the decrepit hovel and immediately notice the
+            missing roof, it has long since collapsed onto the floor, providing
+            little protection from the elements. ";
+        } else {
+            print "You are inside a dilapidated bungalow. ";
+        }
+    ],
     before [;
         Examine:
             if (noun == d_obj)
@@ -1576,10 +1582,13 @@ JungleRoom Clearing "Clearing"
 with
     description [;
         if (self hasnt visited) {
-            print "You are in a natural clearing, the ground a part of a large
-                bedrock providing some relief from the dense jungle. ";
+            print "The jungle recedes somewhat in this natural clearing, the
+            ground seems a part of a bedrock providing some relief from the
+            dense jungle. You have a open view of the sky above. ";
+        } else {
+            print "You are in a natural clearing. ";
         }
-        print "A large fig tree stands here proudly. ";
+        print "A large fig tree stands here. ";
         if (monkey in fig_tree)
             print "A monkey sits in ", (the) fig_tree, ".";
     ],
@@ -1662,9 +1671,16 @@ with
 ! [ ------------------------------------------------------------------- Garden ]
 JungleRoom Garden "Garden"
 with
-    description "You stand in an unkempt garden, whoever kept this garden hasn't
-    been here for a very long time. You see some vegetable plants and fruit
-    trees.",
+    description [;
+        if (self hasnt visited) {
+            print "You enter into a small garden -- whoever kept it hasn't been
+            here for a very long time. The plants are growing wild and are all
+            over the place.";
+        } else {
+            print "You are in a small garden, you see some vegetable plants
+            and fruit trees.";
+        }
+    ],
     ne_to bungalow_way;
 
 ScenicPlantObject "vegetable plants" Garden
@@ -1683,9 +1699,14 @@ with
 ! [ -------------------------------------------------------------- Jungle Path ]
 JungleRoom JunglePath "Jungle Path"
 with
-    description "Trees of all sizes and leaves of all shapes fill every
-                available space of the jungle, this roughly cut path will
-                be indistinguishable from the rest in a few months.",
+    description [;
+        if (self hasnt visited) {
+            print "Plants of all shapes and sizes fill every nook the jungle,
+            this narrow path is drowning in vegetation.";
+        } else {
+            print "You are on a narrow path surrounded by dense vegetation.";
+        }
+    ],
     before [;
         Examine:
             if (noun == s_obj)
@@ -1720,8 +1741,16 @@ with
 OutdoorRoom River "The Maro River"
 with
     description [;
-        print_ret "You are in ", (a) canoe, " on the Maro river. ", (A)
-        boatman, " is with you, rowing the craft.";
+        if (self hasnt visited) {
+            print "The ", (a) canoe, " rocks gently on the water as you travel
+            up the river. ", (A) boatman, " sits at the other end of the craft
+            rowing with an oar. You wonder how much longer this will take, you
+            have been in this ", (a) canoe, " for a while now. You are anxious
+            to start searching for the treasure.";
+        } else {
+            print "You are in ", (a) canoe, " on the Maro river. ", (A)
+            boatman, " is with you, rowing the craft.";
+        }
     ],
     
     scenic
@@ -1748,13 +1777,15 @@ with
 OutdoorRoom Shore "River Shore"
 with
     description [;
-                if (player in canoe)
-                    print_ret "The canoe has stopped ashore, you can get out now.";
-                else
-                    print_ret "You are on the river shore. A roughly cut path
-                                leads North into the jungle.";
-                ],
+        if (player in canoe)
+            print "You are in the canoe on the shore, you can exit the canoe.";
+        else
+            print "The shore is wet and muddy from the river and extends
+            east-to-west.";
+    ],
+    
     n_to jungle_path_way,
+    cant_go "That is the wrong way to get to the treasured artifact.",
     
     each_turn [;
         ! Win condition
@@ -1949,7 +1980,14 @@ with
 ! [ ------------------------------------------------------------------- Valley ]
 JungleRoom Valley "Valley"
 with
-    description "You are in a lush jungle valley.",
+    description [;
+        if (self hasnt visited) {
+            print "Pushing through the thick vegetation into a little valley
+            rich with plants and unseen critters.";
+        } else {
+            print "You are in a lush jungle valley.";
+        }
+    ],
     u_to stone_stairs,
     n_to stone_stairs,
     s_to clearing_way;
@@ -2267,3 +2305,5 @@ Verb    'talk'      * 'to' noun                     -> TalkToNounHelp;
     <<Search noun>>;
 ];
 Extend    'look'      * 'behind' noun                 -> LookBehind;
+
+! TODO GET OUT redirects to EXIT - so get out (when in canoe) works
