@@ -249,7 +249,27 @@ Class OutdoorRoom
 with
     before [;
         Examine:
-            if (noun == u_obj) <<Examine sky>>;
+            ! Examine the sky when looking up
+            if (noun == u_obj)
+                <<Examine sky>>;
+            ! Examine the ground when looking down
+            if (noun == d_obj)
+                print_ret (string) LOOK_DOWN_REPLY;
+            ! If looking in any other compass direction
+            if (noun in compass) {
+                ! if the direction in the location is a DoorWay
+                if (location.(noun) ofclass DoorWay) {
+                    ! Describe what is seen that way
+                    print_ret "You see ", (a) location.(noun), " that way.";
+                } else {
+                    if (location ofclass JungleRoom) {
+                        print_ret "You see the jungle that way.";
+                    }
+                    if (location ofclass OutdoorRoom) {
+                        print_ret "A wall is that way.";
+                    }
+                }
+            }
         Listen:
             if (sky.state == WEATHER_DRY) {
                 print_ret "You hear the sounds of the jungle - faint rustling of
@@ -283,17 +303,6 @@ with
         Go:
             if (location ~= LostInJungle)
                 last_known_location = location;
-    ],
-    
-    ! Senses
-    before [;
-        Examine:
-            if (noun == u_obj)
-                <<Examine sky>>;
-            if (noun == d_obj)
-                print_ret (string) LOOK_DOWN_REPLY;
-            if (noun in compass)
-                print_ret "You see the jungle that way.";
     ];
 
 Class NonPlayerCharacter
@@ -1525,16 +1534,10 @@ with
         Examine:
             if (noun == d_obj)
                 print_ret "The ground is strewn with rubble.";
-            if (noun == n_obj)
-                print_ret "You see a clearing beyond the exit.";
-            if (noun == sw_obj)
-                print_ret "You see a small garden beyond the exit.";
             if (noun == u_obj) {
                 print "Since the roof is no longer there you can see the sky.^";
                 <<Examine sky>>;
             }
-            if (noun in compass)
-                print_ret "A wall is that way.";
     ],
     cant_go "The only exits are North and Southwest.",
     n_to clearing_way,
@@ -1572,7 +1575,7 @@ with
         if (monkey in fig_tree)
             print "A monkey sits in ", (the) fig_tree, ".";
     ],
-    e_to JunglePath,
+    e_to jungle_path_way,
     s_to bungalow_way,
     u_to TreeTop,
 
