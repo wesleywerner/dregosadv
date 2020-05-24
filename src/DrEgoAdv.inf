@@ -943,10 +943,6 @@ with
     ! display a random description
     rnd_no 0,
 
-    ! one-time bonus point when using the lodestar to navigate while lost.
-    ! TODO can remove used_scored as Achieved() handles multiple calls.
-    used_scored false,
-    
     ! Track if the compass has been dropped before
     has_dropped false,
 
@@ -957,10 +953,7 @@ with
 
         ! Return the player to the last known good location
         if (location == LostInJungle) {
-            if (~~self.used_scored) {
-                self.used_scored = true;
-                Achieved(0);
-            }
+            Achieved(0);
             print "^", (A) self, " guides you back to safety.^";
             ! parameter "2" honors brief room descriptions - DM4 pg 21
             PlayerTo(last_known_location, 2);

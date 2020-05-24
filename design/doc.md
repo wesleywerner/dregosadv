@@ -142,7 +142,6 @@ Using the task scoring system, these tasks are Achievable. See the `task_scores`
 * Add doorways to all directions so player can GO WAY
 * Look in directions in most rooms
 * Listen and smell senses in most rooms
-* Changing weather in the sky object
 * Optimize entry descriptions for all rooms
 * Include "Scenic";
 * Advent style "go to room" logic, DM4 $30 pg 220
@@ -150,3 +149,4 @@ Using the task scoring system, these tasks are Achievable. See the `task_scores`
 
 ### Done
 * task_scores - DM$ $22
+* Changing weather in the sky object
