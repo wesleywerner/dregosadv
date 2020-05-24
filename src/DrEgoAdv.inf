@@ -206,7 +206,7 @@ Verb    'dip'       * noun 'in'/'into' noun         -> Dip;
     #ifnot;
     print_ret "^April 10th, 1940.
             ^^Your journey started a few days ago after
-            docking at Port Moresby, from there it was two day's ride on
+            docking at Port Moresby, from there it was two days ride on
             the back of a truck to Kerema, followed by a small aircraft
             flight and landing near the mouth of the Maro River.
             ^^You met your guide and his canoe, who will take you up-river
@@ -916,19 +916,6 @@ EssentialObject journal "journal"
             <<Examine self>>;
     ];
 
-! Scenic jungle when on the River
-Object jungle_distant_scenery "jungle"
-with
-    name 'jungle' 'foliage' 'plant' 'plants' 'bush' 'brush' 'shrub',
-    description "The jungle looks green and lush from this distance.",
-    found_in River,
-    before [;
-        Take:
-            print_ret "It is too far to reach the jungle, you are still on the
-            river, you know!";
-    ],
-    has scenery;
-
 ! The jungle is visible in all JungleRooms
 SearchableObject jungle_scenery "jungle"
     with
@@ -994,7 +981,7 @@ with
         }
         
         ! The monkey notices your action
-        if (~~ObjectIsUntouchable(monkey, true)) {
+        if (monkey_in_view()) {
             print (The) monkey, " seems very interested in the device.^";
         }
         
@@ -1364,6 +1351,7 @@ with
     }
 ];
 
+! Test if the monkey is near the player
 [ monkey_near_player same_room;
     if (same_room) {
         return parent(monkey) == parent(player);
@@ -1373,6 +1361,18 @@ with
         return location == Clearing || location == Bungalow 
             || location == Garden || location == JunglePath;
     }
+];
+
+! Test if the monkey is in view of the player
+[ monkey_in_view;
+    if (monkey_near_player(true)) {
+        return true;
+    } else {
+        if (location == Clearing && monkey in fig_tree) {
+            return true;
+        }
+    }
+    return false;
 ];
 
 [ monkey_action n;
@@ -1454,12 +1454,18 @@ HumanNPC boatman
                 return boatman_answers(noun);
             Ask:
                 return boatman_ask(second);
+            Show:
+                if (noun == lodestar) {
+                    boatman.noticed_compass = true;
+                    print_ret (A) self, " -- ~My father had one just like that~
+                    he says.";
+                }
         ],
 ;
 
 [ boatman_ask second;
     switch (second) {
-        'canoe', 'boat':
+        'canoe', 'boat', 'oar':
             print_ret "~I have the canoe for many years now, built it myself~, ",
                         (a) self, " says proudly.";
         'river', 'maro', 'water':
@@ -1470,6 +1476,8 @@ HumanNPC boatman
                         taught me everything to live and survive out here~";
         'fishing', 'spear':
             print_ret "~We call that a Kalawai, good for catching dinner!~";
+        'time', 'longer':
+            print_ret "~We will reach the shore soon~, he replies.";
     }
     print_ret (The) self, " grins at you and nods.";
 ];
@@ -1567,10 +1575,10 @@ with
 JungleRoom Clearing "Clearing"
 with
     description [;
-        ! TODO provide flavor text for unvisited places via class
-        if (self hasnt visited)
+        if (self hasnt visited) {
             print "You are in a natural clearing, the ground a part of a large
                 bedrock providing some relief from the dense jungle. ";
+        }
         print "A large fig tree stands here proudly. ";
         if (monkey in fig_tree)
             print "A monkey sits in ", (the) fig_tree, ".";
@@ -1712,9 +1720,13 @@ with
 OutdoorRoom River "The Maro River"
 with
     description [;
-        print_ret "You are in ", (a) canoe, " on the Maro river. ",
-                    (A) boatman, " is with you, rowing the craft.";
+        print_ret "You are in ", (a) canoe, " on the Maro river. ", (A)
+        boatman, " is with you, rowing the craft.";
     ],
+    
+    scenic
+        'jungle' 'foliage' 'plant' 'plants' 'bush' 'brush' 'shrub' 0
+        "The jungle looks green and lush from this distance.",
     
     before [;
         ! Senses
@@ -2195,8 +2207,39 @@ Object debugger_wand "Wizard's Wand" with name 'wizard' 'wand' has light;
 #endif;
 
 ! [ ================================================================== Grammar ]
+
+! Scenic.h
+! Provides an easy way to describe non-object scenery.
+! Usage: with scenic 'dictionary' 'words' 0 ("response string" | NULL)
+! Where NULL yields the default response "That's not something you need to..."
+!
+!       Object  forest "Forest"
+!         with  description
+!                   "The forest seems to stretch in every direction. Around you
+!                   an almost impenetrable tangle of bush and shrub silently
+!                   struggles for possession of the mossy ground, while overhead
+!                   the trees rise gaunt and limbless through the dank sour air.",
+!               name 'forest' 'wood',
+!               scenic
+!                   'tree' 'trees' 'gaunt' 'limbless' 0 "Streaked with lichen,
+!                     gnarled and knotted, the trees offer no support below
+!                     the branching canopy dozens of feet above you."
+!                   'bush' 'bushes' 'shrub' 'shrubs' 'tangle' 0 "Thorn and
+!                     bramble thrust spiteful barbs in angry coils."
+!                   'moss' 'ground' 0 "The only bright colour in this dismal
+!                     place, the dark emerald moss billows soft and sodden
+!                     around your feet."
+!                   'air' 'dank' 'sour' 0 "Almost dense enough to grasp, the
+!                     heavy atmosphere piles oppressively down on you."
+!                   'sky' 0 "No trace of the sky is visible through the leaves."
+!                   'lichen' 'branch' 'branches' 'canopy' 'thorn' 'thorns'
+!                   'bramble' 'brambles' 'barb' 'barbs' 'coil' 'coils'
+!                   'colour' 'color' 'emerald' 'billows' 'leaf' 'leaves'
+!                   'atmosphere' 0 NULL,
+Constant ScenicError "You don't need that.";
+Include "Scenic";
+
 Include "Grammar";
-! Include "NewbieGrammar";
 
 ! [ Extend Grammar ----------------------------------------------------------  ]
 
@@ -2211,10 +2254,10 @@ Extend 	'climb'		* 'up'/'down' noun				 -> GoUpDownNoun;
 
 ! Print help when trying to "talk to noun"
 [ TalkToNounHelpSub;
-    print "To ask ", (the) noun, " something type 
-        ~ask ", (the) noun, " about (thing or topic)~. 
-        To say something to ", (the) noun, " type
-        ~say (noun or topic)~.^";
+    print "To ask ", (the) noun, " something start your sentence with 
+        ~ask ", (the) noun, " about ...~ 
+        ^^To say something to ", (the) noun, " start your sentence with
+        ~say ...~^";
 ];
 Verb    'talk'      * 'to' noun                     -> TalkToNounHelp;
 
