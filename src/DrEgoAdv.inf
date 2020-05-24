@@ -1582,15 +1582,17 @@ JungleRoom Clearing "Clearing"
 with
     description [;
         if (self hasnt visited) {
-            print "The jungle recedes somewhat in this natural clearing, the
-            ground seems a part of a bedrock providing some relief from the
-            dense jungle. You have a open view of the sky above. ";
+            print "The jungle recedes here to create a natural clearing, the
+            ground is firm and the area is surrounded by jungle vegetation. 
+            You have a clear view of the sky above. ";
         } else {
-            print "You are in a natural clearing. ";
+            print "You are in a natural clearing surrounded by jungle. ";
         }
-        print "A large fig tree stands here. ";
-        if (monkey in fig_tree)
-            print "A monkey sits in ", (the) fig_tree, ".";
+        if (monkey in fig_tree) {
+            print "A large fig tree stands here with a monkey sitting in it.";
+        } else {
+            print "A large fig tree stands here.";
+        }
     ],
     e_to jungle_path_way,
     s_to bungalow_way,
@@ -1611,10 +1613,17 @@ with
     ];
 
 ! [ -------------------------------------------------------------------- Cliff ]
-JungleRoom Cliff "Cliff"
+JungleRoom Cliff "Gorge"
 with
-    description "You are on top of a cliff, a rope bridge crosses a deep gorge
-    to the East.",
+    description [;
+        if (self hasnt visited) {
+            print "After a good climb you eventually reach the top of the hill.
+            Jungle is around you on all sides except for a deep gorge to the 
+            east, a man-made rope bridge spans across it. ";
+        } else {
+            print "You are overlooking a deep gorge. ";
+        }
+    ],
     d_to stone_stairs,
     s_to stone_stairs,
     e_to bridge_way;
@@ -1982,15 +1991,36 @@ JungleRoom Valley "Valley"
 with
     description [;
         if (self hasnt visited) {
-            print "Pushing through the thick vegetation into a little valley
-            rich with plants and unseen critters.";
+            print "Pushing through the jungle you exit into a little valley
+            rich with flowering orchids all around you.";
         } else {
-            print "You are in a lush jungle valley.";
+            print "You are in a lush jungle valley full of vibrant orchids.";
         }
     ],
     u_to stone_stairs,
     n_to stone_stairs,
-    s_to clearing_way;
+    s_to clearing_way,
+    
+    before [;
+        Smell:
+            print_ret "The entire area smells of sweet orchids, there are so
+            many varieties that their scents mix together to create a
+            potpourri.";
+    ];
+
+ScenicPlantObject orchids "orchids" Valley
+with 
+    name 'flower' 'flowers' 'flowering' 'plant' 'plants' 'orchid' 'orchids',
+    description "A myriad of beautiful orchids display a rich set of vibrant
+    colors -- white, pink, magenta, purple, red, yellow, gold, blue.
+    Their flowers come in all shapes --  oblong, slender, conical and cruciform
+    are just some of the shapes you can identify.",
+    before [;
+        Take:
+            print_ret "As beautiful as they are, you did not come equipped for a
+            horticulture expedition.";
+    ],
+    has pluralname;
 
 ! [ ---------------------------------------------------------------- Waterfall ]
 JungleRoom Waterfall "Waterfall"
