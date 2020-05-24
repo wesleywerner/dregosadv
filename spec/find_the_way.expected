@@ -13,20 +13,20 @@
   always gives short descriptions of locations (even if you haven't been
   there before).
   
-> >  In a Clearing
+> >  Clearing
   
-  A small hut is to the south.
-  
+  A hut is to the south.
+  A jungle path is to the east.
 > >  ; == 78
   
 > >  Lost in the Jungle
   
 > >  Your compass guides you back to safety.
   
-  In a Clearing
+  Clearing
   
-  A small hut is to the south.
-  
+  A hut is to the south.
+  A jungle path is to the east.
   [The score has just gone up by one point.]
   
 > >  You climb up the strong branches of the fig tree.
@@ -42,10 +42,11 @@
 > >  As you descend you drop your compass to the ground below. CLINK!
   
    --- more ---
-)   In a Clearing
+)   Clearing
   
-  A small hut is to the south.
-  
+  A hut is to the south.
+  A jungle path is to the east.
+  A valley is to the northeast.
   There is a monkey here. It has your compass.
   
   The monkey makes grunting noises.

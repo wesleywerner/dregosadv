@@ -10,3 +10,4 @@ kdiff3 catch_fish.expected          catch_fish.actual       -o catch_fish.expect
 kdiff3 compass.expected             compass.actual          -o compass.expected
 kdiff3 ending.expected              ending.actual           -o ending.expected
 kdiff3 pressure_plate_trap.expected pressure_plate_trap.actual -o pressure_plate_trap.expected
+kdiff3 weather.expected             weather.actual          -o weather.expected

@@ -18,7 +18,9 @@
   "Here we are", your guide says -- the canoe comes to a stop on the shore.
   
   River Shore (in the canoe)
-. 
+  
+  A jungle path is to the north.
+  
 > >  You get out of the canoe.
   
   River Shore
@@ -26,8 +28,10 @@
   Your guide sits in the canoe gazing out over the moving river, the salty
   water gently lapping the sides of his craft.
   
+  A jungle path is to the north.
 > >  Jungle Path
   
+  A clearing is to the west.
 > >  Lost in the Jungle
   
 > >  You fumble through the jungle.
@@ -40,6 +44,7 @@
   
   Jungle Path
   
+  A clearing is to the west.
   [The score has just gone up by one point.]
   
 > >  Lost in the Jungle
@@ -48,4 +53,5 @@
   
   Jungle Path
   
+  A clearing is to the west.
 > >

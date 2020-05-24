@@ -12,6 +12,7 @@ cat pressure_plate_trap.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > pressure_plate_tr
 cat catch_fish.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > catch_fish.actual
 cat compass.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > compass.actual
 cat ending.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > ending.actual
+cat weather.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > weather.actual
 
 ::REM Diff Results
 if exist test_results.txt del test_results.txt
@@ -45,6 +46,9 @@ diff --ignore-space-change compass.expected compass.actual >> test_results.txt
 
 echo [ Ending ------------------------------------------------------------] >> test_results.txt
 diff --ignore-space-change ending.expected ending.actual >> test_results.txt
+
+echo [ Weather -----------------------------------------------------------] >> test_results.txt
+diff --ignore-space-change weather.expected weather.actual >> test_results.txt
 
 ::REM Output Results
 cat test_results.txt

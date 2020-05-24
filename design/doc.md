@@ -128,14 +128,14 @@ _(Implemented, - pressure_plate_trap.spec)_
 
 Using the task scoring system, these tasks are Achievable. See the `task_scores` variable in the source.
 
-+ 0: User your compass when lost in the jungle.
-+ 1: See the stairs from the top of the tree. (puzzle)
-+ 2: Whip a banana off the tree. (puzzle)
-+ 3: Retrieve your compass from the monkey. (puzzle)
-+ 4: Made a torch. (puzzle)
-+ 5: Discover the alcove behind the waterfall. (puzzle)
-+ 6: Get the golden egg without setting off the dart trap. (puzzle)
-+ 7: Catch a fish with your whip
++ 1: User your compass when lost in the jungle.
++ 2: See the stairs from the top of the tree. (puzzle)
++ 3: Whip a banana off the tree. (puzzle)
++ 4: Retrieve your compass from the monkey. (puzzle)
++ 5: Made a torch. (puzzle)
++ 6: Discover the alcove behind the waterfall. (puzzle)
++ 7: Get the golden egg without setting off the dart trap. (puzzle)
++ 8: Catch a fish with your whip
 
 # TODO
 * Add HELP, ABOUT, HINT

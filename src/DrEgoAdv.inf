@@ -9,18 +9,59 @@ Constant Headline
             "^An Interactive Fiction Story
              ^by Special Agent.^";
 
-! Show the time instead of the turn number
-Statusline time;
+! [ ================================================================ Constants ]
 
 ! Mention to dead players that they can UNDO the last action.
 Constant DEATH_MENTION_UNDO;
 
-! Set up the game score
+! The time which this story begins (60 * HH + mm)
+Constant StoryStartTime 900; ! 15:00
+
+! The number of turns to pass until the canoe ride ends
+Constant TurnsInCanoe 12;
+
+! When going to undefined direction while in a JungleRoom, the player gets lost.
+! Reading the compass returns them back on track, but if the player lost
+! the device or does not use it, these are the odds of finding their way back:
+! 1 in OddsOfFindingWayWhenLost.
+Constant OddsOfFindingWayWhenLost 16;
+
+! Weather states
+Constant WEATHER_DRY 1;
+Constant WEATHER_RAIN 2;
+! Turns in dry state before rain may start
+Constant RAIN_START_T 40;
+! Turns in wet state before rain may stop
+Constant RAIN_STOP_T 20;
+! Chance of thunder when it RAINS (1 in n)
+Constant THUNDER_ROLL 10;
+! Multiplier for chance of thunder in DRY state (1 in n*THUNDER_ROLL)
+Constant THUNDER_MULTIPLIER 3;
+! Chance of rain (1 in n)
+Constant RAIN_START_ROLL 60;
+! Chance of rain stop (1 in n)
+Constant RAIN_STOP_ROLL 30;
+! Chance of rain drops falling on player when wet (1 in n)
+Constant RAIN_ON_PLAYER_ROLL 6;
+
+! Show the option to list AMUSING things you can try (at the End of the story)
+Constant AMUSING_PROVIDED;
+
+! Define default responses for the five senses.
+Constant LOOK_DOWN_REPLY = "The ground is below you -- thank heavens!";
+
+! [ ========================================================= Scoring & Status ]
+
+! Show the time instead of the turn number
+Statusline time;
+
+! Use task-based scoring - as listed in doc.md
 Constant TASKS_PROVIDED;
 Constant NUMBER_TASKS = 8;
 Constant MAX_SCORE = 8;
 Array task_scores -> 1 1 1 1 1 1 1 1;
 
+! Prints the list of achieved scores and the items they relate to
 [ PrintTaskName task_number;
     switch (task_number) {
         0: "User your compass when lost in the jungle";
@@ -38,42 +79,24 @@ Array task_scores -> 1 1 1 1 1 1 1 1;
 Constant OBJECT_SCORE 1;
 Constant ROOM_SCORE 1;
 
-! The time which this story begins (60 * HH + mm)
-Constant StoryStartTime 900; ! 15:00
-
-! The number of turns to pass until the canoe ride ends
-Constant TurnsInCanoe 12;
-
-! When going to undefined direction while in a JungleRoom, the player gets lost.
-! Reading the compass returns them back on track, but if the player lost
-! the device or does not use it, these are the odds of finding their way back:
-! 1 in OddsOfFindingWayWhenLost.
-Constant OddsOfFindingWayWhenLost 16;
-
-! Show the option to list AMUSING things you can try (at the End of the story)
-Constant AMUSING_PROVIDED;
-
-! Custom Attributes
-Attribute is_torch;
-Attribute wet;
-Attribute oily;
-
-! Define default responses for the five senses.
-Constant LOOK_DOWN_REPLY = "The ground is below you -- thank heavens!";
-
 ! Hide status line for debug builds.
 ! This streamlines the diffs used by unit tests.
 #ifdef DEBUG;
 [DrawStatusLine;];
 #endif;
 
+! [ ================================================================= Includes ]
+
 Include "Parser";
 Include "VerbLib";
 
-! [ ================================================================ Atributes ]
+! [ =============================================================== Attributes ]
 
 ! Applied to NPCs to indicate an active state of interest in the player.
 Attribute curious;
+Attribute is_torch;
+Attribute wet;
+Attribute oily;
 
 ! [ =========================================================== Custom Actions ]
 
@@ -162,6 +185,8 @@ Verb    'dip'       * noun 'in'/'into' noun         -> Dip;
     #ifdef DEBUG;
       ! allow skipping the long boat ride with GO FASTER
       move canoe_hasten to River;
+      ! disable the weather - the rng consumed each turn affects tests
+      sky.enabled = false;
     #endif;
 
     ! Give player inventory
@@ -225,6 +250,14 @@ with
     before [;
         Examine:
             if (noun == u_obj) <<Examine sky>>;
+        Listen:
+            if (sky.state == WEATHER_DRY) {
+                print_ret "You hear the sounds of the jungle - faint rustling of
+                leaves in the wind, faint chirps of insects, and occasionally some
+                small critter moving under cover of the dense foliage.";
+            } else {
+                print_ret "You hear the pitter-patter of rain around you.";
+            }
     ],
     has light;
 
@@ -259,10 +292,6 @@ with
                 print_ret (string) LOOK_DOWN_REPLY;
             if (noun in compass)
                 print_ret "You see the jungle that way.";
-        Listen:
-            print_ret "You hear the sounds of the jungle - faint rustling of
-            leaves in the wind, faint chirps of insects, and occasionally some
-            small critter moving under cover of the dense foliage.";
     ];
 
 Class NonPlayerCharacter
@@ -915,6 +944,7 @@ with
     rnd_no 0,
 
     ! one-time bonus point when using the lodestar to navigate while lost.
+    ! TODO can remove used_scored as Achieved() handles multiple calls.
     used_scored false,
     
     ! Track if the compass has been dropped before
@@ -1022,37 +1052,42 @@ with
     ],
     has container open scenery;
 
-! Weather states
-Constant WEATHER_DRY 1;
-Constant WEATHER_RAIN 2;
-! Turns in dry state before rain may start
-Constant RAIN_START_T 40;
-! Turns in wet state before rain may stop
-Constant RAIN_STOP_T 20;
-! Chance of thunder in dry weather (1 in n)
-Constant THUNDER_ROLL 10;
-! Multiplier for chance of thunder in dry state (1 in n*THUNDER_ROLL)
-Constant THUNDER_MULTIPLIER 3;
-! Chance of rain (1 in n)
-Constant RAIN_START_ROLL 60;
-! Chance of rain stop (1 in n)
-Constant RAIN_STOP_ROLL 30;
-
 ! The sky is visible in all outdoor areas.
 Object sky "sky"
     with
         name 'sky' 'clouds' 'weather' 'sun',
-        description "Rolling clouds move overhead.",
+        
+        ! Describe the changing sky
+        description [;
+            if (self.state == WEATHER_DRY) {
+                print_ret "Rolling clouds move overhead.";
+            } else if (self.state == WEATHER_RAIN) {
+                ! Random flavour text
+                if (random(2) == 1) {
+                    print "You feel the rain on your face as you look up. ";
+                }
+                print_ret "You see dark rain bearing clouds moving overhead.";
+            }
+        ],
+        
+        ! The sky is found in any outside location
         found_in [;
             return (location ofclass OutdoorRoom);
         ],
+        
         ! Weather state - WEATHER_DRY, WEATHER_RAIN
         state WEATHER_DRY,
-        ! Turns passed in current state
+        ! Turns passed in the current state
         counter,
-        ! Thunder delay, heard after lightning
+        ! Turns until thunder is heard after lightning
         thunder_in,
+        ! Switch to turn the weather off
+        enabled true,
+        
     daemon [;
+        
+        ! The weather is not enabled
+        if (~~self.enabled) return;
         
         ! Add the counter
         self.counter = self.counter + 1;
@@ -1066,9 +1101,10 @@ Object sky "sky"
         if (self.thunder_in > 0) {
             self.thunder_in = self.thunder_in - 1;
             if (self.thunder_in == 0) {
-                print (string) random("Loud thunder rolls overhead.",
-                "The sky vibrates with rolling thunder.",
-                "Your ears ring with the sudden clap of thunder."), "^";
+                print (string) random("The sound of thunder rumbles overhead",
+                "The air trembles with the rolling thunder",
+                "Your ears ring from the sudden clap of a lightning strike"),
+                ".^";
             }
             ! No more processing while thunder is on the way
             return;
@@ -1077,6 +1113,7 @@ Object sky "sky"
         if (self.state == WEATHER_DRY) {
             ! Lighting
             if (random(THUNDER_ROLL * THUNDER_MULTIPLIER) == 1) {
+                ! Let the player hear the thunder in n turns
                 self.thunder_in = random(3);
                 print (string) random("Lightning arcs across the sky.",
                 "Lightning flashes in the distance.",
@@ -1086,12 +1123,14 @@ Object sky "sky"
             if (self.counter > RAIN_START_T && random(RAIN_START_ROLL) == 1) {
                 self.counter = 0;
                 self.state = WEATHER_RAIN;
-                print "You feel the cold spatter of raindrops.^";
+                print "It starts to rain.^";
             }
         } else if (self.state == WEATHER_RAIN) {
             ! Rain messages
-            if (random(5) == 1) {
-                print "Cold drops ", 
+            if (random(RAIN_ON_PLAYER_ROLL) == 1) {
+                print 
+                (string) random("Cold drops", "Rain drops", "Drops of rain"), 
+                " ",
                 (string) random("fall", "land", "spatter"),
                 " on your ",
                 (string) random("head", "arms", "neck", "face", "cheek", "back"),
@@ -1099,6 +1138,7 @@ Object sky "sky"
             }
             ! Lightning
             if (self.thunder_in == 0 && random(THUNDER_ROLL) == 1) {
+                ! Let the player hear the thunder in n turns
                 self.thunder_in = random(3);
                 print (string) random("Lightning arcs across the sky.",
                 "Lightning flashes in the distance.",
@@ -1108,7 +1148,9 @@ Object sky "sky"
             if (self.counter > RAIN_STOP_T && self.thunder_in == 0 && random(RAIN_STOP_ROLL) == 1) {
                 self.counter = 0;
                 self.state = WEATHER_DRY;
-                print "The rain stops.^";
+                print "The rain ", 
+                (string) random("subsides", "peters out", "eases off"),
+                ".^";
             }
         }
     ],
@@ -1924,7 +1966,7 @@ with
 ! Way to the jungle path
 DoorWay jungle_path_way "jungle path"
 with
-    name 'path',
+    name 'jungle' 'path',
     description "It is a narrow path through the dense jungle.",
     found_in Clearing Shore,
     door_to JunglePath,
