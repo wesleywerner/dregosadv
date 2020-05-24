@@ -379,7 +379,13 @@ has scenery static;
 Class DoorWay
 with
     initial [;
-        print (A) self, " is to the ", (name) self.door_dir(), ".";
+        if (self.door_dir() == u_to) {
+            print (A) self, " leads upward. ";
+        } else if (self.door_dir() == d_to) {
+                    print (A) self, " leads downward. ";
+        } else {
+            print (A) self, " is to the ", (name) self.door_dir(), ". ";
+        }
     ],
     before [;
         Take:
@@ -1586,9 +1592,10 @@ with
 JungleRoom Cliff "Cliff"
 with
     description "You are on top of a cliff, a rope bridge crosses a deep gorge
-    to the East. Stone steps lead down the hill.",
-    d_to Valley,
-    e_to rope_bridge;
+    to the East.",
+    d_to stone_stairs,
+    s_to stone_stairs,
+    e_to bridge_way;
 
 ! [ -------------------------------------------------------------- Deadly Drop ]
 OutdoorRoom DeadlyDrop "Deadly Drop"
@@ -1633,6 +1640,12 @@ with
     ],
 has light;
 
+Object rope_bridge "rope bridge" DeadlyDrop
+with
+    name 'rope' 'bridge',
+    description "The bridge is made from plait ropes.",
+    has scenery;
+
 ! [ ------------------------------------------------------------------- Garden ]
 JungleRoom Garden "Garden"
 with
@@ -1659,9 +1672,7 @@ JungleRoom JunglePath "Jungle Path"
 with
     description "Trees of all sizes and leaves of all shapes fill every
                 available space of the jungle, this roughly cut path will
-                be indistinguishable from the rest in a few months.
-                ^^The river shore is back South, you notice a clearing
-                in the jungle to the West.",
+                be indistinguishable from the rest in a few months.",
     before [;
         Examine:
             if (noun == s_obj)
@@ -1670,11 +1681,11 @@ with
                 print_ret "You see a clearing in the jungle that way.";
     ],
     n_to [;
-        if (Temple has visited) return path_to_temple;
+        if (temple_way in location) return temple_way;
         return LostInJungle;
     ],
-    w_to Clearing,
-    s_to Shore;
+    w_to clearing_way,
+    s_to shore_way;
 
 ! [ -------------------------------------------------------------- Lost Jungle ]
 JungleRoom LostInJungle "Lost in the Jungle"
@@ -1766,17 +1777,28 @@ with
             print "You see a hole in the floor. ";
         else
             print "A stone slab is on the floor. ";
-        print_ret "You hear water falling from the exit to the North.";
+        print_ret "^^You hear water from the north exit.
+        You see a jungle in the south exit.";
     ],
     n_to Waterfall,
-    s_to path_to_temple,
+    s_to JunglePath,
     before [;
         Exit:
+            if (~~noun)
+                print_ret "Try say if you want to ~exit north~ or ~exit south~.";
             ! Exit the temple
-            <<Go n_obj>>;
+            if (noun == n_obj)
+                <<Go n_obj>>;
+            if (noun == s_obj)
+                <<Go s_obj>>;
         Go:
             if (noun == out_obj)
                 <<Go n_obj>>;
+        Examine:
+            if (noun == n_obj)
+                print_ret "You see a waterfall through the exit that way.";
+            if (noun == s_obj)
+                print_ret "You see a jungle through the exit that way.";
     ],
 
     has light;
@@ -1908,11 +1930,10 @@ with
 ! [ ------------------------------------------------------------------- Valley ]
 JungleRoom Valley "Valley"
 with
-    description "You in a lush jungle valley, stairs carved out of stone
-                lead up to the top. A path leads back South.",
-    u_to Cliff,
-    s_to Clearing,
-    cant_go "The only ways out are South or Up (the stairs).";
+    description "You are in a lush jungle valley.",
+    u_to stone_stairs,
+    n_to stone_stairs,
+    s_to clearing_way;
 
 ! [ ---------------------------------------------------------------- Waterfall ]
 JungleRoom Waterfall "Waterfall"
@@ -1922,11 +1943,10 @@ with
         from somewhere up above into the clear pool. ";
         if (self hasnt visited) print "A fine mist of water-spray fills the 
             space above the pool with a vivid rainbow. ";
-        print_ret "A rope bridge is to the West.";
     ],
     n_to alcove_door,
-    w_to rope_bridge,
-    s_to temple_door;
+    w_to bridge_way,
+    s_to temple_way;
 
 ScenicWaterObject waterfall_cascade "cascading water" Waterfall
 with
@@ -1970,17 +1990,27 @@ with
         return n_to;
     ];
 
+! Way to the river shore
+DoorWay shore_way "river shore"
+with
+    name 'river' 'shore',
+    description "You see the river shore that way.",
+    article "the",
+    found_in JunglePath,
+    door_to Shore,
+    door_dir s_to;
+
 ! Way to the Clearing
-DoorWay clearing_way "clearing"
+DoorWay clearing_way "clearing in the jungle"
 with
     name 'clearing',
     description "It looks like the dense jungle opens up over there.",
-    found_in Bungalow JunglePath,
+    found_in Bungalow JunglePath Valley,
     door_to Clearing,
     door_dir [;
-        ! east from jungle path
+        ! Return the direction this way is in
         if (self in JunglePath) return w_to;
-        ! north from Bungalow
+        if (self in Valley) return s_to;
         return n_to;
     ];
 
@@ -2071,11 +2101,11 @@ with
     has ~scenery;
 
 ! Connect the Cliff and Waterfall with a Bridge.
-RockDoor rope_bridge "rope bridge"
+DoorWay bridge_way "rope bridge"
 with
     name 'rope' 'bridge',
-    description "The bridge is made from plait ropes and extends to the East.",
-    found_in Cliff Waterfall DeadlyDrop,
+    description "The bridge is made from plait ropes.",
+    found_in Cliff Waterfall,
     door_to [;
         ! Random chance of falling down.
         ! We limit this deadly action to only occur once.
@@ -2091,19 +2121,21 @@ with
     ];
 
 ! Connect the Valley and the Cliff with the Stone Steps.
-RockDoor stone_steps "stone steps"
+DoorWay stone_stairs "stone stairs"
 with
-    name 'stone' 'stairs' 'steps' 'hill',
+    name 'stone' 'stairs' 'steps' 'hill' 'staircase',
     description "The individual steps are carved from stone and laid out to form
     a staircase on the hill.",
     found_in Valley Cliff,
     door_to [;
+        ! Return where this way leads
         if (self in Valley) return Cliff;
-        return Valley;
+        if (self in Cliff) return Valley;
     ],
     door_dir [;
+        ! Return the direction this way is in
         if (self in Valley) return u_to;
-        return d_to;
+        if (self in Cliff) return d_to;
     ],
     before [;
         ! Allow climbing the steps to go their way
@@ -2112,42 +2144,34 @@ with
     ],
     has pluralname;
 
-! Connect the Waterfall with the Temple via a door called the "temple"
-RockDoor temple_door "temple"
+! Ways to the Temple
+DoorWay temple_way "temple"
 with
     name 'temple' 'building',
-    initial "There is a temple here, to the South.",
-    description "The temple is about three times your height, it is
-    constructed of carved stone blocks and seems partially swallowed by vines
-    and plant growth. An opening South in the front serves as a door.",
-    found_in Waterfall,
-    door_to Temple,
-    door_dir s_to,
-    has ~scenery;
-
-! Connect the inside of the Temple with a path back to the Jungle Path.
-! This connection only becomes visible if the player has visited the Temple.
-RockDoor path_to_temple "Path to Temple"
-with
-    initial [;
-        if (location == Temple) 
-            print "An exit to the South leads into the jungle.^";
-        if (location == JunglePath) 
-            print "A trail to the North leads to a distant Temple.^";
+    description [;
+        if (location == Waterfall) {
+            print "The temple is about three times your height, it is
+            constructed of carved stone blocks and seems partially swallowed by
+            vines and plant growth. An opening South in the front serves as a
+            door.^";
+        }
+        if (location == JunglePath) {
+            print "The temple is too far to see from here.^";
+        }
     ],
     found_in [;
-        if (location == Temple) return Temple;
+        if (location == Waterfall) return Waterfall;
+        ! Only in the JunglePath if the Temple has been visited
         if (location == JunglePath && Temple has visited) return JunglePath;
     ],
     door_to [;
-        if (location == Temple) return JunglePath;
+        if (location == Waterfall) return Temple;
         if (location == JunglePath) return Temple;
     ],
     door_dir [; ! Only used for ENTER actions
-        if (self in Temple) return s_to;
+        if (self in Waterfall) return s_to;
         if (self in JunglePath) return n_to;
-    ],
-    has door open ~scenery static;
+    ];
 
 ! [ ================================================================ Debugging ]
 #ifdef DEBUG;

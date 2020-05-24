@@ -6,6 +6,6 @@ go temple
 examine glyphs
 examine air terjun
 consult journal about air terjun
-go out
+exit north
 look behind waterfall
 search waterfall
