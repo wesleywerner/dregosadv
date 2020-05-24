@@ -258,6 +258,8 @@ with
             } else {
                 print_ret "You hear the pitter-patter of rain around you.";
             }
+        Smell:
+            print_ret "The air smells fresh with earthy jungle tones.";
     ],
     has light;
 
@@ -602,7 +604,7 @@ with
             banana.eaten = true;
             print_ret "You peel the banana and take a bite, the fruit is
             firm and sweet with a subtle flavor. You finish eating the rest
-            of the delicious fruit - You feel revitalised.";
+            of the delicious fruit - You feel revitalized.";
     ];
 
 ! Also see the custom 'WhipSub' action.
@@ -1723,6 +1725,8 @@ with
         Listen:
             print_ret "You hear the sound of water splashing as ", (a) boatman,
             " paddles with his oar.";
+        Smell:
+            print_ret "You smell the fresh air and feel revitalized.";
     ];
 
 ! [ -------------------------------------------------------------- River Shore ]

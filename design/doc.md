@@ -140,7 +140,6 @@ Using the task scoring system, these tasks are Achievable. See the `task_scores`
 # TODO
 * Add HELP, ABOUT, HINT
 * Look in directions in most rooms
-* Listen and smell senses in most rooms
 * Optimize entry descriptions for all rooms
 * Include "Scenic";
 * Advent style "go to room" logic, DM4 $30 pg 220
