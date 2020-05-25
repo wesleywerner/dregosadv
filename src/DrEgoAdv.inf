@@ -455,8 +455,8 @@ Class ScenicWaterObject
 with
     before [;
         Take, Drink:
-            "You cup your hand and take some of ", (the) self, 
-            ". You feel refreshed.";
+            "You drink some of ", (the) self, " from your cupped hand.
+            You feel refreshed.";
     ],
 has scenery static;
 
@@ -593,9 +593,9 @@ with
     eaten false,
     description [;
         if (parent(self) == garden_trees)
-            print_ret "A bunch of wild bananas hang from the top of the tree.";
+            print "A bunch of wild bananas hang from the top of the tree.";
         else
-            print_ret "It is a wild banana with a bright green and yellow skin.";
+            print "It is a wild banana with a bright green and yellow skin.";
     ],
     before [;
         Take:
@@ -795,10 +795,10 @@ with
     initial "A metllic blue glint catches your eye.",
     description [;
         if (self has moved)
-            "A piece of flint stone, it can be sued to make sparks and create a
-            flame.";
+            print "A piece of flint stone, it can be sued to make sparks and
+            create a flame.";
         else
-            "The glint is coming from a stone on the ground.";
+            print "The glint is coming from a stone on the ground.";
         ],
     found_in [;
         if (GetPlayerTorchObject())
@@ -1057,13 +1057,13 @@ Object sky "sky"
         ! Describe the changing sky
         description [;
             if (self.state == WEATHER_DRY) {
-                print_ret "Rolling clouds move overhead.";
+                print "Rolling clouds move overhead.";
             } else if (self.state == WEATHER_RAIN) {
                 ! Random flavour text
                 if (random(2) == 1) {
                     print "You feel the rain on your face as you look up. ";
                 }
-                print_ret "You see dark rain bearing clouds moving overhead.";
+                print "You see dark rain bearing clouds moving overhead. ";
             }
         ],
         
@@ -1197,11 +1197,13 @@ with
     ],
     
     description [;
-        if (lodestar in self)
-            print_ret "The small creature is fascinated by ", (a) lodestar, ".";
-        else
-            print_ret "It is a small grey monkey with big brown eyes. 
-                It stares back at you.";
+        if (lodestar in self) {
+            print "The small creature is fascinated by ", (a) lodestar, ".";
+        }
+        else {
+            print "It is a small grey monkey with big brown eyes.
+            It stares back at you.";
+        }
     ],
     
     life [;
@@ -1443,9 +1445,9 @@ HumanNPC boatman
 
         description [;
             print "A native to Papua New Guinea, he seems to navigate
-                    this river like he has done it for all his years.^";
+            this river like he has done it for all his years. ";
             if (self hasnt proper) {
-                print "^Perhaps you should SAY HI.^";
+                print "Perhaps you should SAY HI.";
             }
         ],
 
@@ -1702,7 +1704,6 @@ with
             print "You notice a pumpkin on the ground, hiding under some large
             green leaves.";
         }
-        print_ret "";
     ];
 
 ! [ -------------------------------------------------------------- Jungle Path ]
@@ -1794,11 +1795,13 @@ with
 OutdoorRoom Shore "River Shore"
 with
     description [;
-        if (player in canoe)
+        if (player in canoe) {
             print "You are in the canoe on the shore, you can exit the canoe.";
-        else
+        }
+        else {
             print "The shore is wet and muddy from the river and extends
             east-to-west.";
+        }
     ],
     
     n_to jungle_path_way,
@@ -1842,12 +1845,11 @@ with
             thin layer of dirt, and openings near the top of the structure
             provide ample natural light for you to see. ";
         }
-        print "The stone walls are engraved with symbols. ";
         if (temple_stone_box hasnt open) {
             print "A sun is engraved in the floor. ";
         }
-        print_ret "^^You hear water falling from the north entrance.
-        You see a jungle through the south exit.";
+        print "The stone walls are engraved with symbols. You hear water falling
+        from the north entrance, and see jungle through the south exit.";
     ],
     n_to Waterfall,
     s_to JunglePath,
@@ -1931,9 +1933,11 @@ with
 OutdoorRoom TreeTop "Top of Tree"
 with
     description [;
-        if (self hasnt visited)
-            print "The view from up here is breathtaking! ";
-        print_ret "The vantage point allows you to see in all directions.";
+        if (self hasnt visited) {
+            print "You climb up the tree, as high as safely possible, and spend
+            a moment to take in the view. ";
+        }
+        print "You can see in all directions from this high up.";
     ],
     cant_go "The only way is down.",
     d_to Clearing,
@@ -2016,7 +2020,7 @@ JungleRoom Valley "Valley"
 with
     description [;
         if (self hasnt visited) {
-            print "Pushing through the jungle you exit into a little valley
+            print "Pushing through the jungle you arrive in a little valley,
             rich with flowering orchids all around you.";
         } else {
             print "You are in a lush jungle valley full of vibrant orchids.";
@@ -2051,10 +2055,17 @@ with
 JungleRoom Waterfall "Waterfall"
 with
     description [;
-        print "There is a beautiful waterfall here, the water cascades down
-        from somewhere up above into the clear pool. ";
-        if (self hasnt visited) print "A fine mist of water-spray fills the 
-            space above the pool with a vivid rainbow. ";
+        print "Water cascades down into a clear pool of water. ";
+        if (self hasnt visited) {
+            print "A fine mist circulates above the pool,
+            a vivid rainbow shines from the dancing spray.";
+        }
+    ],
+    scenic
+        'mist' 'rainbow' 0 "The vibrant rainbow floats motionless above the pool.",
+    before [;
+        Listen:
+            "You hear the splashing sound of the cascading water.";
     ],
     n_to alcove_door,
     w_to bridge_way,
@@ -2062,8 +2073,9 @@ with
 
 ScenicWaterObject waterfall_cascade "cascading water" Waterfall
 with
-    name 'water' 'waterfall',
-    description "TOFIX.",
+    name 'waterfall',
+    description "The source is from somewhere up above,
+    the water splashes into the pool.",
     before [;
         Search:
             if (alcove_door notin Waterfall) {
@@ -2079,10 +2091,15 @@ with
 ScenicWaterObject waterfall_pool "clear pool water" Waterfall
 with
     name 'clear' 'pool' 'water',
-    description "The water is clear and cool",
+    description "The pool is clear with a rainbow floating above it.",
     before [;
         Search:
-            "You water is clear enough to see through to the bottom.";
+            "You water is clear enough to see through to the bottom, there is
+            nothing of interest in the pool.";
+        Enter:
+            "You would rather not, the water is probably cold anyway.";
+        Touch:
+            "The water is cold.";
     ];
 
 ! [ ========================================================== Doors & Bridges ]
