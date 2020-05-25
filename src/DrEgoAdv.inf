@@ -1617,9 +1617,9 @@ JungleRoom Cliff "Gorge"
 with
     description [;
         if (self hasnt visited) {
-            print "After a good climb you eventually reach the top of the hill.
+            print "After a good climb you reach the top of the hill.
             Jungle is around you on all sides except for a deep gorge to the 
-            east, a man-made rope bridge spans across it. ";
+            east, a rope bridge spans across it. ";
         } else {
             print "You are overlooking a deep gorge. ";
         }
@@ -1733,7 +1733,15 @@ with
 ! [ -------------------------------------------------------------- Lost Jungle ]
 JungleRoom LostInJungle "Lost in the Jungle"
 with
-    description "You don't know where you are.",
+    description [;
+        if (self hasnt visited) {
+            print "There is no path this way and you struggle walking through
+            the dense vegetation. You are surrounded by the jungle and every
+            direction looks the same -- You are lost.";
+        } else {
+            print "You don't know where you are.";
+        }
+    ],
     before [;
         Go:
             if (random(OddsOfFindingWayWhenLost) == 1) {
@@ -1829,15 +1837,17 @@ with
 IndoorRoom Temple "Temple"
 with
     description [;
-        print "You are inside the stone temple, large openings in the ceiling
-        provide ample natural light for you to see the walls covered in
-        symbols. ";
-        if (temple_stone_box has open)
-            print "You see a hole in the floor. ";
-        else
-            print "A stone slab is on the floor. ";
-        print_ret "^^You hear water from the north exit.
-        You see a jungle in the south exit.";
+        if (self hasnt visited) {
+            print "The temple is cool inside, the stone floor is covered in in a
+            thin layer of dirt, and openings near the top of the structure
+            provide ample natural light for you to see. ";
+        }
+        print "The stone walls are engraved with symbols. ";
+        if (temple_stone_box hasnt open) {
+            print "A sun is engraved in the floor. ";
+        }
+        print_ret "^^You hear water falling from the north entrance.
+        You see a jungle through the south exit.";
     ],
     n_to Waterfall,
     s_to JunglePath,
@@ -1858,6 +1868,8 @@ with
                 print_ret "You see a waterfall through the exit that way.";
             if (noun == s_obj)
                 print_ret "You see a jungle through the exit that way.";
+            if (noun == d_obj)
+                <<Examine temple_stone_box>>;
     ],
 
     has light;
@@ -1879,16 +1891,29 @@ with
         Take: "You can't take the glyphs as they are engraved into the stone.";
     ];
 
-ScenicRockObject temple_stone_box "stone lid" Temple
+ScenicRockObject temple_stone_box "engraved sun" Temple
 with
-    name 'stone' 'slab' 'hole',
-    description "It is a square slab of stone flush with the floor, finger-sized
-    holes carved in the top make it possible to open it.",
+    name 'stone' 'slab' 'hole' 'engraved' 'sun',
+    description "The image of the sun is engraved into a slab of stone, embedded
+    into the floor. Holes in the slab make it possible to open it.",
+    short_name "engraved sun",
     before [;
         Take:
             <<Open self>>;
     ],
-    has container openable;
+    after [;
+        Open:
+            ! List this container in room descriptions when it is open
+            give self ~scenery;
+            ! Change it's short name
+            self.short_name = "hole in the floor";
+            ! List the of contents manually, otherwise the default 
+            ! listing prints "you open the hole in the floor".
+            print "You open the stone slab with the sun engraving, revealing ";
+            WriteListFrom(child(self), ENGLISH_BIT);
+            print_ret ".";
+    ],
+    has container openable static;
 
 Object urn "urn"
 with
