@@ -481,7 +481,7 @@ has scenery static;
 ! Something edible
 Class EdibleFruitObject has edible;
 
-! Can be STRIKED to make sparks.
+! Can be used to LIGHT a torch.
 Class SparkThrowerObject;
 
 ! A metal object is required to strike sparks on a SparkThrowerObject
@@ -792,7 +792,7 @@ with
 SparkThrowerObject flint_stone "flint"
 with
     name 'flint' 'stone' 'metallic' 'blue' 'glint',
-    initial "A metllic blue glint catches your eye.",
+    initial "A metallic blue glint catches your eye.",
     description [;
         if (self has moved)
             print "A piece of flint stone, it can be sued to make sparks and
@@ -801,12 +801,13 @@ with
             print "The glint is coming from a stone on the ground.";
         ],
     found_in [;
+        ! Only visible when the player has crafted the torch
         if (GetPlayerTorchObject())
             return Waterfall;
     ],
     before [;
         Use:
-            print_ret "It's a stone, not a zippo. Try LIGHT TORCH.";
+            print_ret "It's a stone, not a zippo. Try LIGHT TORCH WITH FLINT.";
     ],
     after [;
         Take:
