@@ -1,18 +1,18 @@
 @echo off
-@call w:\coding\i6\setvars.bat
+@call ..\tools\setvars.bat
 
 ::REM Run Tests
-cat find_the_way.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > find_the_way.actual
-cat get_bananas.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > get_bananas.actual
-cat distract_monkey.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > distract_monkey.actual
-cat deadly_drop.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > deadly_drop.actual
-cat find_the_alcove.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > find_the_alcove.actual
-cat make_a_torch.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > make_a_torch.actual
-cat pressure_plate_trap.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > pressure_plate_trap.actual
-cat catch_fish.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > catch_fish.actual
-cat compass.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > compass.actual
-cat ending.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > ending.actual
-cat weather.spec | dfrotz -s 0 -p ..\DrEgoAdv.z5 > weather.actual
+cat find_the_way.spec | dfrotz -s 0 -p ..\build\Debug.z5 > find_the_way.actual
+cat get_bananas.spec | dfrotz -s 0 -p ..\build\Debug.z5 > get_bananas.actual
+cat distract_monkey.spec | dfrotz -s 0 -p ..\build\Debug.z5 > distract_monkey.actual
+cat deadly_drop.spec | dfrotz -s 0 -p ..\build\Debug.z5 > deadly_drop.actual
+cat find_the_alcove.spec | dfrotz -s 0 -p ..\build\Debug.z5 > find_the_alcove.actual
+cat make_a_torch.spec | dfrotz -s 0 -p ..\build\Debug.z5 > make_a_torch.actual
+cat pressure_plate_trap.spec | dfrotz -s 0 -p ..\build\Debug.z5 > pressure_plate_trap.actual
+cat catch_fish.spec | dfrotz -s 0 -p ..\build\Debug.z5 > catch_fish.actual
+cat compass.spec | dfrotz -s 0 -p ..\build\Debug.z5 > compass.actual
+cat ending.spec | dfrotz -s 0 -p ..\build\Debug.z5 > ending.actual
+cat weather.spec | dfrotz -s 0 -p ..\build\Debug.z5 > weather.actual
 
 ::REM Diff Results
 if exist test_results.txt del test_results.txt

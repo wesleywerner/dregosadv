@@ -1,5 +1,6 @@
 @echo off
-@call w:\coding\i6\setvars.bat
+@call ..\tools\setvars.bat
+
 kdiff3 find_the_way.expected        find_the_way.actual     -o find_the_way.expected
 kdiff3 get_bananas.expected         get_bananas.actual      -o get_bananas.expected
 kdiff3 distract_monkey.expected     distract_monkey.actual  -o distract_monkey.expected
