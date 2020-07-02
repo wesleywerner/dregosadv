@@ -1,4 +1,5 @@
 # Ignore binary builds
+build/
 *.z5
 
 # Ignore ide configuration

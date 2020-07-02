@@ -207,8 +207,10 @@ Using the task scoring system, these tasks are Achievable. See the `task_scores`
 * Optimize entry descriptions for all rooms
 * Fill the journal with notes
 * Use ScenicBase
-* Remove the crowbar and MetalObject, these are not used
 * Try get oil on inventory items, and examining oily things descriptions
+* Change the win condition to when you get in the canoe with the treasure
+* Returning to the canoe, if you had caught the fish, you find it cooking over a fire
+* You can put the yam in the fire to roast it
 
 ### Done
 * Add task based scoring - DM$ $22

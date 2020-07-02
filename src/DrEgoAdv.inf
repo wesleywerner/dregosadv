@@ -169,7 +169,6 @@ Verb    'dip'       * noun 'in'/'into' noun         -> Dip;
     move monkey to fig_tree;
     move banana to garden_trees;
     move yam to Garden;
-    move crowbar to bungalow_rubble;
     move cloth to bungalow_rubble;
     move torch_of_wood to jungle_scenery;
     move golden_egg to stone_altar;
@@ -484,9 +483,6 @@ Class EdibleFruitObject has edible;
 ! Can be used to LIGHT a torch.
 Class SparkThrowerObject;
 
-! A metal object is required to strike sparks on a SparkThrowerObject
-Class MetalObject;
-
 ! A long straight object that can be made into a torch.
 ! The material property describes what the torch is made of.
 Class TorchBaseObject 
@@ -577,9 +573,6 @@ with
             }
         }
     ];
-
-! Items that can be taken and are used to solve some of the puzzles.
-Class UsefulObject;
 
 Class WeightedObject;
 
@@ -708,12 +701,6 @@ with
     name 'cloth' 'canvas',
     description "A strip of canvas cloth the length of your arm, it seems pretty
     old since it is a pale dirty white.";
-
-MetalObject crowbar "crowbar"
-with
-    name 'crowbar' 'bar',
-    description "A multi-purpose short metal rod, a little rusted but it
-    works all the same.";
 
 !
 ScenicTreeObject fig_tree "fig tree"
@@ -1694,7 +1681,7 @@ with
     broken remnants of furniture.",
     search_lead "You scrounge amid the rubble and disturb a giant centipede -
     The critter scurries out of sight. You continue your search and find ",
-    search_concludes "You take them.",
+    search_concludes "You take it.",
     auto_take true,
     before [;
         ! Alias Dig as searching
