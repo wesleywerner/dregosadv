@@ -2,7 +2,7 @@
 ! at coordinates 8°28'03.0"S 140°21'20.8"E
 
 Release 1;
-Serial "200410";
+Serial "400410";
 
 Constant Story "Dr Ego and the Egg of Man-Toomba";
 Constant Headline
@@ -640,7 +640,9 @@ with
         craft.";
     ],
 
-    description "It is a small wooden canoe, it looks hand built.
+    description "The canoe is built from a hollowed-out log and wooden planks, 
+    it has a single lateral support float fastened to the hull on one side, to
+    help stabilize the craft.
     A fishing spear lies inside the boat.",
     
     before [;
@@ -865,17 +867,66 @@ EssentialObject golden_egg "Golden Egg of Man-Toomba"
 EssentialObject journal "journal"
     with
         name 'your' 'diary' 'journal' 'book',
-        description "It is your journal filled with your research notes.
-        You can ~look up <any topic> in journal~ or ~read about <any topic> in
-        journal~, or ~consult journal about <any topic>~.",
-    before [w1 w2;
+        
+        description [;
+        "Your journal is filled with your research notes about Papua
+        New Guinea, its people and ", (the) golden_egg, ".
+        You can ~look up <topic> in journal~ or ~read about <topic> in
+        journal~, or ~consult journal about <topic>~ -- all of these actions
+        will give the same result. To read about the Maro River for example,
+        enter ~read about the maro in journal~.";],
+        
+    before [w1 w2 context;
         Consult:
             ! forward the word marker to the first word in the consult topic.
             wn = consult_from;
+            ! Grab the first word in the topic
             w1 = NextWord();
+            ! If the word is 'the', 'a' or 'an', grab the next word
+            if (w1=='the') w1 = NextWord();
+            if (w1=='a') w1 = NextWord();
+            if (w1=='an') w1 = NextWord();
             w2 = NextWord();
             
-            if (w1=='Papua' || w2=='Guinea')
+            if (w1=='Papua' || w2=='Guinea' || w1=='land' || w2=='land')
+                context = 'New Guinea';
+                
+            if (w1=='people' || w1=='native' || w1=='natives')
+                context = 'People';
+            
+            if (w1=='jungle' || w1=='forest' || w1=='rainforest')
+                context = 'Jungle';
+                
+            if (w1=='yam' || w1=='yams' || w1=='karuka')
+                context = 'Edibles';
+    
+            if (w1=='maro' || w1=='river' || w2=='river')
+                context = 'Maro River';
+            
+            if ((w1=='air' && w2 =='terjun') || (w1=='terjun'))
+                context = 'air terjun';
+            
+            if (w1=='Mogillo' || w1=='fish' || w1=='bass' || w2=='bass')
+                context = 'Mogillo';
+            
+            if (w1=='Kalawai' || w1=='spear' || w1=='fishing' || w2=='fishing')
+                context = 'Fishing';
+            
+            if (w1=='treasure' || w2=='treasure')
+                context = 'Treasure';
+            
+            if ((w1=='gold' || w1=='golden') && (w2=='egg'))
+                context = 'Golden Egg';
+            
+            if (w1=='mannaz' || w1=='ehwaz' || w1=='gebo' || w1=='peorth')
+                context = 'Glyphs';
+                
+            if ((parent(boatman)==parent(player)) && 
+                (w1=='canoe' || w1=='boat' || w1=='craft'))
+                context = 'Ask Rom';
+            
+            switch (context) {
+                'New Guinea':
                 "You leaf through your notes and come to an entry about Papua
                 New Guinea: It is a country in Oceania that occupies the eastern
                 half of the island. Its capital, located along its southeastern
@@ -883,36 +934,91 @@ EssentialObject journal "journal"
                 country. It is known to have numerous groups of uncontacted
                 peoples, and researchers believe there are many undiscovered
                 species of plants and animals in the interior.";
-            
-            if (w1=='maro' || w1=='river' || w2=='river')
+                
+                'Jungle':
+                "Papua New Guinea is populated by dense rain forest and large
+                wetland areas. This terrain has made it difficult for the
+                country to develop transportation infrastructure. Some areas are
+                accessible only on foot or by plane.";
+                
+                'People':
+                "Papua New Guinea has more than a thousand cultural groups, the
+                majority being from the group known as Papuans, whose ancestors
+                arrived in the New Guinea region tens of thousands of years
+                ago. Most of these cultural groups have their own language.
+                People typically live in villages that rely on subsistence
+                farming. In some areas people hunt and collect wild plants (such
+                as yam roots and karuka) to supplement their diets. Those who
+                become skilled at hunting, farming and fishing earn a great deal
+                of respect.";
+                
+                'Edibles':
+                "Yam roots and karuka are popular foods in Papua New Guinea.
+                A yam is a starchy edible tuber, it has a rough skin that is
+                difficult to peel but readily softened by heating. The skins
+                vary in color from dark brown to light pink.
+                Karuka is a nut bearing tree that is a cultivated crop, the
+                fruit are more nutritious than coconuts and has been used as a
+                major food source for over 30 millennia.";
+                
+                'Maro River':
                 "The Maro river flows from north-east to south-west into the
                 Arafura Sea. It runs over 124 miles or 200 kilometers in length,
                 and is up to 1 kilometer or two thirds of a mile wide.
                 It is a complex system of swamps and oxbow lakes which hosts a
                 large number of birds and reptiles.";
-            
-            if ((w1=='air' && w2 =='terjun') || (w1=='terjun'))
-                "You page through your journal until you find your notes about
-                glyphs, and find an underlined passage about air terjun -- you
-                learn that the symbol indicates a hidden thing ~behind the
-                falling water~.";
-            
-            if (w1=='Mogillo' || w1=='fish' || w1=='bass' || w2=='bass')
-                "Lutjanus goldiei, the Papuan black bass known locally as
-                mogillo, is a large snapper species native to the Pacific Ocean
-                from New Guinea all the way to Malaysia and known to inhabit
-                thick, jungle rivers and brackish river mouths.";
-            
-            if (w1=='gold' || w1=='golden' || w1=='egg' || w2=='egg')
-                "The golden egg is a mysterious artifact";
-            
-            if (w1=='glyph' || w1=='glyphs' || w1=='mannaz' 
-                || w1=='ehwaz' || w1=='gebo' || w1=='peorth')
-                "You find some notes on the meanings of these glyphs: 
+                
+                'Glyphs':
+                "You page through your notes and find the meanings of these glyphs: 
                 Mannaz means mankind, intelligence and forethought.
                 Ehwaz means horse, Movement and change for the better.
                 Gebo means gifts or treasure.
                 Peorth means something concealed or a secret.";
+                
+                'air terjun':
+                "You page through your journal until you find your notes about
+                glyphs, and find an underlined passage about air terjun -- you
+                learn that the symbol indicates a hidden thing ~behind the
+                falling water~.";
+                
+                'Mogillo':
+                "Lutjanus goldiei, the Papuan black bass known locally as
+                mogillo, is a large snapper species native to the Pacific Ocean
+                from New Guinea all the way to Malaysia and known to inhabit
+                thick, jungle rivers and brackish river mouths.
+                See ~Fishing~.";
+                
+                'Fishing':
+                "Spear fishing is a traditional method of hunting food in New
+                Guinea. A fishing spear made from a wooden pole with metal
+                prongs fixed to the one end. Divers in shallow water use it to
+                harpoon small fish.
+                See ~Mogillo~.";
+                
+                'Treasure':
+                "New Guinea is rumored to have many hidden treasures because of
+                its unexplored and rich land, most treasures are historical
+                relics, however some of these items are crafted from precious
+                metals or stones and are sought after by many a treasure hunter
+                looking for profit.
+                See ~Golden Egg~.";
+                
+                'Golden Egg':
+                "", (The) golden_egg, " is mysterious and rumored to be
+                cursed. It is said to bring misfortune to whomever tries to
+                covet the shimmering artifact. The Egg is said to be crafted
+                from gold and is the size of a fist.
+                See ~Treasure~.";
+                
+                'Ask Rom':
+                print "You rifle through the pages without luck, you decide to
+                ask ", (a) boatman, " about it.^";
+                <<Ask boatman w1>>;
+                
+                default: "You leaf through your journal but can't find any notes
+                about that topic.";
+            }
+            
         Use:
             <<Examine self>>;
     ];
@@ -1457,6 +1563,8 @@ HumanNPC boatman
                 return boatman_answers(noun);
             Ask:
                 return boatman_ask(second);
+            Tell:
+                return boatman_ask(second);
             Show:
                 if (noun == lodestar) {
                     boatman.noticed_compass = true;
@@ -1478,7 +1586,8 @@ HumanNPC boatman
             print_ret "~He taught me how to build boats and how to fish...
                         taught me everything to live and survive out here~";
         'fishing', 'spear':
-            print_ret "~We call that a Kalawai, good for catching dinner!~";
+            print_ret "~We call that a Kalawai~, nodding at the spear in the
+            boat, ~Good for catching dinner!~";
         'time', 'longer':
             print_ret "~We will reach the shore soon~, he replies.";
     }
@@ -2365,10 +2474,8 @@ Extend 	'climb'		* 'up'/'down' noun				 -> GoUpDownNoun;
 
 ! Print help when trying to "talk to noun"
 [ TalkToNounHelpSub;
-    print "To ask ", (the) noun, " something start your sentence with 
-        ~ask ", (the) noun, " about ...~ 
-        ^^To say something to ", (the) noun, " start your sentence with
-        ~say ...~^";
+    print "Conversations have two forms: asking someone something, and telling something.
+    You can ASK ", (the) noun, " ABOUT SOMETHING, or SAY SOMETHING.";
 ];
 Verb    'talk'      * 'to' noun                     -> TalkToNounHelp;
 
