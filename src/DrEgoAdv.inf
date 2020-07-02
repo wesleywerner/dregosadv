@@ -827,8 +827,8 @@ ScenicPlantObject garden_trees "fruit trees"
 with
     name 'fruit' 'fruits' 'cherry' 'tree' 'trees',
 
-    description "You see a cherry tree but it is not bearing any fruit, the
-    banana tree next to it however has a bunch of fruit.",
+    description "You see a cherry tree but it is not bearing any fruit.
+    The other tree next to it, however, has a bunch of bananas.",
     
     found_in Garden,
 
