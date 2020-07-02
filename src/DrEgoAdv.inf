@@ -643,7 +643,7 @@ with
     description "The canoe is built from a hollowed-out log and wooden planks, 
     it has a single lateral support float fastened to the hull on one side, to
     help stabilize the craft.
-    A fishing spear lies inside the boat.",
+    A fishing spear and net are in the boat.",
     
     before [;
 
@@ -782,12 +782,17 @@ with
     ];
 
 !
-NotYourPropertyObject fishing_spear "fishing spear"
+NotYourPropertyObject fishing_spear "fishing spear" canoe
 with
     name 'fishing' 'rod' 'spear' 'kalawai',
     description "A traditional fishing spear made from wood, it has three
     metal prongs at the business end.",
-    found_in canoe,
+    has scenery;
+
+NotYourPropertyObject fishing_net "fishing net" canoe
+with
+    name 'fishing' 'net',
+    description "A fishing net is heaped here inside the canoe.",
     has scenery;
 
 !
@@ -1577,19 +1582,26 @@ HumanNPC boatman
 [ boatman_ask second;
     switch (second) {
         'canoe', 'boat', 'oar':
-            print_ret "~I have the canoe for many years now, built it myself~, ",
-                        (a) self, " says proudly.";
+            "~I have the canoe for many years now, built it myself~, ",
+            (a) self, " says proudly.";
         'river', 'maro', 'water':
-            print_ret "~The ancient waters of the Maro will swallow you whole if
-                        you try to swim~, he says mournfully.";
+            "~The ancient waters of the Maro will swallow you whole if you try
+            to swim~, he says mournfully.";
         'father':
-            print_ret "~He taught me how to build boats and how to fish...
-                        taught me everything to live and survive out here~";
-        'fishing', 'spear':
-            print_ret "~We call that a Kalawai~, nodding at the spear in the
+            "~He taught me how to build boats and how to fish... taught me
+            everything to live and survive out here~";
+        'spear':
+            "~We call that a Kalawai~, nodding at the spear in the
             boat, ~Good for catching dinner!~";
+        'net':
+            "~That is a cast net, I throw it out into the water, and haul it
+            back in~.";
+        'fishing':
+            <Ask self 'spear'>;
+            print "He continues, ";
+            <<Ask self 'net'>>;
         'time', 'longer':
-            print_ret "~We will reach the shore soon~, he replies.";
+            "~We will reach the shore soon~, he replies.";
     }
     print_ret (The) self, " grins at you and nods.";
 ];
