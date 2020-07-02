@@ -168,7 +168,7 @@ Verb    'dip'       * noun 'in'/'into' noun         -> Dip;
     move boatman to canoe;
     move monkey to fig_tree;
     move banana to garden_trees;
-    move pumpkin to Garden;
+    move yam to Garden;
     move crowbar to bungalow_rubble;
     move cloth to bungalow_rubble;
     move torch_of_wood to jungle_scenery;
@@ -1127,21 +1127,26 @@ with
     has wet;
 
 !
-Object pumpkin "pumpkin"
+Object yam "yam"
 with
-    name 'pumpkin' 'pumpkins',
-    description "It is a small round and green pumpkin.",
+    name 'yam' 'tuber',
+    description [;
+        if (self has moved) {
+            "The yam has a rough light yellow skin.";
+        } else {
+            "The tuber is partially exposed above ground.";
+        }],
     before [;
         Eat:
-            print_ret "It looks delicious and fresh, but would be better served
-            cooked.";
+            print_ret "It would be better served cooked.";
     ],
     after [;
         Take:
         if (self hasnt moved) {
             give self ~concealed;
-            print_ret "You carefully break the stem and take the small round
-            pumpkin.";
+            print_ret "You reach down pulling on the leafy parts of the plant,
+            and a yam emerges from of the ground. You discard the leaves and
+            keep the yam.";
         }
     ],
     has concealed edible;
@@ -1822,10 +1827,10 @@ with
     description [;
         print "The vegetable plants in the garden have grown wild without
         anybody around to harvest them. ";
-        if (pumpkin has concealed) {
-            print "You notice a pumpkin on the ground, hiding under some large
-            green leaves.";
+        if (yam has concealed) {
+            print "You notice some kind of tuber growing on the ground.";
         }
+        "";
     ];
 
 ! [ -------------------------------------------------------------- Jungle Path ]
