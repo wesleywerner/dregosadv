@@ -98,58 +98,6 @@ Attribute is_torch;
 Attribute wet;
 Attribute oily;
 
-! [ =========================================================== Custom Actions ]
-
-! A new verb to use the bullwip.
-[ WhipSub;
-
-    if (bullwhip notin player)
-        "Not without your bullwhip.";
-
-    if (noun in player)
-        "You could hurt yourself.";
-
-    if (noun == player)
-        "You are not into that kind of thing.";
-
-    if (noun ofclass NonPlayerCharacter)
-        <<Attack noun>>;
-
-    if (parent(noun) ofclass NonPlayerCharacter)
-        <<Attack noun>>;
-
-    ! if (children(player) > 1)
-    !     "You need your hands free to use the whip effectively.";
-    
-    ! Whipping succeeded, frighten the monkey if it is nearby
-    monkey_frighten();
-
-    ! Test if any custom after routines are handled.
-    if (AfterRoutines()) return;
-
-    ! Default response
-    "You crack the whip at ", (the) noun, " -- *SNAP*^";
-
-];
-Verb 'whip' * noun -> Whip;
-
-! Provides a help verb when trying to "use noun".
-! Individual objects implement a Use action to describe their usage.
-[ UseSub;
-    ! Run any intercepted object actions
-    if (AfterRoutines()) return;
-    ! Default response
-    "Begin your sentence with a Verb.^";
-];
-Verb    'use'       * noun                          -> Use;
-
-! Provides a "Dip" synonym for inserting things.
-! Note that dipping implies insert something into the *parent* of the thing.
-[ DipSub;
-    <<Insert noun parent(second)>>;
-];
-Verb    'dip'       * noun 'in'/'into' noun         -> Dip;
-
 ! [ ================================================================= Routines ]
 
 [ Initialise;
@@ -2489,5 +2437,55 @@ Verb    'talk'      * 'to' noun                     -> TalkToNounHelp;
     <<Search noun>>;
 ];
 Extend    'look'      * 'behind' noun                 -> LookBehind;
+
+! Provides a help verb when trying to "use noun".
+! Individual objects implement a Use action to describe their usage.
+[ UseSub;
+    ! Run any intercepted object actions
+    if (AfterRoutines()) return;
+    ! Default response
+    "Begin your sentence with a Verb.^";
+];
+Verb    'use'       * noun                          -> Use;
+
+! Provides a "Dip" synonym for inserting things.
+! Note that dipping implies insert something into the *parent* of the thing.
+[ DipSub;
+    <<Insert noun parent(second)>>;
+];
+Verb    'dip'       * noun 'in'/'into' noun         -> Dip;
+
+! Provides a Whip verb.
+[ WhipSub;
+
+    if (bullwhip notin player)
+        "Not without your bullwhip.";
+
+    if (noun in player)
+        "You could hurt yourself.";
+
+    if (noun == player)
+        "You are not into that kind of thing.";
+
+    if (noun ofclass NonPlayerCharacter)
+        <<Attack noun>>;
+
+    if (parent(noun) ofclass NonPlayerCharacter)
+        <<Attack noun>>;
+
+    ! if (children(player) > 1)
+    !     "You need your hands free to use the whip effectively.";
+    
+    ! Whipping succeeded, frighten the monkey if it is nearby
+    monkey_frighten();
+
+    ! Test if any custom after routines are handled.
+    if (AfterRoutines()) return;
+
+    ! Default response
+    "You crack the whip at ", (the) noun, " -- *SNAP*^";
+
+];
+Verb 'whip' * noun -> Whip;
 
 ! TODO GET OUT redirects to EXIT - so get out (when in canoe) works
