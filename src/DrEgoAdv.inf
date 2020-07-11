@@ -1547,7 +1547,7 @@ HumanNPC boatman
 
 [ boatman_answers noun;
     switch (noun) {
-        'hello', 'hi':
+        'hello', 'hi', 'greetings':
             if (self has proper)
                 print_ret (A) self, " looks baffled at your repeated greeting,
                             but he obliges you with a big grin anyway.";
@@ -1561,11 +1561,13 @@ HumanNPC boatman
             }
         'bye', 'goodbye', 'cheers':
             if (location == River)
-                print_ret "No need to say goodbye to ", (a) self, " before
-                            you reach your destination.";
+                "No need to say goodbye to ", (a) self, " before you reach your
+                destination.";
             if (location == Shore)
-                print_ret "~Safe travels ", (a) player, ", I hope you find what
-                            you are looking for!~, ", (a) self, " waves.";
+                "~Safe travels ", (a) player, ", I hope you find what you are
+                looking for!~, ", (a) self, " waves.";
+        default:
+            print_ret (A) self, " does not reply.";
     }
 ];
 
