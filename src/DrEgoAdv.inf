@@ -810,11 +810,10 @@ EssentialObject journal "journal"
         
         description [;
         "Your journal is filled with your research notes about Papua
-        New Guinea, its people and ", (the) golden_egg, ".
-        You can ~look up <topic> in journal~ or ~read about <topic> in
-        journal~, or ~consult journal about <topic>~ -- all of these actions
-        will give the same result. To read about the Maro River for example,
-        enter ~read about the maro in journal~.";],
+        New Guinea, its people and ", (the) golden_egg, ".  
+        To consult your journal about a topic, type NOTES ON <topic>.  
+        To read about the Maro River for example, enter NOTES ON THE MARO.";
+        ],
         
     before [w1 w2 context;
         Consult:
@@ -2492,4 +2491,14 @@ Verb    'dip'       * noun 'in'/'into' noun         -> Dip;
 ];
 Verb 'whip' * noun -> Whip;
 
-! TODO GET OUT redirects to EXIT - so get out (when in canoe) works
+! Add a NOTES verb that consults the journal directly.
+[ NotesSub;
+    if (journal in player) {
+        <<Consult journal>>;
+    }
+    else {
+        "You don't have your journal on you.";
+    }
+];
+Verb 'notes'     * 'on' topic   -> Notes
+                 * topic        -> Notes;
