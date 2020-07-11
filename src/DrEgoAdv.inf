@@ -2409,8 +2409,8 @@ Object debugger_wand "Wizard's Wand" with name 'wizard' 'wand' has light;
 !                   'colour' 'color' 'emerald' 'billows' 'leaf' 'leaves'
 !                   'atmosphere' 0 NULL,
 Constant ScenicError "You don't need that.";
-Include "Scenic";
-
+Include "DrScenic";
+Include "DrHelpRoutines";
 Include "Grammar";
 
 ! [ Extend Grammar ----------------------------------------------------------  ]

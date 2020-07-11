@@ -1,0 +1,544 @@
+  THIS GAME IS IN DEBUG MODE
+  
+  Dr Ego and the Egg of Man-Toomba
+  An Interactive Fiction Story
+  by Special Agent.
+  Release 1 / Serial number 400410 / Inform v6.33 Library v6.12.3pre SX
+  
+  The Maro River (in the canoe)
+  The a canoe rocks gently on the water as you travel up the river. Your
+  guide sits at the other end of the craft rowing with an oar. You wonder how
+  much longer this will take, you have been in this a canoe for a while now.
+  You are anxious to start searching for the treasure.
+  
+> >  The game you are playing is a work of Interactive Fiction, you play the
+  main character of a story and you type the actions you want the character
+  to take.
+  
+  If this sounds daunting be assured that there is a very low learning curve,
+  and this HELP text will tell you everything you need to play IF.
+  
+  This text uses a convention where upper case words signal something that
+  you can type.  It does not matter if you type in upper or lower case, the
+  story will understand either way.
+  
+  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    CREDITS
+  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  
+> >  BASICS
+  In order to communicate with the game, you will need to enter instructions
+  beginning with verbs, as if you are giving orders to someone.  The story
+  recognizes a limited number of verbs, all of which are listed with HELP
+  VERBS.
+  
+  You may use articles ("the" and "a"), but you do not need to. GO NORTH,
+  TAKE THE BRASS LANTERN, or LOOK UNDER THE CARPET are examples of how verbs
+  and nouns are used.
+  
+  GETTING STARTED
+  The first thing you want to do when starting a game is acquaint yourself
+  with your surroundings and get a sense of your goal:
+  
+  Read the introductory text carefully.  Sometimes it contains clues.  LOOK
+  at the room description.  Get an idea of what sort of place you're in.
+  Usually the description will tell you where the exits are, and any items
+  that you can interact with. Type LOOK if you want to see the room
+  description.  EXAMINE the things in the room.  Item descriptions can
+  contain clues to help you out.  Examine self.  To see your own appearance.
+  TAKE INVENTORY (I).  To list everything you are carrying.  GO NORTH.  Move
+  from room to room, and check out every location available.
+***MORE***  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    CREDITS
+  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  
+> >  THINGS
+  The story contains an assortment of things that you can interact with.
+  Most importantly, you may TAKE or GET items, and (when you are tired of
+  them) DROP them again.  INVENTORY (abbreviated I) will list the items you
+  are currently carrying.
+  
+  There are usually assorted things you may do with these objects. OPEN,
+  CLOSE, WEAR, EAT, LOCK, and UNLOCK are especially common.
+  
+  Occasionally, you will find that the game does not recognize the name of an
+  object even though it has been described as being in the room with you.  If
+  this is the case, the object is just there for scenery, and you may assume
+  that you do not need to interact with it.
+  
+  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    CREDITS
+  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  
+> >  Here is a list of verbs you can use in this story. To read more about a
+  specific verb, type HELP followed by the verb.
+  
+  Seeing Things
+  CONSULT    EXAMINE    INVENTORY
+  LOOK       READ       SEARCH
+  
+  Moving Around
+  NORTH [N]  SOUTH [S]  EAST  [E]  WEST  [W]
+  [NE]       [NW]       [SE]       [SW]
+  UP         DOWN       IN         OUT
+  CLIMB      ENTER      EXIT
+  
+  Manipulating Things
+  BLOW       BREAK      BURN       CLOSE      CUT
+  DIG        DROP       EMPTY      FILL       LIGHT
+  LOCK       OPEN       PULL       PUSH       PUT
+  REMOVE     SET        SWITCH     TAKE       THROW
+  TIE        TRANSFER   TURN       UNLOCK     WEAR
+  
+  Other Physical Actions
+  ATTACK     BUY        JUMP       RUB
+***MORE***  SLEEP      SWIM       SWING      SQUEEZE
+  WAIT       WAKE       WAVE
+  
+  Using Your Senses
+  EAT        DRINK      LISTEN     SMELL
+  SING       TASTE      TOUCH      THINK
+  
+  Interacting with others
+  ASK ABOUT  ASK FOR    GIVE
+  ANSWER     KISS       SAY        SHOW       TELL
+  
+  Game Commands
+  RESTART    RESTORE     SAVE
+  QUIT       UNDO        PRONOUNS
+  SCRIPT ON  SCRIPT OFF  VERIFY
+  OBJECTS    PLACES
+  SCORE      NOTIFY ON  NOTIFY OFF FULL SCORE
+  
+  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    CREDITS
+  IF       STUCK    HINT     ABBREVIATIONS (AB)
+***MORE***> >  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    CREDITS
+  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  
+> >  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    CREDITS
+  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  
+> >  INTERACTIVE FICTION
+  There are various kinds of IF in the world.  Some of them put more emphasis
+  on solving puzzles; some want to move you through a coherent plot of some
+  kind; some want to offer you something to explore.
+  
+  In games with a lot of challenging puzzles, you can expect to spend a fair
+  amount of time wandering around trying to figure out what you should do
+  next; this is part of the fun.  (If you like that sort of thing, anyway.)
+  When you start a game, you can usually get a sense fairly early on of what
+  kind of game it is and what the author expects you to do.  Read the opening
+  text carefully: it may tell you things about the character you are playing,
+  your goals within the game, and so on.
+  
+  If the game tells you to type ABOUT or INFO the first time you play, you
+  should always do so: this information may include special commands or other
+  material without which you won't be able to finish.  This is like the game
+  manual in a commercial game, so don't ignore it.
+  
+  HOW THE WORLD IS ASSEMBLED
+  
+  Space: Most IF games are set in a world made up of rooms without internal
+  division.  Movement between rooms is possible; movement within a room does
+***MORE***  not always amount to anything.  >WALK OVER TO THE DESK is rarely a useful
+  sort of command.  On the other hand, if something is described as being
+  high or out of reach, it is sometimes relevant to stand on an object to
+  increase your height.  This kind of activity tends to be important only if
+  prompted by the game text.
+  
+  Containment: One thing that IF does tend to model thoroughly is
+  containment.  Is something in or on something else?  The game keeps track
+  of this, and many puzzles have to do with where things are -- in the
+  player's possession, lying on the floor of the room, on a table, in a box,
+  etc.
+  
+  Types of Action: Most of the actions you can perform in the world of IF are
+  brief and specific.  >WALK WEST or >OPEN DOOR are likely to be provided.
+  >TAKE A JOURNEY or >BUILD A TABLE are not.  Things like >GO TO THE HOTEL
+  are on the borderline: some games allow them, but most do not. In general,
+  abstract, multi-stage behavior usually has to be broken down in order for
+  the game to understand it.
+  
+  Other Characters: Other characters in IF games are sometimes rather
+  limited.  On the other hand, there are also games in which character
+  interaction is the main point of the game.  You should be able to get a
+  feel early on for the characters -- if they seem to respond to a lot of
+***MORE***  questions, remember what they're told, move around on their own, etc., then
+  they may be fairly important.  If they have a lot of stock responses and
+  don't seem to have been the game designer's main concern, then they are
+  most likely present either as local color or to provide the solution to a
+  specific puzzle or set of puzzles.  Characters in very puzzle-oriented
+  games often have to be bribed, threatened, or cajoled into doing something
+  that the player cannot do -- giving up a piece of information or an object,
+  reaching something high, allowing the player into a restricted area, and so
+  on.
+  
+  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    CREDITS
+  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  
+> >  Abbreviations:
+  AGAIN [G]      DOWN [D]       EAST [E]       LOOK [L]
+  NORTH [N]      QUIT [Q]       SOUTH [S]      UP [U]
+  WEST [W]       WAIT [Z]       EXAMINE [X]    INVENTORY [I]
+  NORTHEAST [NE] NORTHWEST [NW] SOUTHEAST [SE] SOUTHWEST [SW]
+  
+  AGAIN repeats the last entered command, and "it" refers to the last item
+  handled, eg:
+  > EXAMINE THE LANTERN
+  > TAKE IT
+  
+  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    CREDITS
+  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  
+> >    go north
+    east
+    sw
+  
+  Moves your character in the given direction, provided there is an exit that
+  way.  Exits are listed when you LOOK around.
+  
+  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    CREDITS
+  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  
+> >    light the candle with the blowtorch
+    burn the pyre with the Molotov cocktail
+  
+  Sets something alight using a flame, which may be a matchbook, a zippo
+  lighter or even a piece of fire-making flint. BURN and LIGHT are synonyms.
+  
+  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    CREDITS
+  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  
+> >    climb the fig tree
+  
+  Ascends climbable objects: ladders, ropes and jungle gyms. Because English
+  is nuanced you can also climb stairs, although this is a different action
+  (GOing UP), some stories allow you to do this -- If this fails, try GO UP
+  to use stairs instead.
+  
+  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    CREDITS
+  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  
+> >    dig in the ground
+    dig in the garden with the spade
+  
+  Makes you dig using a tool that you are carrying. Some stories allow you to
+  dig without a tool, simply omit the tool name.
+  
+  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    CREDITS
+  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  
+> >    consult the book about roman history
+    look up moon phases in the almanac
+    read about hallucinations in the medical journal
+  
+  Reads about a topic in a book, or other reading material that you are
+  carrying.  Newspapers, almanacs and recipe books are other examples of
+  reading material.  Alternative ways to read include: LOOK UP and READ
+  ABOUT.
+  
+  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    CREDITS
+  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  
+> >    cut the paper with the scissors
+    cut the rope with the axe
+  
+  Some stories need you to cut an item to progress the plot, this verb allows
+  you to do that, simply and succinct.
+  
+  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    CREDITS
+  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  
+> >    go up (when there are stairs)
+    go down (when hanging from a rope)
+    down (when standing on a bar counter)
+  
+  UP and DOWN are treated as directions, you can GO UP if there is a way
+  heading upward: stairs or hills for example. Generally when wanting to
+  ascend a climbable thing like ladders or ropes, you should use the CLIMB
+  verb.
+  
+  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    CREDITS
+  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  
+> >    drop the hot potato.
+    drop all (everything being carried).
+  
+  Drop places something you are carrying on the ground. If you instead want
+  to place the thing on top of a surface, or inside a container, use the PUT
+  verb instead.
+  
+  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    CREDITS
+  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  
+> >    empty the rucksack
+    empty the rucksack on the table
+  
+  Empties a container of all items and drops them on the ground, or onto
+  another surface. You must be holding the container. If you need to move
+  items from one container to another, see TRANSFER instead.
+  
+  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    CREDITS
+  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  
+> >    enter the small red car
+    enter the ancient temple
+  
+  Entering things is another form of movement when it makes grammatical sense
+  - cars, pillow fortresses or walk-in showers are examples of places you can
+  enter.  Usually if the story does not mention a specific direction of a
+  place, you can try ENTER it.
+  
+  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    CREDITS
+  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  
+> >    examine the ming vase
+    examine self
+    x the tomato plant
+  
+  Describes an item in more detail.  This verb is important in any IF story,
+  as examining an item can give you clues to how the item can be used, or
+  reveal some detail to help progress the story. For brevity this verb can be
+  shortened to X.
+  
+  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    CREDITS
+  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  
+> >    exit (when inside the hovercraft)
+    exit the speedboat
+  
+  Get out of something: a car, a boat and a phone booth. When your character
+  is on top of something (ladder, chair or perhaps a bar counter), type GET
+  OFF instead of exiting.
+  
+  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    CREDITS
+  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  
+> >    go in
+    out
+  
+  Moves into another location or structure (if present), depending on how the
+  story is written. For example standing near a tent may allow you to GO IN
+  to enter it, and GO OUT to leave it.
+  
+  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    CREDITS
+  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  
+> >    take inventory
+    i (abbreviated form)
+  
+  Lists everything your character is carrying. For brevity you can only type
+  the first letter, "i".
+  
+  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    CREDITS
+  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  
+> >    unlock the iron gate with the key
+    lock the medicine cabinet with the key
+  
+  Allows you to manipulate any locking mechanism: Doors, padlocks, electronic
+  keycard system, anything the story deems a lock.  If you are carrying a
+  single key, the story may let you omit which key to use.
+  
+  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    CREDITS
+  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  
+> >    look
+    l (abbreviated form)
+    look [up] / [north] / [se] / [down]
+    look under the carpet
+  
+  When used alone, LOOK describes what you see around you. When given a
+  compass direction, you describe what you see that way. Looking under things
+  may reveal something hidden.  See SEARCH.
+  
+  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    CREDITS
+  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  
+> >    open the door
+    close the toy chest
+  
+  Opens and closes doors, windows and containers.
+  
+  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    CREDITS
+  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  
+> >    push the cupboard
+    pull the silk thread
+  
+  Push and pull acts on a variety of items and is a very specific action to
+  each story.  Generally you won't be able to push or pull every little thing
+  in the world, but this verb has a place in IF puzzle solving --  Like
+  pushing a heavy cupboard out the way to reveal a hidden passage, or to push
+  a swing on the playground, or to push the fire alarm button. Generally in
+  IF you don't say which direction to PUSH in, but you can if the story
+  requires it -- PULL on the other hand never needs a direction.
+  
+  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    CREDITS
+  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  
+> >    put the vase on the pedestal
+    put the melon in the blender
+  
+  Places things onto a surface (like a table), or into containers (like a
+  bucket). If you want to put an item on the ground, DROP it instead.
+  
+  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    CREDITS
+  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  
+> >    remove the pearl necklace
+    remove the mango from the crate
+  
+  Takes items out of containers, or disrobes a worn garment or removes worn
+  jewelry.
+  
+  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    CREDITS
+  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  
+> >    search the rubble
+    search the suspect
+  
+  Searching can reveal something hidden. Searching containers (purses or
+  filing cabinets) is the same as LOOKing in the bag.  On the other hand
+  searching a pile of rubble makes more sense grammatically.  Do not say what
+  you are searching _for_: SEARCH FOR SPECTACLES will usually fail.
+  
+  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    CREDITS
+  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  
+> >    switch the lamp on
+    switch the tv on
+    turn the tv off (alternative form)
+  
+  Turns a switchable thing on or off.
+  
+  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    CREDITS
+  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  
+> >    get the wooden spoon
+    take the brass lantern
+    take all from the treasure chest (takes all the things)
+  
+  Take or get a thing into your inventory.  If something cannot be taken the
+  story will tell you so.  Note that you can use the "all" word to indicate
+  taking every possible thing, furthermore you can also specify taking "from"
+  something - a toolbox, shelf or candy jar.
+  
+  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    CREDITS
+  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  
+> >    throw the frisbee at rex
+    throw the rock at the ogre
+  
+  Throwing is a very specific verb with subtle nuances -- You usually throw
+  things AT something.  If you want to throw a gold coin down a magic well,
+  you should DROP the coin in the well instead (even though in English you
+  may say the former).
+  
+  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    CREDITS
+  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  
+> >    transfer candy to treat bag
+    transfer the red potion to the carry case
+  
+  Transfer is a shortcut verb which REMOVEs an item from one container and
+  INSERTs it into another, saving you from typing two commands.  Both
+  containers need to be open so their contents are visible.
+  
+  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    CREDITS
+  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  
+> >    tie the bed sheet to the window frame
+    tie the rope around the tree
+  
+  Tying fixes one item on another.  Not everything in the story can be tied.
+  
+  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    CREDITS
+  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  
+> >    turn the dial
+    turn the Lazy Susan
+  
+  Turns or rotates a thing.
+  
+  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    CREDITS
+  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  
+> >    wear the top hat
+    wear the pearl necklace
+  
+  Puts a garment or jewelry on.
+  
+  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    CREDITS
+  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  
+> >
