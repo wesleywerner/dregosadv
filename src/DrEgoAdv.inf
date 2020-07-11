@@ -2438,6 +2438,10 @@ Verb    'talk'      * 'to' noun                     -> TalkToNounHelp;
 ];
 Extend    'look'      * 'behind' noun                 -> LookBehind;
 
+! Add additional syntax to allow SEARCH IN the... (the default grammar does not
+! recognize the "in" keyword)
+Extend    'search'    * 'in' noun                     -> Search;
+
 ! Provides a help verb when trying to "use noun".
 ! Individual objects implement a Use action to describe their usage.
 [ UseSub;
