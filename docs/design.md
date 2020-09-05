@@ -34,7 +34,7 @@ This is a short story written in Inform 6 with the hope of learning how to imple
                         ^                |                                     
                         ^                |                                     
                         ^                |                                     
-      Tree Top     Valley                .                                     
+      Tree Top     Valley --- Tribe      .                                     
              ^      /                    .                                     
              ^     /                     .                                     
              ^ Clearing -------- Jungle Path                                   
@@ -48,11 +48,12 @@ This is a short story written in Inform 6 with the hope of learning how to imple
 
 # Inventory
 
-You start off with some basic items
+You start with these inventory items:
 
 * A compass, to help you navigate in the jungle.
 * A bullwhip, for grappling items.
-* Journal, containing your notes about the region and the treasured artifact.
+* Your journal, containing your research notes.
+* A knife.
 
 # Puzzles
 
@@ -180,14 +181,48 @@ _Implemented. Tested in `find_the_alcove.spec`_
 
 #### Pressure Plate Booby Trap
 
-Taking the Golden Egg triggers a trap of poison darts, killing the player. To prevent this demise, the player should place an egg-shaped stone on the altar before taking the prize.
+The Golden Egg sits on top of a stone altar, the player triggers poison dart trap when taking it, ending the game. To prevent this demise, the player should place an egg-shaped stone on the altar before taking the prize.
 
 _Implemented. Tested in `pressure_plate_trap.spec`_
 
-* Why: take the golden egg without setting off the trap
+* Why: take the treasure without setting off the trap
 * What: stone egg
 * How: put the stone on the altar
 * Where: Temple (stone egg), Tomb (altar)
+
+#### Unlocking the Altar -- WIP
+
+The stone altar is initially out of view and resembles a stone column from floor-to-ceiling. To reveal it the player has to insert a gear-like key and turn it a few times, lowering the column which turns it into the altar, revealing the treasure on top.
+
+Interlocking pieces make up the key that fits in a hole inside the tomb. The key resembles a large flat amulet in the shape of a sun, the beams fashioned to resemble the teeth of a key.
+
+_Not Implemented._
+
+* Why: To reveal the treasure
+* What: The sun key
+* How: put the sun key in the key hole. Turn it.
+* Where: Temple
+
+#### Catch a Chicken -- WIP
+
+The chicken is used to complete the "Bribing the Carver" puzzle. The creature will appear from out of the jungle into the Tribe location. Attempts to take it will fail unless the player drops some food first. The player can also enter the jungle from the Tribe location to find the creature. Seed can be found by telling the boatman about the chicken. The player can also carve up the pumpkin as bait.
+
+* Why: Use the chicken to bribe the carver
+* What: Seed or carved up pumpkin
+* How: Wait for the chicken. Drop food. Grab it.
+* Where: Tribe location, or Jungle adjacent to the Tribe.
+
+#### Bribing the Carver -- WIP
+
+Inside the Tomb is a glyph beside a hole in the floor, when consulted in the journal it reveals a drawing of the sun key. 
+An NPC that is busy carving wooden ornaments must be bribed, then shown the drawing of the key, so they can carve out a copy from wood. This NPC does not speak English, so communication is visual. Showing the drawing to the carver will make him gesture to his mouth to symbolize eating, and flapping his elbows. In the end he will accept a live chicken in exchange for his work.
+
+_Not Implemented._
+
+* Why: Get the sun key
+* What: A chicken
+* How: Give the chicken to the carver. Show drawing to him.
+* Where: Tribe
 
 # Scores
 
@@ -206,11 +241,14 @@ Using the task scoring system, these tasks are Achievable. See the `task_scores`
 * Add HELP, ABOUT, HINT
 * Optimize entry descriptions for all rooms
 * Fill the journal with notes
-* Use ScenicBase
+* Use or Remove ScenicBase?
+* Make the stone egg large and heavy, you lug it around?
 * Try get oil on inventory items, and examining oily things descriptions
 * Change the win condition to when you get in the canoe with the treasure
 * Returning to the canoe, if you had caught the fish, you find it cooking over a fire
 * You can put the yam in the fire to roast it
+* Research puzzles. Consult the journal more.
+* Add worn items: a shoulder bag, a fedora hat, a leather jacket.
 
 ### Done
 * Add task based scoring - DM$ $22
