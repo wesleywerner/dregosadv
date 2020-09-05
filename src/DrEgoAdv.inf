@@ -127,6 +127,7 @@ Attribute oily;
     ! Start Daemons
     StartDaemon(monkey);
     StartDaemon(sky);
+    StartDaemon(chicken);
 
     ! enable debugging actions:
     #ifdef DEBUG;
@@ -1226,6 +1227,55 @@ with
     
 ! [ ==================================================== Non Player Characters ]
 
+! [ ------------------------------------------------------------------ Chicken ]
+AnimalNPC chicken "hen"
+with
+    name 'chicken' 'bird' 'hen',
+    description "The female chicken is pecking at the dirt for grubs and bugs.",
+    venture_clock 5,
+    has_fed false,
+    before [;
+        Take:
+            if (self.has_fed) {
+                move self to player;
+                StopDaemon(chicken);
+                print_ret "You walk over to the hen and pick her up.";
+            }
+            else
+                remove self;
+                self.venture_clock=5;
+                print_ret (The) self, " moves quickly out of reach and
+                disappears into the jungle.";
+        Show:
+            if (noun ofclass EdibleFruitObject)
+                "The hen is determined to keep a safe distance from you, despite
+                the temptation of ", (the) noun, ".";
+            else
+                "She shows no interest in ", (the) noun, ".";
+        Drop:
+            ! release the hen, reset capture progress
+            StartDaemon(chicken);
+            self.has_fed = false;
+            print "You put the hen down on the ground. ";
+            <<Take self>>;
+    ],
+    daemon [;
+        ! only when in the Tribe, or adjacent to the Tribe while LostInJungle
+        if (last_known_location ~= Tribe) return;
+        ! only when not in this location
+        if (parent(self) == location) return;
+        ! only when venture clock has run down
+        if (--self.venture_clock > 0) return;
+        ! reset venture clock
+        self.venture_clock=5;
+        ! move hen to the location
+        move self to location;
+        if (location == LostInJungle)
+            "A hen appears from out the foliage.";
+        else
+            "A hen appears from out the jungle.";
+    ];
+
 ! [ ------------------------------------------------------------------- Monkey ]
 AnimalNPC monkey "monkey"
 with
@@ -2125,7 +2175,7 @@ with
     has ~scenery supporter;
 
 ! [ -------------------------------------------------------------------- Tribe ]
-OutdoorRoom Tribe "Tribe"
+JungleRoom Tribe "Tribe"
 with 
     description [;
         print "The small tribal settlement of a dozen natives are going about
