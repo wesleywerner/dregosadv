@@ -340,9 +340,9 @@ with
         if (self.door_dir() == u_to) {
             print (A) self, " leads upward. ";
         } else if (self.door_dir() == d_to) {
-                    print (A) self, " leads downward. ";
+            print (A) self, " leads downward. ";
         } else {
-            print (A) self, " is to the ", (name) self.door_dir(), ". ";
+            print (A) self, " is due ", (name) self.door_dir(), ". ";
         }
     ],
     before [;
@@ -2043,8 +2043,7 @@ with
 IndoorRoom Tomb "Underground Tomb"
 with
     description "You are in a small dark room, engravings on the walls dance
-    under the flicker of your torch.
-    A narrow stone staircase leads up.",
+    under the flicker of your torch.",
     u_to tomb_stairs;
 
 ScenicEngravingObject "glyphs" Tomb
@@ -2232,6 +2231,7 @@ with
     door_dir sw_to;
 
 ! Way to the Valley
+! Moved to Clearing when looking NE from TreeTop
 DoorWay valley_way "valley"
 with
     name 'valley',
@@ -2240,13 +2240,14 @@ with
     door_dir ne_to;
 
 ! Connect the inside of the Tomb with the Waterfall
-RockDoor tomb_stairs "stairs"
+DoorWay tomb_stairs "stairs"
 with
     name 'stair' 'stairs',
     description "Carved out of the stone, they lead up.",
     found_in Tomb,
     door_dir u_to,
-    door_to Waterfall;
+    door_to Waterfall
+    has pluralname;
 
 ! Connect the Waterfall with the Tomb via an Alcove
 RockDoor alcove_door "alcove"

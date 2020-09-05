@@ -17,8 +17,8 @@
   
 > >  Clearing
   
-  A hut is to the south.
-  A jungle path is to the east.
+  A hut is due south.
+  A jungle path is due east.
 > >  ; == 75
   
 > >  Lost in the Jungle
@@ -27,8 +27,8 @@
   
   Clearing
   
-  A hut is to the south.
-  A jungle path is to the east.
+  A hut is due south.
+  A jungle path is due east.
   [The score has just gone up by one point.]
   
 > >  You climb up the strong branches of the fig tree.
@@ -46,9 +46,9 @@
    --- more ---
 )   Clearing
   
-  A hut is to the south.
-  A jungle path is to the east.
-  A valley is to the northeast.
+  A hut is due south.
+  A jungle path is due east.
+  A valley is due northeast.
   There is a monkey here. It has your compass.
   
   The monkey makes grunting noises.
@@ -56,5 +56,5 @@
 > >  Valley
   
   Some stone stairs leads upward.
-  A clearing in the jungle is to the south.
+  A clearing in the jungle is due south.
 > >
