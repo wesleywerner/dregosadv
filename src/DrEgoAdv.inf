@@ -309,7 +309,8 @@ with
                 self.examined = true;
                 print (string) self.description_lead;
             }
-    ];
+    ],
+    has scenery static;
 
 ! Provides the scenery attribute
 Class ScenicRockObject
@@ -330,8 +331,7 @@ with
         Take:
             print_ret "You can't take ", (the) self, " as they are part of the
             stone.";
-    ],
-has scenery static;
+    ];
 
 ! A door that is listed in the room description.
 Class DoorWay
@@ -1473,7 +1473,7 @@ with
     }
 ];
 
-! [ ------------------------------------------------------------------- Boatman ]
+! [ ------------------------------------------------------------------ Boatman ]
 HumanNPC boatman
     with
         name 'guide' 'rom' 'man',
@@ -1593,6 +1593,53 @@ HumanNPC boatman
                     print "^~I still have my father's compass...~, ",
                         (a) boatman, " reflects nostalgically.^";
     }
+];
+
+! [ ------------------------------------------------------------- Native Tribe ]
+HumanNPC natives "natives"
+with
+    name 'people' 'men' 'women' 'native' 'natives',
+    description "Women and men are weaving plant fibers into
+    fishing nets and ropes, some are tending to a firepit while others
+    prepare pumpkins, tubers and fish. ",
+    found_in Tribe,
+    Life [;
+        Ask, Tell:
+            ! test second
+            "They seem content with doing their chores, you would rather not
+            disturb them. ";
+        Answer:
+            ! test noun
+            switch (noun) {
+            'hi', 'hello':
+                "The people wave back at you with smiles.";
+            }
+    ],
+    has pluralname scenery;
+
+! [ ------------------------------------------------------------------- Carver ]
+HumanNPC carver "carver"
+with 
+    name 'man' 'carver',
+    initial "A man sits nearby, carving a piece of wood.",
+    description "He is busy carving a rough piece of dry wood using
+    a knife and other assorted hand tools. There are half a dozen carved 
+    wooden statuettes and figurines in various stages of completion on the
+    ground beside him. His handiwork tells you he is very skilled in his trade.",
+    found_in Tribe,
+    
+    life [;
+        Ask,Answer,Tell:
+            "The man says something unintelligible while gesturing to his works.";
+        Give:
+            if (noun ofclass EssentialObject)
+                "He refuses to take ", (the) noun, ".";
+            else
+                "He takes ", (the) noun, " and examines it, turns it around a
+                few times, and finally hands it back to you.";
+        Show:
+            if (noun ofclass EssentialObject)
+                "He seems more interested in his carvings than ", (the) noun, ".";
 ];
 
 ! [ ==================================================================== Rooms ]
@@ -2077,6 +2124,51 @@ with
     ],
     has ~scenery supporter;
 
+! [ -------------------------------------------------------------------- Tribe ]
+OutdoorRoom Tribe "Tribe"
+with 
+    description [;
+        print "The small tribal settlement of a dozen natives are going about
+        their daily chores. ";
+        if (self hasnt visited) {
+            !print "Women and men are weaving plant fibers into
+            !fishing nets and ropes, some are tending to a firepit while others
+            !prepare pumpkins, tubers and fish. ";
+            <Examine natives>;
+            print "They don't seem to mind your presence as continue with
+            their chores. ";
+        }
+    ],
+    before [;
+        Smell: "You smell the burning fire, mixed with the earthy jungle tones.";
+        Listen: "You hear the locals chatter in their native tongue, sounds
+        like they are having a relaxed conversation.";
+    ],
+    w_to tribe_path
+;
+
+ScenicBase firepit "firepit"
+with
+    name 'fire' 'pit' 'firepit',
+    description "A pit dug into the ground in which a fire is burning.",
+    description_lead "Some of the people are tending to the fire",
+    found_in Tribe;
+
+ScenicBase statuettes "carvings"
+with 
+    name 'wood' 'wooden' 'statuettes' 'figurines' 'carvings',
+    description_lead "The wooden figurines are all lined up neatly. ",
+    description "They depict several deities and animals.",
+    found_in Tribe,
+    before [;
+        Take:
+        "You don't think it would be right to take them - besides,
+        you  don't see any that you be useful to you. 
+        You get the feeling he will be happy to make you a carving in exchange
+        for some kind of payment.";
+    ],
+    has pluralname;
+
 ! [ ------------------------------------------------------------------- Valley ]
 JungleRoom Valley "Valley"
 with
@@ -2091,6 +2183,7 @@ with
     u_to stone_stairs,
     n_to stone_stairs,
     s_to clearing_way,
+    e_to tribe_path,
     
     before [;
         Smell:
@@ -2366,6 +2459,29 @@ with
         if (self in JunglePath) return n_to;
     ];
 
+! Way to the Tribe
+DoorWay tribe_path "foot path"
+with
+    name 'foot' 'path' 'footpath',
+    description "The path winds through the jungle and you can't see where it 
+    leads, but it seems regularly used as the surrounding foliage is cut away 
+    to make walking on the path easier.",
+    found_in Valley Tribe,
+    door_to [;
+        if (location == Valley) {
+            if (Tribe hasnt visited) print "You walk along the path for a short
+            while, winding your way through the jungle. You finally emerge at
+            the other end and find yourself pleasantly surprised to see other
+            people here.^";
+            return Tribe;
+        }
+        return Valley;
+    ],
+    door_dir [;
+        if (location == Valley) return e_to;
+        return w_to;
+    ];
+
 ! [ ================================================================ Debugging ]
 #ifdef DEBUG;
 ! These portals provide a way to quickly jump to locations in our spec scripts.
@@ -2376,6 +2492,7 @@ ScenicRockObject warpto_bungalow Bungalow with name 'bungalow' 'portal';
 ScenicRockObject warpto_valley Valley with name 'valley' 'portal';
 ScenicRockObject warpto_waterfall Waterfall with name 'waterf' 'portal';
 ScenicRockObject warpto_tomb Tomb with name 'tomb' 'portal';
+ScenicRockObject warpto_tribe Tribe with name 'tribewarp';
 ! Some useful items used in test specifications
 Object debugger_wand "Wizard's Wand" with name 'wizard' 'wand' has light;
 #endif;
