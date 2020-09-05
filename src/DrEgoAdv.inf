@@ -291,7 +291,7 @@ Class EssentialObject
     with
         article "your",
         before [;
-            Drop, ThrowAt:
+            Drop, ThrowAt, Insert:
                 print_ret "You would not dream of leaving ",
                             (a) noun, " behind.";
             Taste, Eat:
