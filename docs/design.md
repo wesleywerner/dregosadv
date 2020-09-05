@@ -205,10 +205,10 @@ _Not Implemented._
 
 #### Catch a Chicken -- WIP
 
-The chicken is used to complete the "Bribing the Carver" puzzle. The creature will appear from out of the jungle into the Tribe location. Attempts to take it will fail unless the player drops some food first. The player can also enter the jungle from the Tribe location to find the creature. Seed can be found by telling the boatman about the chicken. The player can also carve up the pumpkin as bait.
+The chicken is used to complete the "Bribing the Carver" puzzle. The creature will appear from out of the jungle into the Tribe location. Attempts to take it will fail unless the player drops some food first. The player can also enter the jungle from the Tribe location to find the creature. Seed can be found by telling the boatman about the chicken.
 
 * Why: Use the chicken to bribe the carver
-* What: Seed or carved up pumpkin
+* What: Seed
 * How: Wait for the chicken. Drop food. Grab it.
 * Where: Tribe location, or Jungle adjacent to the Tribe.
 

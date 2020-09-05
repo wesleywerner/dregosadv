@@ -429,6 +429,15 @@ has scenery static;
 ! Something edible
 Class EdibleFruitObject has edible;
 
+Class EdibleSeedObject
+with
+    before [;
+        Eat:
+            "You taste some of ", (the) self, " - not bad, but it would probably
+            taste better to a chicken.";
+    ],
+has edible;
+
 ! Can be used to LIGHT a torch.
 Class SparkThrowerObject;
 
@@ -1224,6 +1233,17 @@ with
     name 'wood' 'wood' 'stick',
     material "wooden",
     description "A wooden stick about the length of your arm.";
+
+EdibleSeedObject seed "seed"
+with
+    name 'seed' 'seeds//p',
+    description "A handful of varied types of edible seeds.",
+    before [;
+        Drop:
+            if (parent(chicken) ~= location)
+                print_ret "You would rather not waste the seed here.";
+    ],
+    has pluralname;
     
 ! [ ==================================================== Non Player Characters ]
 
@@ -1246,12 +1266,6 @@ with
                 self.venture_clock=5;
                 print_ret (The) self, " moves quickly out of reach and
                 disappears into the jungle.";
-        Show:
-            if (noun ofclass EdibleFruitObject)
-                "The hen is determined to keep a safe distance from you, despite
-                the temptation of ", (the) noun, ".";
-            else
-                "She shows no interest in ", (the) noun, ".";
         Drop:
             ! release the hen, reset capture progress
             StartDaemon(chicken);
@@ -1259,21 +1273,45 @@ with
             print "You put the hen down on the ground. ";
             <<Take self>>;
     ],
-    daemon [;
+    
+    life [;
+        Show:
+            if (noun ofclass EdibleSeedObject)
+                "The hen is determined to keep a safe distance from you, despite
+                the temptation of ", (the) noun, ".";
+            else
+                "She shows no interest in ", (the) noun, ".";
+    ],
+    
+    daemon [look_item seed;
         ! only when in the Tribe, or adjacent to the Tribe while LostInJungle
         if (last_known_location ~= Tribe) return;
-        ! only when not in this location
-        if (parent(self) == location) return;
-        ! only when venture clock has run down
-        if (--self.venture_clock > 0) return;
-        ! reset venture clock
-        self.venture_clock=5;
-        ! move hen to the location
-        move self to location;
-        if (location == LostInJungle)
-            "A hen appears from out the foliage.";
-        else
-            "A hen appears from out the jungle.";
+        ! when not in the location
+        if (parent(self) ~= location) {
+            ! only when venture clock has run down
+            if (--self.venture_clock > 0) return;
+            ! reset venture clock
+            self.venture_clock=5;
+            ! move hen to the location
+            move self to location;
+            if (location == LostInJungle)
+                "A hen appears from out the foliage.";
+            else
+                "A hen appears from out the jungle.";
+            return;
+        }
+        ! scan for seeds
+        seed = nothing;
+        objectloop(look_item in location) {
+            if (look_item ofclass EdibleSeedObject)
+                seed = look_item;
+        }
+        if (seed && self.has_fed == false) {
+            self.has_fed = true;
+            remove seed;
+            "The hen runs towards the seed posthaste and begins her pecking
+            frenzy.";
+        }
     ];
 
 ! [ ------------------------------------------------------------------- Monkey ]
