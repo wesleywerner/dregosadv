@@ -1,9 +1,24 @@
+ask rom for the trap
+gonear garden portal
+search veggies
+take tuber
+gonear tribe portal
+gonear rom
+ask rom for the trap
+give yam to rom
 gonear valley portal
-purloin trap,seed
 go e
 drop trap
 put seed in trap
 set trap
+wait
+wait
+wait
+wait
+wait
+wait
+wait
+wait
 wait
 wait
 wait
