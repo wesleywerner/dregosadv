@@ -14,21 +14,7 @@
   In the canoe you can also see a trap (which is closed and empty), a fishing
   spear and a fishing net.
   
-> >  Valley
-  Pushing through the jungle you arrive in a little valley, rich with
-  flowering orchids all around you.
-  A foot path is due east.
-  Some stone stairs leads upward.
-  A clearing in the jungle is due south.
-> >  drawing of the sun key: [Purloined.]
-  trap: [Purloined.]
-  seed pouch: [Purloined.]
-  
-> >  You walk along the path for a short while, winding your way through the
-  jungle. You finally emerge at the other end and find yourself pleasantly
-  surprised to see other people here.
-  
-  Tribe
+> >  Tribe
   The small tribal settlement of a dozen natives are going about their daily
   chores. Women and men are weaving plant fibers into fishing nets and ropes,
   some are tending to a firepit while others prepare pumpkins, tubers and
@@ -37,40 +23,12 @@
   A foot path is due west.
   A man sits nearby, carving a piece of wood.
   
-> >  He is busy carving a rough piece of dry wood using a knife and other
-  assorted hand tools. There are half a dozen carved wooden statuettes and
-  figurines in various stages of completion on the ground beside him. His
-  handiwork tells you he is very skilled in his trade.
+> >  trap: [Purloined.]
+  drawing of the sun key: [Purloined.]
   
-> >  The man takes a look at the drawing, and he seems to understand that you
-  want a carving of it. He gestures to his mouth as if eating, and tucking
-  his hands under his shoulders, flaps his elbows like a bird.
+> >  [Abstracted.]
   
-> >  The man takes a look at the drawing, and he seems to understand that you
-  want a carving of it. He gestures to his mouth as if eating, and tucking
-  his hands under his shoulders, flaps his elbows like a bird.
-  
-> >  This looks like a good place to set the trap. Dropped.
-  A hen appears from out the jungle.
-  
-> >  You open the trap.
-  You scatter some seeds inside the trap.
-  The trap door swings shut by itself.
-  
-> >  You prop the trap door open with the stick, and take hold of the free end
-  of the string. You take a few paces back from the trap.
-  
-> >  Time passes.
-  
-> >  Time passes.
-  The hen enters the trap posthaste and begins her pecking frenzy.
-  
-> >  You give the string a quick yank, the propped stick flies out from under
-  the trap door.
-  The trap door swings shut by itself.
-  
-> >  (first taking the trap)
-  The man seems impressed!
+> >  The man seems impressed!
   
 > >  The carver has a big grin on his face, he removes the hen from the trap and
   takes her over to the firepit, handing the hen to another man. He returns

@@ -1,15 +1,6 @@
-gonear valley portal
-purloin sun key drawing, trap, seed
-go east
-examine carver
-show drawing to man
-give drawing to man
-drop trap
-put seed in trap
-set trap
-wait
-wait
-pull string
+gonear tribe portal
+purloin trap,sun key drawing
+abstract chicken to trap
 show trap to man
 give trap to man
 examine carver
