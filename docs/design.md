@@ -203,13 +203,15 @@ _Not Implemented._
 * How: put the sun key in the key hole. Turn it.
 * Where: Temple
 
-#### Catch a Chicken -- WIP
+#### Catch a Chicken
+
+_Implemented. Tested in `catch_chicken.spec`_
 
 The chicken is used to complete the "Bribing the Carver" puzzle. The creature will appear from out of the jungle into the Tribe location. Attempts to take it will fail. The player can also enter the jungle from the Tribe location to find the creature. The boatman has a chicken trap, which he will lend you in exchange for a tuber.
 
 * Why: Bribe the carver
 * What: Trap
-* How: Put trap on the ground. Put seed in the trap. Wait.
+* How: Put trap on the ground. Put seed in the trap. Set the trap. Wait. Pull the string.
 * Where: Tribe location, or Jungle adjacent to the Tribe.
 
 #### Bribing the Carver -- WIP

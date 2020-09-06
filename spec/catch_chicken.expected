@@ -1,0 +1,68 @@
+  THIS GAME IS IN DEBUG MODE
+  
+  Dr Ego and the Egg of Man-Toomba
+  An Interactive Fiction Story
+  by Special Agent.
+  Release 1 / Serial number 400410 / Inform v6.33 Library v6.12.3pre SX
+  
+  The Maro River (in the canoe)
+  The a canoe rocks gently on the water as you travel up the river. Your
+  guide sits at the other end of the craft rowing with an oar. You wonder how
+  much longer this will take, you have been in this a canoe for a while now.
+  You are anxious to start searching for the treasure.
+  
+  In the canoe you can also see a trap (which is closed and empty), a fishing
+  spear and a fishing net.
+  
+> >  Valley
+  Pushing through the jungle you arrive in a little valley, rich with
+  flowering orchids all around you.
+  A foot path is due east.
+  Some stone stairs leads upward.
+  A clearing in the jungle is due south.
+> >  trap: [Purloined.]
+  seed pouch: [Purloined.]
+  
+> >  You walk along the path for a short while, winding your way through the
+  jungle. You finally emerge at the other end and find yourself pleasantly
+  surprised to see other people here.
+  
+  Tribe
+  The small tribal settlement of a dozen natives are going about their daily
+  chores. Women and men are weaving plant fibers into fishing nets and ropes,
+  some are tending to a firepit while others prepare pumpkins, tubers and
+  fish.
+  They don't seem to mind your presence as continue with their chores.
+  A foot path is due west.
+  A man sits nearby, carving a piece of wood.
+  
+> >  This looks like a good place to set the trap. Dropped.
+  
+> >  You open the trap.
+  You scatter some seeds inside the trap.
+  The trap door swings shut by itself.
+  
+> >  You prop the trap door open with the stick, and take hold of the free end
+  of the string. You take a few paces back from the trap.
+  
+> >  Time passes.
+  A hen appears from out the jungle.
+  
+> >  Time passes.
+  
+> >  Time passes.
+  
+> >  Time passes.
+  The hen enters the trap posthaste and begins her pecking frenzy.
+  
+> >  Time passes.
+  
+> >  You give the string a quick yank, the propped stick flies out from under
+  the trap door.
+  The trap door swings shut by itself.
+  
+> >  Taken.
+  
+> >  In the trap is a hen.
+  
+> >

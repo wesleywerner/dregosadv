@@ -8,6 +8,7 @@ kdiff3 deadly_drop.expected         deadly_drop.actual      -o deadly_drop.expec
 kdiff3 find_the_alcove.expected     find_the_alcove.actual  -o find_the_alcove.expected
 kdiff3 make_a_torch.expected        make_a_torch.actual     -o make_a_torch.expected
 kdiff3 catch_fish.expected          catch_fish.actual       -o catch_fish.expected
+kdiff3 catch_chicken.expected       catch_chicken.actual    -o catch_chicken.expected
 kdiff3 compass.expected             compass.actual          -o compass.expected
 kdiff3 ending.expected              ending.actual           -o ending.expected
 kdiff3 pressure_plate_trap.expected pressure_plate_trap.actual -o pressure_plate_trap.expected

@@ -14,6 +14,7 @@ cat compass.spec | dfrotz -s 0 -p ..\build\Debug.z5 > compass.actual
 cat ending.spec | dfrotz -s 0 -p ..\build\Debug.z5 > ending.actual
 cat weather.spec | dfrotz -s 0 -p ..\build\Debug.z5 > weather.actual
 cat help.spec | dfrotz -s 0 -p ..\build\Debug.z5 > help.actual
+cat catch_chicken.spec | dfrotz -s 0 -p ..\build\Debug.z5 > catch_chicken.actual
 
 ::REM Diff Results
 if exist test_results.txt del test_results.txt
@@ -38,6 +39,9 @@ diff --ignore-space-change make_a_torch.expected make_a_torch.actual >> test_res
 
 echo [ Puzzle: Pressure Plate Trap ---------------------------------------] >> test_results.txt
 diff --ignore-space-change pressure_plate_trap.expected pressure_plate_trap.actual >> test_results.txt
+
+echo [ Puzzle: Catch a Chicken -------------------------------------------] >> test_results.txt
+diff --ignore-space-change catch_chicken.expected catch_chicken.actual >> test_results.txt
 
 echo [ Amusing: Catch Fish -----------------------------------------------] >> test_results.txt
 diff --ignore-space-change catch_fish.expected catch_fish.actual >> test_results.txt

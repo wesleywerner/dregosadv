@@ -1224,24 +1224,89 @@ with
     material "wooden",
     description "A wooden stick about the length of your arm.";
 
-Object seed "seed"
+Object seed_pouch "seed pouch"
 with
-    name 'seed' 'seeds//p',
-    description "A handful of varied types of edible seeds.",
+    name 'seed' 'pouch' 'seeds//p',
+    description "A small pouch with a drawstring and filled with edible seeds.",
     before [;
         Drop:
-            "The seed will work better inside the trap.";
+            "The seeds will work better inside the trap.";
         Eat:
-            "You taste some of ", (the) self, " - not bad, but it would probably
-            taste better to a chicken.";
+            "Mmm not bad, but it would probably taste better to a chicken.";
+        Insert:
+            if (second == box_trap) {
+                if (box_trap in player) 
+                    "It would be easier if you put the trap down first.";
+                if (some_seed in box_trap) {
+                    "There is some seed in there already.";
+                }
+                else {
+                    if (box_trap hasnt open) <Open box_trap>;
+                    move some_seed to box_trap;
+                    "You scatter some seeds inside the trap.";
+                }
+            }
     ],
-    has edible pluralname;
+    has edible;
 
-NotYourPropertyObject box_trap "trap"
+Object some_seed "seed"
+has pluralname;
+
+Object box_trap "trap"
 with
     name 'trap',
-    description "The trap is a box constructed from wood and netting, with one
-    side being the door.";
+    description "The trap is a crude box consisting of a wooden frame and
+    some kind of netting covering the sides. One of the sides is openable and
+    acts as a door.",
+    is_set false,
+    
+    before [;
+        Take:
+            ! Cannot take it before it is given to you
+            if (~~self has moved) print_ret (The) noun, " is not yours to take.";
+            remove some_seed;
+            remove trap_string;
+            self.is_set = false;
+        Drop:
+            if (last_known_location == Tribe) 
+                print "This looks like a good place to set the trap. ";
+        Open:
+            ! Cannot open it before it is given to you
+            if (~~self has moved) "You would rather leave it alone.";
+            if (chicken in self) "If you do that the chicken might escape.";
+        Set:
+            if (chicken in self)
+                "But you already have ", (the) chicken, ".";
+            if (player in canoe)
+                "This is not an ideal location to set the trap.";
+            if (self in player)
+                "It would be easier if you put the trap down first.";
+            self.is_set = true;
+            give self open;
+            move trap_string to player;
+            "You prop the trap door open with the stick, and take hold
+            of the free end of the string. You take a few paces back from the
+            trap.";
+    ],
+    
+    each_turn [;
+        if (self has open && self.is_set == false) {
+            give self ~open;
+            print "The trap door swings shut by itself.^";
+        }
+    ],
+    
+    has container openable transparent;
+
+Object trap_string "trigger string (held)"
+with 
+    name 'string',
+    before [;
+        Pull:
+            box_trap.is_set = false;
+            "You give the string a quick yank, the propped stick flies out from
+            under the trap door.";
+    ];
 
 ! [ ==================================================== Non Player Characters ]
 
@@ -1249,43 +1314,58 @@ with
 AnimalNPC chicken "hen"
 with
     name 'chicken' 'bird' 'hen',
-    description "The female chicken is pecking at the dirt for grubs and bugs.",
+    description [;
+        if (self in box_trap)
+            "The hen sits quietly in the trap.";
+        else
+            "The female chicken is pecking at the dirt for grubs and bugs.";
+    ],
     venture_clock 5,
-    has_fed false,
     before [;
         Take:
-            if (self.has_fed) {
-                move self to player;
-                StopDaemon(chicken);
-                print_ret "You walk over to the hen and pick her up.";
-            }
-            else
-                remove self;
-                self.venture_clock=5;
-                print_ret (The) self, " moves quickly out of reach and
-                disappears into the jungle.";
+            remove self;
+            self.venture_clock=5;
+            print_ret (The) self, " moves quickly out of reach and
+            disappears into the jungle.";
         Drop:
             ! release the hen, reset capture progress
             StartDaemon(chicken);
-            self.has_fed = false;
             print "You put the hen down on the ground. ";
+            ! Try take the hen which makes it scatter away
             <<Take self>>;
     ],
     
     life [;
         Show:
-            if (noun == seed)
-                "The hen is determined to keep a safe distance from you, despite
-                the temptation of ", (the) noun, ".";
+            if (noun == seed_pouch)
+                "The hen is determined to keep a safe distance from you.";
             else
                 "She shows no interest in ", (the) noun, ".";
     ],
     
     daemon [;
-        ! only when in the Tribe, or adjacent to the Tribe while LostInJungle
-        if (last_known_location ~= Tribe) return;
-        ! when not in the location
-        if (parent(self) ~= location) {
+        ! when inside the trap
+        if (self in box_trap) {
+            if (box_trap has open) {
+                ! exit the trap
+                if (random(5)==1) {
+                    move self to parent(box_trap);
+                    remove some_seed;
+                    "The chicken exits the trap.";
+                }
+            }
+            ! the trap is closed and our chicken no longer can wander
+            else {
+                remove some_seed;
+                StopDaemon(chicken);
+                if (box_trap notin player) "The chicken is oblivious and keeps on pecking at the seed.";
+            }
+            ! stop processing
+            return;
+        }
+        ! when not in the player's location
+        ! and player is in the Tribe, or adjacent to the Tribe (LostInJungle)
+        if (parent(self) ~= location && last_known_location == Tribe) {
             ! only when venture clock has run down
             if (--self.venture_clock > 0) return;
             ! reset venture clock
@@ -1296,14 +1376,13 @@ with
                 "A hen appears from out the foliage.";
             else
                 "A hen appears from out the jungle.";
+            ! stop processing
             return;
         }
-        if (parent(seed) ~= parent(chicken)) return;
-        if (seed && self.has_fed == false) {
-            self.has_fed = true;
-            remove seed;
-            "The hen runs towards the seed posthaste and begins her pecking
-            frenzy.";
+        ! enter the trap
+        if (box_trap.is_set && some_seed in box_trap && random(5)==1) {
+            move self to box_trap;
+            "The hen enters the trap posthaste and begins her pecking frenzy.";
         }
     ];
 
@@ -1597,6 +1676,15 @@ HumanNPC boatman
                     he says.";
                 }
             Order:
+                if (Tribe has visited && second == box_trap) {
+                    if (yam in boatman) {
+                        move box_trap to player;
+                        move seed_pouch to player;
+                        "He ";
+                    } else
+                    "~You know, I will lend you my chicken trap, if you find me
+                    a yam. I think yam and fish will make a good meal.~";
+                } else
                 "You have no reason to ask for ", (the) second, ".";
         ],
 ;
@@ -1625,9 +1713,9 @@ HumanNPC boatman
         'time', 'longer':
             "~We will reach the shore soon~, he replies.";
         'trap':
-            "That, my friend, is a chicken trap. You prop the door open with a
-            stick, and pull on a string tied to that stick, to close the door
-            and trap the chicken inside.";
+            "~That, my friend, is a chicken trap. When you set the trap you
+            prop the door open with this stick, and then you pull on the
+            trigger string to swing the door shut~.";
     }
     print_ret (The) self, " grins at you and nods.";
 ];
@@ -2579,7 +2667,7 @@ ScenicRockObject warpto_bungalow Bungalow with name 'bungalow' 'portal';
 ScenicRockObject warpto_valley Valley with name 'valley' 'portal';
 ScenicRockObject warpto_waterfall Waterfall with name 'waterf' 'portal';
 ScenicRockObject warpto_tomb Tomb with name 'tomb' 'portal';
-ScenicRockObject warpto_tribe Tribe with name 'tribewarp';
+ScenicRockObject warpto_tribe Tribe with name 'tribe' 'portal';
 ! Some useful items used in test specifications
 Object debugger_wand "Wizard's Wand" with name 'wizard' 'wand' has light;
 #endif;
