@@ -3,7 +3,7 @@ build/
 *.z5
 
 # Ignore ide configuration
-process-palette.json
+#process-palette.json
 
 # Ignore transient test specification files
 spec/*.actual
