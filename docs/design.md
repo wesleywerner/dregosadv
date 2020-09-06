@@ -252,6 +252,7 @@ Using the task scoring system, these tasks are Achievable. See the `task_scores`
 * You can put the yam in the fire to roast it
 * Research puzzles. Consult the journal more.
 * Add worn items: a shoulder bag, a fedora hat, a leather jacket.
+* Add more things you can Show to Rom.
 
 ### Done
 * Add task based scoring - DM$ $22

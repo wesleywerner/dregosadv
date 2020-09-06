@@ -1655,8 +1655,11 @@ HumanNPC boatman
         article "your",
         short_name "guide",
 
-        ! NPC noticed you examining your compass
+        ! he noticed you examining your compass
         noticed_compass false,
+        
+        ! he told you to bring him a yam in exchange for the trap
+        expects_yam false,
 
         ! Hide the room description (in the boat you see your guide)
         initial [;
@@ -1690,27 +1693,34 @@ HumanNPC boatman
                     print_ret (A) self, " -- ~My father had one just like that~
                     he says.";
                 }
+                if (noun == yam && self.expects_yam) {
+                    "~Yep, that is a yam alright~";
+                }
+                print_ret (A) self, " looks amusingly at ", (the) noun, " ";
             Give:
-                if (noun == yam) {
+                if (self.expects_yam && noun == yam) {
                     move yam to self;
                     move box_trap to player;
                     move seed_pouch to player;
-                    print "~This will do fine!~ he says with a laugh. 
-                    He hands you a pouch filled with seeds, along with the trap.^^";
-                    print "~Remember to set the trap, then pull the string
+                    print "~This will do fine!~ he says with a laugh. He hands
+                    you a pouch filled with seeds, along with the trap.^^
+                    ~Remember to set the trap, then pull the string
                     when the chicken is inside. Good luck!~";
                     return true;
                 }
-                "~No thanks~.";
+                "~No thanks~, ", (a) self, " politely declines.";
             Order:
                 if (Tribe has visited && (second == box_trap || noun == box_trap)) {
-                    if (yam in boatman) {
-                        move box_trap to player;
-                        move seed_pouch to player;
-                        "He ";
-                    } else
-                    "~You know, I will lend you my chicken trap, if you find me
-                    a yam. I think yam and fish will make a good meal.~";
+                    if (yam in self) {
+                        "~I hope you caught that chicken you were after!~";
+                    } else if (self.expects_yam) {
+                        "~Of course you are free to use my trap, just find me a
+                        yam~, ", (a) self, " says smiling.";
+                    } else {
+                        self.expects_yam = true;
+                        "~You know, I will lend you my chicken trap, if you find
+                        me a yam. I think yam and fish will make a good meal.~";
+                    }
                 } else
                 "You have no reason to ask for that.";
         ],
