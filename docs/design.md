@@ -192,11 +192,12 @@ _Implemented. Tested in `pressure_plate_trap.spec`_
 
 #### Unlocking the Altar -- WIP
 
+_Not Implemented._
+
 The stone altar is initially out of view and resembles a stone column from floor-to-ceiling. To reveal it the player has to insert a gear-like key and turn it a few times, lowering the column which turns it into the altar, revealing the treasure on top.
 
 Interlocking pieces make up the key that fits in a hole inside the tomb. The key resembles a large flat amulet in the shape of a sun, the beams fashioned to resemble the teeth of a key.
 
-_Not Implemented._
 
 * Why: To reveal the treasure
 * What: The sun key
@@ -214,16 +215,16 @@ The chicken is used to complete the "Bribing the Carver" puzzle. The creature wi
 * How: Put trap on the ground. Put seed in the trap. Set the trap. Wait. Pull the string.
 * Where: Tribe location, or Jungle adjacent to the Tribe.
 
-#### Bribing the Carver -- WIP
+#### Bribing the Carver
+
+_Implemented. Tested in `bribing_the_carver.spec`_
 
 Inside the Tomb is a glyph beside a hole in the floor, when consulted in the journal it reveals a drawing of the sun key. 
 An NPC that is busy carving wooden ornaments must be bribed, then shown the drawing of the key, so they can carve out a copy from wood. This NPC does not speak English, so communication is visual. Showing the drawing to the carver will make him gesture to his mouth to symbolize eating, and flapping his elbows. In the end he will accept a live chicken in exchange for his work.
 
-_Not Implemented._
-
 * Why: Get the sun key
 * What: A chicken
-* How: Give the chicken to the carver. Show drawing to him.
+* How: Give the chicken to the carver. Give the drawing to him.
 * Where: Tribe
 
 # Scores

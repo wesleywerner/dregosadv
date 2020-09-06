@@ -1210,6 +1210,18 @@ with
     description "The stone is carved in the shape of an egg, it is the size of a
     head.";
 
+Object sun_key "sun key"
+with
+    name 'sun' 'key',
+    description "It is a replica carving of the sun key that you had
+    drawn in your journal.";
+
+Object sun_drawing "drawing of the sun key"
+with
+    name 'sun' 'key' 'drawing',
+    description "It is a drawing of a key, which resembles a large flat amulet
+    in the shape of a sun, the beams are the teeth of the key.";
+
 ! A bone that can be made into a torch.
 TorchBaseObject torch_of_bone "bone"
 with
@@ -1323,6 +1335,9 @@ with
     venture_clock 5,
     before [;
         Take:
+            if (parent(self) == box_trap) {
+                "Best keep the chicken inside the trap, lest it escapes.";
+            }
             remove self;
             self.venture_clock=5;
             print_ret (The) self, " moves quickly out of reach and
@@ -1809,25 +1824,81 @@ HumanNPC carver "carver"
 with 
     name 'man' 'carver',
     initial "A man sits nearby, carving a piece of wood.",
-    description "He is busy carving a rough piece of dry wood using
-    a knife and other assorted hand tools. There are half a dozen carved 
-    wooden statuettes and figurines in various stages of completion on the
-    ground beside him. His handiwork tells you he is very skilled in his trade.",
+    description [;
+        if (self.carving_state == 0 || self.carving_state == 50)
+            "He is busy carving a rough piece of dry wood using a knife and
+            other assorted hand tools. There are half a dozen carved wooden
+            statuettes and figurines in various stages of completion on the
+            ground beside him. His handiwork tells you he is very skilled in his
+            trade.";
+        else if (self.carving_state == 1)
+            "The carver is waiting for the drawing of the sun key.";
+        else if (self.carving_state > 1)
+            "The carver is busy working on your sun key replica.";
+    ],
+        
     found_in Tribe,
+    
+    ! 0: initial
+    ! 1: waits for drawing
+    ! 2-n: busy with the carving
+    ! 50: done with the carving
+    carving_state 0,
     
     life [;
         Ask,Answer,Tell:
             "The man says something unintelligible while gesturing to his works.";
         Give:
-            if (noun ofclass EssentialObject)
+            if (noun ofclass EssentialObject) {
                 "He refuses to take ", (the) noun, ".";
+            }
+            else if (noun == sun_drawing && self.carving_state == 0) {
+                <<Show noun self>>;
+            }
+            else if (noun == sun_drawing && self.carving_state == 1) {
+                remove sun_drawing;
+                self.carving_state = 2;
+                "The man takes the drawing from you, he picks a piece of wood
+                from his pile and begins carving.";
+            }
+            else if (noun == box_trap && chicken in box_trap && self.carving_state == 0) {
+                remove chicken;
+                self.carving_state = 1;
+                "The carver has a big grin on his face, he removes the hen
+                from the trap and takes her over to the firepit, handing the
+                hen to another man. He returns and gestures to you for the
+                drawing.";
+            }
             else
                 "He takes ", (the) noun, " and examines it, turns it around a
                 few times, and finally hands it back to you.";
         Show:
             if (noun ofclass EssentialObject)
                 "He seems more interested in his carvings than ", (the) noun, ".";
-];
+            if (noun == sun_drawing && self.carving_state == 0)
+                "The man takes a look at the drawing, and he seems to understand
+                that you want a carving of it. He gestures to his mouth as if 
+                eating, and tucking his hands under his shoulders, flaps his
+                elbows like a bird.";
+            if (noun == sun_drawing && self.carving_state == 1)
+                <<Give noun self>>;
+            if (noun == box_trap && chicken in box_trap) {
+                "The man seems impressed!";
+            }
+    ],
+    
+    each_turn [;
+        if (self.carving_state > 1 && self.carving_state < 50) {
+            if (++self.carving_state == 12) {
+                self.carving_state = 50;
+                move sun_key to Tribe;
+                if (player in Tribe) {
+                    "The carver gestures to you that he is done with the 
+                    carving.";
+                }
+            }
+        }
+    ];
 
 ! [ ==================================================================== Rooms ]
 
