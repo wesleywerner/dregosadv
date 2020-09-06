@@ -1675,8 +1675,20 @@ HumanNPC boatman
                     print_ret (A) self, " -- ~My father had one just like that~
                     he says.";
                 }
+            Give:
+                if (noun == yam) {
+                    move yam to self;
+                    move box_trap to player;
+                    move seed_pouch to player;
+                    print "~This will do fine!~ he says with a laugh. 
+                    He hands you a pouch filled with seeds, along with the trap.^^";
+                    print "~Remember to set the trap, then pull the string
+                    when the chicken is inside. Good luck!~";
+                    return true;
+                }
+                "~No thanks~.";
             Order:
-                if (Tribe has visited && second == box_trap) {
+                if (Tribe has visited && (second == box_trap || noun == box_trap)) {
                     if (yam in boatman) {
                         move box_trap to player;
                         move seed_pouch to player;
@@ -1685,7 +1697,7 @@ HumanNPC boatman
                     "~You know, I will lend you my chicken trap, if you find me
                     a yam. I think yam and fish will make a good meal.~";
                 } else
-                "You have no reason to ask for ", (the) second, ".";
+                "You have no reason to ask for that.";
         ],
 ;
 
@@ -1981,7 +1993,7 @@ with
 
 ScenicPlantObject "vegetable plants" Garden
 with
-    name 'veg' 'vegetable' 'vegetables' 'plant' 'plants',
+    name 'veg' 'veggie' 'veggies//p' 'vegetable' 'vegetables//p' 'plant' 'plants//p',
     description [;
         print "The vegetable plants in the garden have grown wild without
         anybody around to harvest them. ";
@@ -1989,6 +2001,10 @@ with
             print "You notice some kind of tuber growing on the ground.";
         }
         "";
+    ],
+    before [;
+        Search:
+            <<Examine self>>;
     ];
 
 ! [ -------------------------------------------------------------- Jungle Path ]
@@ -2668,6 +2684,7 @@ ScenicRockObject warpto_valley Valley with name 'valley' 'portal';
 ScenicRockObject warpto_waterfall Waterfall with name 'waterf' 'portal';
 ScenicRockObject warpto_tomb Tomb with name 'tomb' 'portal';
 ScenicRockObject warpto_tribe Tribe with name 'tribe' 'portal';
+ScenicRockObject warpto_shore Shore with name 'shore' 'portal';
 ! Some useful items used in test specifications
 Object debugger_wand "Wizard's Wand" with name 'wizard' 'wand' has light;
 #endif;
