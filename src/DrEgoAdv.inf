@@ -2140,6 +2140,9 @@ with
 ! [ --------------------------------------------------------------- Maro River ]
 OutdoorRoom River "The Maro River"
 with
+    #ifdef DEBUG;
+    description "",
+    #ifnot;
     description [;
         if (self hasnt visited) {
             print "The ", (a) canoe, " rocks gently on the water as you travel
@@ -2152,6 +2155,7 @@ with
             boatman, " is with you, rowing the craft.";
         }
     ],
+    #endif;
     
     scenic
         'jungle' 'foliage' 'plant' 'plants' 'bush' 'brush' 'shrub' 0
