@@ -114,6 +114,7 @@ Attribute oily;
     ! Move objects to their starting places
     move canoe to River;
     move boatman to canoe;
+    move box_trap to canoe;
     move monkey to fig_tree;
     move banana to garden_trees;
     move yam to Garden;
@@ -429,15 +430,6 @@ has scenery static;
 ! Something edible
 Class EdibleFruitObject has edible;
 
-Class EdibleSeedObject
-with
-    before [;
-        Eat:
-            "You taste some of ", (the) self, " - not bad, but it would probably
-            taste better to a chicken.";
-    ],
-has edible;
-
 ! Can be used to LIGHT a torch.
 Class SparkThrowerObject;
 
@@ -731,14 +723,12 @@ NotYourPropertyObject fishing_spear "fishing spear" canoe
 with
     name 'fishing' 'rod' 'spear' 'kalawai',
     description "A traditional fishing spear made from wood, it has three
-    metal prongs at the business end.",
-    has scenery;
+    metal prongs at the business end.";
 
 NotYourPropertyObject fishing_net "fishing net" canoe
 with
     name 'fishing' 'net',
-    description "A fishing net is heaped here inside the canoe.",
-    has scenery;
+    description "A fishing net is heaped here inside the canoe.";
 
 !
 SparkThrowerObject flint_stone "flint"
@@ -1234,17 +1224,25 @@ with
     material "wooden",
     description "A wooden stick about the length of your arm.";
 
-EdibleSeedObject seed "seed"
+Object seed "seed"
 with
     name 'seed' 'seeds//p',
     description "A handful of varied types of edible seeds.",
     before [;
         Drop:
-            if (parent(chicken) ~= location)
-                print_ret "You would rather not waste the seed here.";
+            "The seed will work better inside the trap.";
+        Eat:
+            "You taste some of ", (the) self, " - not bad, but it would probably
+            taste better to a chicken.";
     ],
-    has pluralname;
-    
+    has edible pluralname;
+
+NotYourPropertyObject box_trap "trap"
+with
+    name 'trap',
+    description "The trap is a box constructed from wood and netting, with one
+    side being the door.";
+
 ! [ ==================================================== Non Player Characters ]
 
 ! [ ------------------------------------------------------------------ Chicken ]
@@ -1276,14 +1274,14 @@ with
     
     life [;
         Show:
-            if (noun ofclass EdibleSeedObject)
+            if (noun == seed)
                 "The hen is determined to keep a safe distance from you, despite
                 the temptation of ", (the) noun, ".";
             else
                 "She shows no interest in ", (the) noun, ".";
     ],
     
-    daemon [look_item seed;
+    daemon [;
         ! only when in the Tribe, or adjacent to the Tribe while LostInJungle
         if (last_known_location ~= Tribe) return;
         ! when not in the location
@@ -1300,12 +1298,7 @@ with
                 "A hen appears from out the jungle.";
             return;
         }
-        ! scan for seeds
-        seed = nothing;
-        objectloop(look_item in location) {
-            if (look_item ofclass EdibleSeedObject)
-                seed = look_item;
-        }
+        if (parent(seed) ~= parent(chicken)) return;
         if (seed && self.has_fed == false) {
             self.has_fed = true;
             remove seed;
@@ -1603,6 +1596,8 @@ HumanNPC boatman
                     print_ret (A) self, " -- ~My father had one just like that~
                     he says.";
                 }
+            Order:
+                "You have no reason to ask for ", (the) second, ".";
         ],
 ;
 
@@ -1629,6 +1624,10 @@ HumanNPC boatman
             <<Ask self 'net'>>;
         'time', 'longer':
             "~We will reach the shore soon~, he replies.";
+        'trap':
+            "That, my friend, is a chicken trap. You prop the door open with a
+            stick, and pull on a string tied to that stick, to close the door
+            and trap the chicken inside.";
     }
     print_ret (The) self, " grins at you and nods.";
 ];
