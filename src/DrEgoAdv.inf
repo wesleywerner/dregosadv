@@ -59,19 +59,31 @@ Statusline time;
 Constant TASKS_PROVIDED;
 Constant NUMBER_TASKS = 8;
 Constant MAX_SCORE = 8;
+
+! List of points for each task completed via the `Achieved` keyword.
 Array task_scores -> 1 1 1 1 1 1 1 1;
+
+! List of score achievement indices
+Constant SCORE_USE_COMPASS = 0;
+Constant SCORE_FIND_THE_WAY = 1;
+Constant SCORE_WHIP_THE_BANANA = 2;
+Constant SCORE_RESCUE_COMPASS = 3;
+Constant SCORE_CRAFT_TORCH = 4;
+Constant SCORE_FIND_ALCOVE = 5;
+Constant SCORE_NO_DARTS = 6;
+Constant SCORE_FISHING = 7;
 
 ! Prints the list of achieved scores and the items they relate to
 [ PrintTaskName task_number;
     switch (task_number) {
-        0: "User your compass when lost in the jungle";
-        1: "See the stairs from the top of the tree";
-        2: "Whip a banana off the tree";
-        3: "Retrieve your compass from the monkey";
-        4: "Made a torch";
-        5: "Discover the alcove behind the waterfall";
-        6: "Get the golden egg without setting off the dart trap";
-        7: "Catch a fish with your whip";
+        SCORE_USE_COMPASS: "Use your compass in the jungle";
+        SCORE_FIND_THE_WAY: "Spot the way from atop a tree";
+        SCORE_WHIP_THE_BANANA: "Whip a banana off the tree";
+        SCORE_RESCUE_COMPASS: "Rescue your compass from the monkey";
+        SCORE_CRAFT_TORCH: "Craft a torch";
+        SCORE_FIND_ALCOVE: "Find the alcove behind the waterfall";
+        SCORE_NO_DARTS: "Avoid the poison dart trap";
+        SCORE_FISHING: "Catch a fish with your whip";
     }
 ];
 
@@ -518,7 +530,7 @@ with
             if (n ~= self && n hasnt oily) {
                 give n oily;
                 print (The) n, " is now covered in a film of oil.";
-                if (n ofclass TorchBaseObject) Achieved(4);
+                if (n ofclass TorchBaseObject) Achieved(SCORE_CRAFT_TORCH);
                 if (~~n ofclass TorchBaseObject) print " This is a fine mess.";
             }
         }
@@ -688,7 +700,7 @@ with
     ! try catch the fish with the whip
     try_catch [;
         if (self notin canoe && self.caught == false) {
-            Achieved(7);
+            Achieved(SCORE_FISHING);
             move self to canoe;
             self.caught = true;
             print_ret "*SNAP* -- As you crack the whip into the water
@@ -774,7 +786,7 @@ with
     ],
     after [;
         Whip:
-            Achieved(2);
+            Achieved(SCORE_WHIP_THE_BANANA);
             move banana to Garden;
             banana.whip_count = banana.whip_count + 1;
             switch (banana.whip_count) {
@@ -798,7 +810,7 @@ EssentialObject golden_egg "Golden Egg of Man-Toomba"
         after [;
             Take:
                 if (~~self has moved)
-                    Achieved(6);
+                    Achieved(SCORE_NO_DARTS);
                     print_ret "You lift ", (the) self, " carefully from it's
                     resting place.";
         ];
@@ -1003,7 +1015,7 @@ with
 
         ! Return the player to the last known good location
         if (location == LostInJungle) {
-            Achieved(0);
+            Achieved(SCORE_USE_COMPASS);
             print "^", (A) self, " guides you back to safety.^";
             ! parameter "2" honors brief room descriptions - DM4 pg 21
             PlayerTo(last_known_location, 2);
@@ -1051,7 +1063,7 @@ with
     
     after [;
         Take:
-            Achieved(3);
+            Achieved(SCORE_RESCUE_COMPASS);
     ];
 
 SparkThrowerObject matchbook "matchbook"
@@ -2351,7 +2363,7 @@ with
             if (noun == ne_obj) {
                 Clearing.ne_to = valley_way;
                 move valley_way to Clearing;
-                Achieved(1);
+                Achieved(SCORE_FIND_THE_WAY);
                 print_ret "There! Stone stairs up the hill, in the distance to ",
                     (a) noun, ".";
             }
@@ -2511,7 +2523,7 @@ with
         Search:
             if (alcove_door notin Waterfall) {
                 move alcove_door to Waterfall;
-                Achieved(5);
+                Achieved(SCORE_FIND_ALCOVE);
                 "You lean into the narrow space behind the cascading
                 water and see an alcove behind the waterfall.";
             } else {

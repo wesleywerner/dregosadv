@@ -231,14 +231,14 @@ An NPC that is busy carving wooden ornaments must be bribed, then shown the draw
 
 Using the task scoring system, these tasks are Achievable. See the `task_scores` variable in the source.
 
-+ 1: Use your compass when lost in the jungle. (puzzle)
-+ 2: See the stairs from the top of the tree. (puzzle)
-+ 3: Whip a banana off the tree. (puzzle)
-+ 4: Retrieve your compass from the monkey. (puzzle)
-+ 5: Made a torch. (puzzle)
-+ 6: Discover the alcove behind the waterfall. (puzzle)
-+ 7: Get the golden egg without setting off the dart trap. (puzzle)
-+ 8: Catch a fish with your whip (amusing)
++ SCORE_USE_COMPASS: Use your compass in the jungle. (puzzle)
++ SCORE_FIND_THE_WAY: Spot the way from atop a tree. (puzzle)
++ SCORE_WHIP_THE_BANANA: Whip a banana off the tree. (puzzle)
++ SCORE_RESCUE_COMPASS: Rescue your compass from the monkey. (puzzle)
++ SCORE_CRAFT_TORCH: Craft a torch. (puzzle)
++ SCORE_FIND_ALCOVE: Find the alcove behind the waterfall. (puzzle)
++ SCORE_NO_DARTS: Avoid the poison dart trap. (puzzle)
++ SCORE_FISHING: Catch a fish with your whip (amusing)
 
 # TODO
 * Add HELP, ABOUT, HINT
