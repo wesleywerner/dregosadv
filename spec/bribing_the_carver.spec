@@ -1,6 +1,6 @@
 superbrief
 gonear tribe portal
-purloin trap,sun key drawing
+purloin trap, drawing
 abstract chicken to trap
 show trap to man
 give trap to man

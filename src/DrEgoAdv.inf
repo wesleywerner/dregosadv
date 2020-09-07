@@ -1253,7 +1253,7 @@ with
 
 Object sun_drawing "drawing of the sun key"
 with
-    name 'sun' 'key' 'drawing',
+    name 'drawing' 'page',
     description "It is a drawing of a key, which resembles a large flat amulet
     in the shape of a sun, the beams are the teeth of the key.";
 
