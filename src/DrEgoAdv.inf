@@ -102,6 +102,27 @@ Constant ROOM_SCORE 1;
 ! [ ================================================================= Includes ]
 
 Include "Parser";
+
+! Override default library messages. See DM4 $25 and $A4.
+Object LibraryMessages
+with before [;
+    Miscellany:
+        ! code 50 is the score message.
+        ! lm_o contains the number of points scored.
+        ! print "You scored ", (number) lm_o, " points";
+        if (lm_n == 50) {
+            if (score == 1) {
+                print "You scored your first point!
+                Type SCORE/FULL to list them";
+            } else if (lm_o == 1) {
+                print "You scored another point";
+            } else {
+                print "You scored ", (number) lm_o, " points";
+            }
+            rtrue;
+        }
+];
+
 Include "VerbLib";
 
 ! [ =============================================================== Attributes ]
