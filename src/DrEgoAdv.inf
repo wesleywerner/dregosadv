@@ -57,11 +57,11 @@ Statusline time;
 
 ! Use task-based scoring - as listed in doc.md
 Constant TASKS_PROVIDED;
-Constant NUMBER_TASKS = 8;
-Constant MAX_SCORE = 8;
+Constant NUMBER_TASKS = 9;
+Constant MAX_SCORE = 9;
 
 ! List of points for each task completed via the `Achieved` keyword.
-Array task_scores -> 1 1 1 1 1 1 1 1;
+Array task_scores -> 1 1 1 1 1 1 1 1 1;
 
 ! List of score achievement indices
 Constant SCORE_USE_COMPASS = 0;
@@ -72,6 +72,7 @@ Constant SCORE_CRAFT_TORCH = 4;
 Constant SCORE_FIND_ALCOVE = 5;
 Constant SCORE_NO_DARTS = 6;
 Constant SCORE_FISHING = 7;
+Constant SCORE_BRIBERY = 8;
 
 ! Prints the list of achieved scores and the items they relate to
 [ PrintTaskName task_number;
@@ -84,6 +85,7 @@ Constant SCORE_FISHING = 7;
         SCORE_FIND_ALCOVE: "Find the alcove behind the waterfall";
         SCORE_NO_DARTS: "Avoid the poison dart trap";
         SCORE_FISHING: "Catch a fish with your whip";
+        SCORE_BRIBERY: "Trade with the Carver";
     }
 ];
 
@@ -1880,6 +1882,7 @@ with
             else if (noun == sun_drawing && self.carving_state == 1) {
                 remove sun_drawing;
                 self.carving_state = 2;
+                Achieved(SCORE_BRIBERY);
                 "The man takes the drawing from you, he picks a piece of wood
                 from his pile and begins carving.";
             }
