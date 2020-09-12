@@ -2225,10 +2225,6 @@ with
     ],
     #endif;
     
-    scenic
-        'jungle' 'foliage' 'plant' 'plants' 'bush' 'brush' 'shrub' 0
-        "The jungle looks green and lush from this distance.",
-    
     before [;
         ! Senses
         Examine:
@@ -2244,6 +2240,17 @@ with
         Smell:
             print_ret "You smell the fresh air and feel revitalized.";
     ];
+
+Object "jungle"
+with 
+    name 'jungle' 'foliage' 'plant' 'plants' 'bush' 'brush' 'shrub',
+    description "The jungle looks green and lush from this distance.",
+    found_in River,
+    before [;
+        Examine: ;
+        default: "The jungle is out of reach.";
+    ],
+    has scenery;
 
 ! [ -------------------------------------------------------------- River Shore ]
 OutdoorRoom Shore "River Shore"
@@ -2651,8 +2658,6 @@ with
             a vivid rainbow shines from the dancing spray.";
         }
     ],
-    scenic
-        'mist' 'rainbow' 0 "The vibrant rainbow floats motionless above the pool.",
     before [;
         Listen:
             "You hear the splashing sound of the cascading water.";
@@ -2660,6 +2665,17 @@ with
     n_to alcove_door,
     w_to bridge_way,
     s_to temple_way;
+
+Object "mist"
+with 
+    name 'mist' 'rainbow',
+    description "The vibrant rainbow floats motionless above the pool.",
+    found_in Waterfall,
+    before [;
+        Examine: ;
+        default: "It is intangible.";
+    ],
+    has scenery;
 
 ScenicWaterObject waterfall_cascade "cascading water" Waterfall
 with
@@ -2935,36 +2951,6 @@ Object debugger_wand "Wizard's Wand" with name 'wizard' 'wand' has light;
 
 ! [ ================================================================== Grammar ]
 
-! Scenic.h
-! Provides an easy way to describe non-object scenery.
-! Usage: with scenic 'dictionary' 'words' 0 ("response string" | NULL)
-! Where NULL yields the default response "That's not something you need to..."
-!
-!       Object  forest "Forest"
-!         with  description
-!                   "The forest seems to stretch in every direction. Around you
-!                   an almost impenetrable tangle of bush and shrub silently
-!                   struggles for possession of the mossy ground, while overhead
-!                   the trees rise gaunt and limbless through the dank sour air.",
-!               name 'forest' 'wood',
-!               scenic
-!                   'tree' 'trees' 'gaunt' 'limbless' 0 "Streaked with lichen,
-!                     gnarled and knotted, the trees offer no support below
-!                     the branching canopy dozens of feet above you."
-!                   'bush' 'bushes' 'shrub' 'shrubs' 'tangle' 0 "Thorn and
-!                     bramble thrust spiteful barbs in angry coils."
-!                   'moss' 'ground' 0 "The only bright colour in this dismal
-!                     place, the dark emerald moss billows soft and sodden
-!                     around your feet."
-!                   'air' 'dank' 'sour' 0 "Almost dense enough to grasp, the
-!                     heavy atmosphere piles oppressively down on you."
-!                   'sky' 0 "No trace of the sky is visible through the leaves."
-!                   'lichen' 'branch' 'branches' 'canopy' 'thorn' 'thorns'
-!                   'bramble' 'brambles' 'barb' 'barbs' 'coil' 'coils'
-!                   'colour' 'color' 'emerald' 'billows' 'leaf' 'leaves'
-!                   'atmosphere' 0 NULL,
-Constant ScenicError "You don't need that.";
-Include "DrScenic";
 Include "DrHelpRoutines";
 Include "Grammar";
 
