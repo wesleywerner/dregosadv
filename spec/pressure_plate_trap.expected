@@ -39,7 +39,9 @@
   A stone column stands in the center of the room, a sun-shaped hole in the
   floor next to it.
   
-> >  You leaf through your journal and find this entry: "Sowilu is the rune for
+> >  (putting the sun key into the satchel to make room)
+  You take the journal from your satchel.
+  You leaf through your journal and find this entry: "Sowilu is the rune for
   the sun, and because of its symbolic power, it is rumored that the treasure
   can only be unlocked with a key of the sun".
   
@@ -52,7 +54,9 @@
   
 > >  You turn the key around in your hands, it is a fine piece of work indeed.
   
-> >  You put the sun key into the keyhole.
+> >  You take the sun key from your satchel.
+  (first taking the sun key out of the satchel)
+  You put the sun key into the keyhole.
   
 > >  In the keyhole is a sun key.
   
@@ -74,7 +78,8 @@
   attractively on top of it!
   
   Some stairs leads upward.
-> >  You lift the Golden Egg of Man-Toomba carefully from it's resting place.
+> >  (putting the journal into the satchel to make room)
+  You lift the Golden Egg of Man-Toomba carefully from it's resting place.
   
   The weight lifted from the altar triggers a pressure plate booby trap, tens
   of tiny poisoned darts shoot out from holes hidden in the runed walls. You
@@ -89,9 +94,11 @@
 > >  Underground Tomb
   [Previous turn undone.]
   
-> >  You put the stone egg on the altar.
+> >  (first taking the stone egg out of the satchel)
+  You put the stone egg on the altar.
   
-> >  You lift the Golden Egg of Man-Toomba carefully from it's resting place.
+> >  (putting the drawing of the sun key into the satchel to make room)
+  You lift the Golden Egg of Man-Toomba carefully from it's resting place.
   
   [You scored one hundred points.]
   

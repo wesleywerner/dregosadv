@@ -242,19 +242,17 @@ Using the task scoring system, these tasks are Achievable. See the `task_scores`
 
 # TODO
 * Add ABOUT, HINT
-* Optimize entry descriptions for all rooms
-* Fill the journal with notes
-* Use or Remove ScenicBase?
 * Make the stone egg large and heavy, you lug it around?
 * Try get oil on inventory items, and examining oily things descriptions
 * Change the win condition to when you get in the canoe with the treasure
 * Returning to the canoe, if you had caught the fish, you find it cooking over a fire
 * You can put the yam in the fire to roast it
 * Research puzzles. Consult the journal more.
-* Add worn items: a shoulder bag, a fedora hat, a leather jacket.
 * Add more things you can Show to Rom.
 * Add SCORE to the help topics.
+* Fill the journal with notes
 * Quotes in journal entries.
+* Optimize entry descriptions for all rooms
 * Rewrite parser responses and PC feedback in the first person?
 * Map with IFM.
 

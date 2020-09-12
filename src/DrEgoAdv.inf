@@ -50,6 +50,10 @@ Constant AMUSING_PROVIDED;
 ! Define default responses for the five senses.
 Constant LOOK_DOWN_REPLY = "The ground is below you -- thank heavens!";
 
+! Set the PC carryall
+Constant MAX_CARRIED = 2;
+Constant SACK_OBJECT = satchel;
+
 ! [ ========================================================= Scoring & Status ]
 
 ! Show the time instead of the turn number
@@ -146,7 +150,7 @@ Attribute examined;
 
     ! Set the starting location
     location = canoe;
-
+    
     ! Move objects to their starting places
     move canoe to River;
     move boatman to canoe;
@@ -175,10 +179,13 @@ Attribute examined;
     #endif;
 
     ! Give player inventory
-    move lodestar to player;
+    move lodestar to satchel;
     move bullwhip to player;
-    move journal to player;
-    move matchbook to player;
+    move journal to satchel;
+    move matchbook to satchel;
+    move fedora_hat to player;
+    move leather_jacket to player;
+    move satchel to player;
 
     ! Give the player a name and description
     player.short_name = "Dr Ego";
@@ -328,7 +335,16 @@ Class EssentialObject
     with
         article "your",
         before [;
-            Drop, ThrowAt, Insert:
+            Examine:
+                if (self in satchel) {
+                    <Take self>;
+                }
+            Insert:
+                if (second ~= satchel) {
+                    print_ret "You would not dream of leaving ", (a) noun, "
+                    behind.";
+                }
+            Drop, ThrowAt:
                 print_ret "You would not dream of leaving ",
                             (a) noun, " behind.";
             Taste, Eat:
@@ -596,15 +612,16 @@ with
 
 ! Also see the custom 'WhipSub' action.
 EssentialObject bullwhip "bullwhip"
-    with
-        name 'bullwhip' 'whip',
-        description "A leather whip made of braided strips, you can use it to
-                    WHIP SOMETHING to grab items out of reach, or to grip a
-                    fixture to swing and pull yourself over short distances.",
+with
+    name 'bullwhip' 'whip',
+    description "A leather whip made of braided strips, you can use it to
+                WHIP SOMETHING to grab items out of reach, or to grip a
+                fixture to swing and pull yourself over short distances.",
     before [;
         Use:
             print_ret "Start your sentence with WHIP, like WHIP THE TREE.";
-    ];
+    ],
+    has clothing worn;
 
 !
 Object canoe "canoe"
@@ -686,6 +703,18 @@ with
     name 'cloth' 'canvas',
     description "A strip of canvas cloth the length of your arm, it seems pretty
     old since it is a pale dirty white.";
+
+EssentialObject fedora_hat "fedora"
+with
+    name 'fedora' 'hat',
+    description "This is your brown felt hat.",
+    has clothing worn;
+
+EssentialObject leather_jacket "leather jacket"
+with
+    name 'jacket',
+    description "This is your brown jacket.",
+    has clothing worn;
 
 !
 ScenicTreeObject fig_tree "fig tree"
@@ -1050,7 +1079,7 @@ with
     has_dropped false,
 
     description [;
-    
+
         ! Test for posession
         if (self notin player) print_ret "You do not have ", (a) self, ".";
 
@@ -1103,8 +1132,8 @@ with
     ],
     
     after [;
-        Take:
-            Achieved(SCORE_RESCUE_COMPASS);
+        Use:
+            "To use ", (the) self, ", READ it.";
     ];
 
 SparkThrowerObject matchbook "matchbook"
@@ -1152,6 +1181,19 @@ with
             return fish.try_catch();
     ],
     has container open scenery;
+
+! The PC's bag
+EssentialObject satchel "satchel"
+with
+    name 'bag' 'satchel',
+    description "This is your brown shoulder bag.",
+    after [;
+        LetGo:
+            if (noun) {
+                "You take ", (the) noun, " from your satchel.";
+            }
+    ],
+    has container open clothing worn;
 
 ! The sky is visible in all outdoor areas.
 Object sky "sky"
@@ -1466,7 +1508,9 @@ with
             move self to box_trap;
             "The hen enters the trap posthaste and begins her pecking frenzy.";
         }
-    ];
+    ],
+    
+    has female;
 
 ! [ ------------------------------------------------------------------- Monkey ]
 AnimalNPC monkey "monkey"
@@ -1606,13 +1650,12 @@ with
                     print (The) self, " grabs ", (the) fruit, 
                     ", stuffing its face with the delicious fruit.";
                     if (lodestar in self) {
-                        ! remove the fruit and return the player's posession
+                        ! remove the fruit and return the player's possession
                         move fruit to garden_trees;
                         move lodestar to location;
                         ! climb back into the tree and reset counters
                         monkey_forget_about_food();
-                        ! move self to fig_tree;
-                        ! give self ~curious;
+                        Achieved(SCORE_RESCUE_COMPASS);
                         print_ret " It seems distracted and left ", 
                         (the) lodestar, " lying on the ground.";
                     }
@@ -3035,6 +3078,9 @@ Verb 'whip' * noun -> Whip;
 
 ! Add a NOTES verb that consults the journal directly.
 [ NotesSub;
+    if (journal in satchel) {
+        <Take journal>;
+    }
     if (journal in player) {
         <<Consult journal>>;
     }

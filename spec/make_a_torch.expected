@@ -41,10 +41,13 @@
   
 > >  You're carrying:
     a wooden torch
-    a matchbook
-    your journal
-    your bullwhip
-    your compass
+    your satchel (being worn)
+      a matchbook
+      your journal
+      your compass
+    your leather jacket (being worn)
+    your fedora (being worn)
+    your bullwhip (being worn)
   
 > >  Waterfall
   
@@ -74,7 +77,8 @@
   The wooden torch is now covered in a film of oil.
   [You scored another point.]
   
-> >  You take the wooden torch.
+> >  (putting the flint into the satchel to make room)
+  You take the wooden torch.
   You strike the flint and sparks fly onto the wick, they catch and a small
   flame appears -- gradually the flame grows until it covers the wick.
   
