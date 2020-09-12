@@ -246,10 +246,9 @@ Using the task scoring system, these tasks are Achievable. See the `task_scores`
 * Try get oil on inventory items, and examining oily things descriptions
 * Change the win condition to when you get in the canoe with the treasure
 * Returning to the canoe, if you had caught the fish, you find it cooking over a fire
-* You can put the yam in the fire to roast it
-* Research puzzles. Consult the journal more.
 * Add more things you can Show to Rom.
 * Add SCORE to the help topics.
+* Research puzzles. Consult the journal more.
 * Fill the journal with notes
 * Quotes in journal entries.
 * Optimize entry descriptions for all rooms

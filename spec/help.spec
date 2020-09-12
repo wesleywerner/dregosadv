@@ -6,8 +6,9 @@ help verbs
 help talking
 help save
 help about
-help credits
 help if
+
+
 help stuck
 help hint
 help abbreviations

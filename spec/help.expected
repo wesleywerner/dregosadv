@@ -23,8 +23,8 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT    CREDITS
-  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  SAVE     RESTORE  ABOUT
+  IF       STUCK    ABBREVIATIONS (AB)
   
 > >  BASICS
   In order to communicate with the game, you will need to enter instructions
@@ -50,8 +50,8 @@
   from room to room, and check out every location available.
 ***MORE***  Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT    CREDITS
-  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  SAVE     RESTORE  ABOUT
+  IF       STUCK    ABBREVIATIONS (AB)
   
 > >  THINGS
   The story contains an assortment of things that you can interact with.
@@ -69,8 +69,8 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT    CREDITS
-  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  SAVE     RESTORE  ABOUT
+  IF       STUCK    ABBREVIATIONS (AB)
   
 > >  Here is a list of verbs you can use in this story. To read more about a
   specific verb, type HELP followed by the verb.
@@ -114,18 +114,11 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT    CREDITS
-  IF       STUCK    HINT     ABBREVIATIONS (AB)
-***MORE***> >  Type HELP followed by one of these words to learn more:
-  BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT    CREDITS
-  IF       STUCK    HINT     ABBREVIATIONS (AB)
-  
-> >  Type HELP followed by one of these words to learn more:
-  BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT    CREDITS
-  IF       STUCK    HINT     ABBREVIATIONS (AB)
-  
+  SAVE     RESTORE  ABOUT
+  IF       STUCK    ABBREVIATIONS (AB)
+***MORE***> >  ABOUT THIS STORY
+  TODO.
+. 
 > >  INTERACTIVE FICTION
   There are various kinds of IF in the world.  Some of them put more emphasis
   on solving puzzles; some want to move you through a coherent plot of some
@@ -183,8 +176,39 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT    CREDITS
-  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  SAVE     RESTORE  ABOUT
+  IF       STUCK    ABBREVIATIONS (AB)
+  
+> >  Explore.  Examine every object mentioned in room descriptions, and
+  everything in your inventory.  Examine yourself, too. Look inside all
+  closed containers.  Open all doors and go through them.  If anything is
+  locked, that's probably a puzzle, and you should try to get it unlocked.
+  
+  Try out all your senses.  If the game mentions an interesting texture,
+  odor, or sound, try SMELLing, TOUCHing, LISTENing, etc.
+  
+  Reread.  Look back at things you've already seen; sometimes this will
+  trigger an idea you hadn't thought of.
+  
+  Take hints from the prose.  Things that are described in great detail are
+  probably more important than things that are given one-liners. Play with
+  those things.  If there is a hole, or container, look inside it.
+  
+  Consider the genre of the game.  Mysteries, romances, and thrillers all
+  have their own types of action and motivation.  What are you trying to do,
+  and how do conventional characters go about doing that?  What's the right
+  sort of behavior for a detective/romance heroine/spy?
+  
+  Play with someone else.  Two heads are usually better than one.
+***MORE***  As a last resort.  Type HINT to get some help from the story if you are
+  stuck.
+  
+  Good luck!
+. 
+  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT
+  IF       STUCK    ABBREVIATIONS (AB)
   
 > >  Abbreviations:
   AGAIN [G]      DOWN [D]       EAST [E]       LOOK [L]
@@ -199,8 +223,8 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT    CREDITS
-  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  SAVE     RESTORE  ABOUT
+  IF       STUCK    ABBREVIATIONS (AB)
   
 > >    go north
     east
@@ -211,8 +235,8 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT    CREDITS
-  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  SAVE     RESTORE  ABOUT
+  IF       STUCK    ABBREVIATIONS (AB)
   
 > >    light the candle with the blowtorch
     burn the pyre with the Molotov cocktail
@@ -222,8 +246,8 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT    CREDITS
-  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  SAVE     RESTORE  ABOUT
+  IF       STUCK    ABBREVIATIONS (AB)
   
 > >    climb the fig tree
   
@@ -234,8 +258,8 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT    CREDITS
-  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  SAVE     RESTORE  ABOUT
+  IF       STUCK    ABBREVIATIONS (AB)
   
 > >    dig in the ground
     dig in the garden with the spade
@@ -245,8 +269,8 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT    CREDITS
-  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  SAVE     RESTORE  ABOUT
+  IF       STUCK    ABBREVIATIONS (AB)
   
 > >    consult the book about roman history
     look up moon phases in the almanac
@@ -259,8 +283,8 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT    CREDITS
-  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  SAVE     RESTORE  ABOUT
+  IF       STUCK    ABBREVIATIONS (AB)
   
 > >    cut the paper with the scissors
     cut the rope with the axe
@@ -270,8 +294,8 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT    CREDITS
-  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  SAVE     RESTORE  ABOUT
+  IF       STUCK    ABBREVIATIONS (AB)
   
 > >    go up (when there are stairs)
     go down (when hanging from a rope)
@@ -284,8 +308,8 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT    CREDITS
-  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  SAVE     RESTORE  ABOUT
+  IF       STUCK    ABBREVIATIONS (AB)
   
 > >    drop the hot potato.
     drop all (everything being carried).
@@ -296,8 +320,8 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT    CREDITS
-  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  SAVE     RESTORE  ABOUT
+  IF       STUCK    ABBREVIATIONS (AB)
   
 > >    empty the rucksack
     empty the rucksack on the table
@@ -308,8 +332,8 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT    CREDITS
-  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  SAVE     RESTORE  ABOUT
+  IF       STUCK    ABBREVIATIONS (AB)
   
 > >    enter the small red car
     enter the ancient temple
@@ -321,8 +345,8 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT    CREDITS
-  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  SAVE     RESTORE  ABOUT
+  IF       STUCK    ABBREVIATIONS (AB)
   
 > >    examine the ming vase
     examine self
@@ -335,8 +359,8 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT    CREDITS
-  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  SAVE     RESTORE  ABOUT
+  IF       STUCK    ABBREVIATIONS (AB)
   
 > >    exit (when inside the hovercraft)
     exit the speedboat
@@ -347,8 +371,8 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT    CREDITS
-  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  SAVE     RESTORE  ABOUT
+  IF       STUCK    ABBREVIATIONS (AB)
   
 > >    go in
     out
@@ -359,8 +383,8 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT    CREDITS
-  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  SAVE     RESTORE  ABOUT
+  IF       STUCK    ABBREVIATIONS (AB)
   
 > >    take inventory
     i (abbreviated form)
@@ -370,8 +394,8 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT    CREDITS
-  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  SAVE     RESTORE  ABOUT
+  IF       STUCK    ABBREVIATIONS (AB)
   
 > >    unlock the iron gate with the key
     lock the medicine cabinet with the key
@@ -382,8 +406,8 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT    CREDITS
-  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  SAVE     RESTORE  ABOUT
+  IF       STUCK    ABBREVIATIONS (AB)
   
 > >    look
     l (abbreviated form)
@@ -396,8 +420,8 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT    CREDITS
-  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  SAVE     RESTORE  ABOUT
+  IF       STUCK    ABBREVIATIONS (AB)
   
 > >    open the door
     close the toy chest
@@ -406,8 +430,8 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT    CREDITS
-  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  SAVE     RESTORE  ABOUT
+  IF       STUCK    ABBREVIATIONS (AB)
   
 > >    push the cupboard
     pull the silk thread
@@ -422,8 +446,8 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT    CREDITS
-  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  SAVE     RESTORE  ABOUT
+  IF       STUCK    ABBREVIATIONS (AB)
   
 > >    put the vase on the pedestal
     put the melon in the blender
@@ -433,8 +457,8 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT    CREDITS
-  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  SAVE     RESTORE  ABOUT
+  IF       STUCK    ABBREVIATIONS (AB)
   
 > >    remove the pearl necklace
     remove the mango from the crate
@@ -444,8 +468,8 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT    CREDITS
-  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  SAVE     RESTORE  ABOUT
+  IF       STUCK    ABBREVIATIONS (AB)
   
 > >    search the rubble
     search the suspect
@@ -457,8 +481,8 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT    CREDITS
-  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  SAVE     RESTORE  ABOUT
+  IF       STUCK    ABBREVIATIONS (AB)
   
 > >    switch the lamp on
     switch the tv on
@@ -468,8 +492,8 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT    CREDITS
-  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  SAVE     RESTORE  ABOUT
+  IF       STUCK    ABBREVIATIONS (AB)
   
 > >    get the wooden spoon
     take the brass lantern
@@ -482,8 +506,8 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT    CREDITS
-  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  SAVE     RESTORE  ABOUT
+  IF       STUCK    ABBREVIATIONS (AB)
   
 > >    throw the frisbee at rex
     throw the rock at the ogre
@@ -495,8 +519,8 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT    CREDITS
-  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  SAVE     RESTORE  ABOUT
+  IF       STUCK    ABBREVIATIONS (AB)
   
 > >    transfer candy to treat bag
     transfer the red potion to the carry case
@@ -507,8 +531,8 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT    CREDITS
-  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  SAVE     RESTORE  ABOUT
+  IF       STUCK    ABBREVIATIONS (AB)
   
 > >    tie the bed sheet to the window frame
     tie the rope around the tree
@@ -517,8 +541,8 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT    CREDITS
-  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  SAVE     RESTORE  ABOUT
+  IF       STUCK    ABBREVIATIONS (AB)
   
 > >    turn the dial
     turn the Lazy Susan
@@ -527,8 +551,8 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT    CREDITS
-  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  SAVE     RESTORE  ABOUT
+  IF       STUCK    ABBREVIATIONS (AB)
   
 > >    wear the top hat
     wear the pearl necklace
@@ -537,7 +561,7 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT    CREDITS
-  IF       STUCK    HINT     ABBREVIATIONS (AB)
+  SAVE     RESTORE  ABOUT
+  IF       STUCK    ABBREVIATIONS (AB)
   
 > >

@@ -6,10 +6,11 @@
 !   original to fit better into the story. 
 !   My thanks to E. Short for her contribution in this regard!
 !
-!   To customize the to your story:
-!     1. Edit the list of verbs available in the StandardVerbs routine.
-!     2. Edit the wording in the CreditsMenu and AboutMenu routines.
-!
+!   To customize the help for your story:
+!     1. Edit the main help options in the HelpMenu routine.
+!     2. Edit the list of verbs available in the StandardVerbs routine.
+!     3. Edit the wording in the AboutSub routine.
+!     4. Add new help commands to the HelpSub routine.
 !
 !---------------------------------------------------------------------------
 !	HelpRoutines.h, by Emily Short (emshort@mindspring.com) 
@@ -168,6 +169,9 @@ Global auto_print_help_intro = true;
     ! The while-loop ensures that HELP ME WITH FOO, and HELP FOO, both work equally well.
     while (help_topic) {
         switch (help_topic) {
+            'about', 'credits':
+                AboutSub();
+                return;
             'basic', 'basics': 
                 Communication();
                 StartingInstructions();
@@ -180,7 +184,7 @@ Global auto_print_help_intro = true;
             'npc', 'character', 'characters':
                 !OnNPCs();
                 TopicMenuNPC();
-            'stuck':
+            'stuck', 'hint':
                 StuckInstructions();
             'abbreviations', 'ab':
                 Abbreviations();
@@ -188,6 +192,8 @@ Global auto_print_help_intro = true;
                 BasicIntro();
             'save', 'restore':
                 MetaCommands();
+            'talking':
+                AskTellNPC();
             default:
                 SpecificVerbHelp(help_topic);
         }
@@ -212,12 +218,9 @@ Verb meta 'help'    *                               -> Help
 ! Menu
 !--------------------------------------------------------------------------- 
 
-[ AboutMenu;
-    print (ESB) "TODO";
-];
-
-[ CreditsMenu;
-    print (ESB) "TODO";
+[ AboutSub;
+    print (ESB) "ABOUT THIS STORY^";
+    print "TODO.^^";
 ];
 
 [ HelpMenu;
@@ -239,12 +242,10 @@ Verb meta 'help'    *                               -> Help
 	print "SAVE     ";
     print "RESTORE  ";
     print "ABOUT    ";
-    print "CREDITS  ";
     print "^";
     
     print "IF       ";
     print "STUCK    ";
-    print "HINT     ";
 	print "ABBREVIATIONS (AB)";
 	
 	print "^";
@@ -665,9 +666,6 @@ Verb meta 'help'    *                               -> Help
 ];
 
 [ StuckInstructions;
-	print (ESI) "[These suggestions are lengthy, so the game will periodically
-		pause while printing them.  To stop the instructions mid-flow, press
-		Q at a pause; to continue, press any other key.]^^";
 	print (ESB) "Explore.  ", "Examine every object mentioned in room descriptions, and
 		everything in your inventory.  Examine yourself, too.  
 		Look inside all closed containers.  Open
@@ -675,72 +673,20 @@ Verb meta 'help'    *                               -> Help
 		puzzle, and you should try to get it unlocked.^^";
 	print (ESB) "Try out all your senses.  ", "If the game mentions an interesting
 		texture, odor, or sound, try SMELLing, TOUCHing, LISTENing, etc.^^";
-	print (ESB) "Be thorough.  ", "If you *still* can't figure out what to do, try opening
-		windows, looking under beds, etc.  Sometimes objects are well-hidden.^^";
 	print (ESB) "Reread.  ", "Look back at things you've already seen; sometimes this will
 		trigger an idea you hadn't thought of.^^";
-	if (ES_Pause()) jump end;
-	print (ESB) "Take hints from the prose of the game.  ",
+	print (ESB) "Take hints from the prose.  ",
 		"Things that are described in great
 		detail are probably more important than things that are given one-liners.
-		Play with those objects.  If a machine is described as having component
-		parts, look at the parts, and try manipulating them.   Likewise, notice
-		the verbs that the game itself uses.  Try using those yourself.  Games
-		often include special verbs -- the names of magic spells, or other special
-		commands.  There's no harm in attempting something if the game mentions
-		it.^^";
-	print (ESB) "Rephrase.  ",
-		"If you have something in mind that you want to do, but can't
-		get the game to respond, try alternative wordings.  Often synonyms are
-		provided.  Game designers usually try to anticipate all the synonyms you
-		are likely to come up with, but they may not have thought of yours.^^";
-	if (ES_Pause()) jump end;
-	print (ESB) "Try variations.  ",
-		"Sometimes an action doesn't work, but *does* produce some
-		kind of unusual result.  These are often indications that you're on the
-		right track, even if you haven't figured out quite the right approach
-		yet.  Pressing the red button alone may only cause a grinding noise from
-		inside the wall, so perhaps pressing the blue and *then* the red will open
-		the secret door.^^";
-	print (ESB) "Try to understand the game's internal logic.  ",
-		"Sometimes there is a system
-		in play that does not operate in the normal world -- a kind of magic, for
-		instance, or technology we don't have on modern-day earth.  If you've been
-		introduced to such a system in the game, ask yourself how you might apply
-		it to the situations that are still causing you problems.^^";
-	if (ES_Pause()) jump end;
-	print (ESB) "Check the *whole* screen.  ",
-		"Are there extra windows besides the main
-		window?  What's going on in those?  Check out the status bar, if there is
-		one -- it may contain the name of the room you're in, your score, the time
-		of day, your character's state of health, or some other important
-		information.  If there's something up there, it's worth paying attention
-		to that, too.  When and where does it change?  Why is it significant?  If
-		the bar is describing your character's health, you can bet there is
-		probably a point at which that will be important.^^";
+		Play with those things.  If there is a hole, or container, look inside it.^^";
 	print (ESB) "Consider the genre of the game.  ",
 		"Mysteries, romances, and thrillers all
 		have their own types of action and motivation.  What are you trying to do,
 		and how do conventional characters go about doing that?  What's the right
 		sort of behavior for a detective/romance heroine/spy?^^";
-	if (ES_Pause()) jump end;
 	print (ESB) "Play with someone else.  ", "Two heads are usually better than one.^^";
-	print (ESB) "Try typing HINT, HELP, INFO, ABOUT: ", "one or more of these are often
-		implemented as a source of suggestions about how to get past difficult
-		spots.  If that doesn't work, try emailing the author or (better yet)
-		posting a request for hints on the newsgroup rec.games.int-fiction.  For
-		best results, put the name of the game you want help with in the subject
-		line; then leave a page or so of blank ~spoiler space~ (so that no one
-		will read about where you got to in the game unless they've already played
-		it), and describe your problem as clearly as possible.  Someone will
-		probably be able to tell you how to get around it.^^";
-	if (ES_Pause()) jump end;
-
-	print (ESB) "Email the author: ",
-		"If you're stuck somewhere that just makes no sense at all, it's possible
-		that you're facing a bug.  If you think you are, you should email the
-		author (politely) to report the problem and ask for a way around it.^";
-	.end;
+	print (ESB) "As a last resort.  ", "If you are stuck and don't know how to
+	progress the story, you can ask Dr Hint by typing HINT.^^";
 	"Good luck!^^";
 ];
 
@@ -1143,10 +1089,6 @@ Verb meta 'help'    *                               -> Help
 	print "Command them to do something.^";
 	print (ESB) ">TINY TIM, PUT THE UKELELE ON THE TABLE^";
 	print (ESB) ">TIN MAN, GET UP. CARRY US^^";
-	print "FREDDY, HELLO is not an actual command, but is phrased like one. (Note that not
-		all games implement this command, but it's worth knowing about just in case.)
-		Notice that you can give characters more than one command on a line. Most
-		characters will be less than responsive to commands.^";
 ];
 
 [ MenuNPC;
@@ -1243,3 +1185,6 @@ Verb meta 'help'    *                               -> Help
 		Guide just mentioned, or at Baf's Guide to Interactive Fiction, 
 		http://www.wurb.com/if/index.";
 ];
+
+Verb meta 'about' * -> About;
+Verb meta 'credits' = 'about';
