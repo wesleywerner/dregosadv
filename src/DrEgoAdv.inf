@@ -2473,6 +2473,9 @@ with
         
         ! Look in directions
         Examine:
+            if (noun in compass && lodestar notin player) {
+                <Take lodestar>;
+            }
             if (noun == ne_obj) {
                 Clearing.ne_to = valley_way;
                 move valley_way to Clearing;
