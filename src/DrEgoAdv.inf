@@ -58,10 +58,10 @@ Statusline time;
 ! Use task-based scoring - as listed in doc.md
 Constant TASKS_PROVIDED;
 Constant NUMBER_TASKS = 9;
-Constant MAX_SCORE = 9;
+Constant MAX_SCORE = 108;
 
 ! List of points for each task completed via the `Achieved` keyword.
-Array task_scores -> 1 1 1 1 1 1 1 1 1;
+Array task_scores -> 1 1 1 1 1 1 100 1 1;
 
 ! List of score achievement indices
 Constant SCORE_USE_COMPASS = 0;
@@ -70,7 +70,7 @@ Constant SCORE_WHIP_THE_BANANA = 2;
 Constant SCORE_RESCUE_COMPASS = 3;
 Constant SCORE_CRAFT_TORCH = 4;
 Constant SCORE_FIND_ALCOVE = 5;
-Constant SCORE_NO_DARTS = 6;
+Constant SCORE_TREASURE = 6;
 Constant SCORE_FISHING = 7;
 Constant SCORE_BRIBERY = 8;
 
@@ -83,7 +83,7 @@ Constant SCORE_BRIBERY = 8;
         SCORE_RESCUE_COMPASS: "Rescue your compass from the monkey";
         SCORE_CRAFT_TORCH: "Craft a torch";
         SCORE_FIND_ALCOVE: "Find the alcove behind the waterfall";
-        SCORE_NO_DARTS: "Avoid the poison dart trap";
+        SCORE_TREASURE: "Get the treasure";
         SCORE_FISHING: "Catch a fish with your whip";
         SCORE_BRIBERY: "Trade with the Carver";
     }
@@ -132,6 +132,7 @@ Attribute curious;
 Attribute is_torch;
 Attribute wet;
 Attribute oily;
+Attribute examined;
 
 ! [ ================================================================= Routines ]
 
@@ -338,12 +339,11 @@ Class EssentialObject
 ! the first time.
 Class ScenicBase
 with
-    examined false,
     description_lead "",
     before [;
         Examine:
-            if (~~self.examined) {
-                self.examined = true;
+            if (~~self has examined) {
+                give self examined;
                 print (string) self.description_lead;
             }
     ],
@@ -826,17 +826,18 @@ with
 
 ! The prized treasure you are looking for.
 EssentialObject golden_egg "Golden Egg of Man-Toomba"
-    with
-        article "the",
-        name 'gold' 'golden' 'egg',
-        description "It shimmers with golden light.",
-        after [;
-            Take:
-                if (~~self has moved)
-                    Achieved(SCORE_NO_DARTS);
-                    print_ret "You lift ", (the) self, " carefully from it's
-                    resting place.";
-        ];
+with
+    article "the",
+    name 'gold' 'golden' 'egg',
+    description "It shimmers with golden light.",
+    after [;
+        Take:
+            if (~~self has moved) {
+                print_ret "You lift ", (the) self, " carefully from it's
+                resting place.";
+            }
+    ],
+    has concealed;
 
 !
 EssentialObject journal "journal"
@@ -894,6 +895,9 @@ EssentialObject journal "journal"
             
             if (w1=='mannaz' || w1=='ehwaz' || w1=='gebo' || w1=='peorth')
                 context = 'Glyphs';
+            
+            if (w1=='Sowilu' || w2=='Sowilu')
+                context = 'Sowilu';
                 
             if ((parent(boatman)==parent(player)) && 
                 (w1=='canoe' || w1=='boat' || w1=='craft'))
@@ -983,6 +987,20 @@ EssentialObject journal "journal"
                 covet the shimmering artifact. The Egg is said to be crafted
                 from gold and is the size of a fist.
                 See ~Treasure~.";
+                
+                'Sowilu':
+                print "You leaf through your journal and find this entry:
+                ~Sowilu is the rune for the sun, and because of its symbolic
+                power, it is rumored that the treasure can only be unlocked with
+                a key of the sun~.^";
+                if (~~sun_drawing has moved) {
+                    move sun_drawing to player;
+                    sun_key_hole.short_name = "keyhole";
+                    "^On the opposite page is a pencil drawing of the key,
+                    you remove the drawing from your journal and compare it to
+                    the hole - A perfect fit - It would appear that is a 
+                    keyhole.";
+                }
                 
                 'Ask Rom':
                 print "You rifle through the pages without luck, you decide to
@@ -1248,14 +1266,28 @@ with
 Object sun_key "sun key"
 with
     name 'sun' 'key',
-    description "It is a replica carving of the sun key that you had
-    drawn in your journal.";
+    description "It is a replica carving of the sun key that you had 
+    in your journal. The quality of workmanship is superb.",
+    before [;
+        Turn:
+            if (self in sun_key_hole) {
+                if (stone_altar in location) {
+                    "It does not want to turn any more.";
+                }
+                stone_column.lower();
+                return true;
+            } else {
+                "You turn the key around in your hands, it is a fine piece of
+                work indeed.";
+            }
+    ];
 
 Object sun_drawing "drawing of the sun key"
 with
     name 'drawing' 'page',
     description "It is a drawing of a key, which resembles a large flat amulet
-    in the shape of a sun, the beams are the teeth of the key.";
+    in the shape of a sun, the beams are fashioned to serve as the 
+    teeth of the key.";
 
 ! A bone that can be made into a torch.
 TorchBaseObject torch_of_bone "bone"
@@ -2401,9 +2433,21 @@ with
 ! [ --------------------------------------------------------------------- Tomb ]
 IndoorRoom Tomb "Underground Tomb"
 with
-    description "You are in a small dark room, engravings on the walls dance
-    under the flicker of your torch.",
-    u_to tomb_stairs;
+    description "The room is small yet crammed with all manner of artifacts,
+    there are clay pots stacked in every corner, wood and stone idols stand
+    guard between the pots. The engravings on the walls dance under the flicker
+    of your torch.",
+    u_to tomb_stairs,
+    before [;
+        Examine:
+            if (noun == u_obj) {
+                "You see a wall of stone above you.";
+            }
+            else if (noun == d_obj) {
+                print "You notice the hole in the floor. ";
+                <<Examine sun_key_hole>>;
+            }
+    ];
 
 ScenicEngravingObject "glyphs" Tomb
 with
@@ -2413,13 +2457,88 @@ with
     description "The engravings cover all of the walls, you recognize some as
     mannaz, ehwaz, gebo, peorth.";
 
-ScenicRockObject stone_altar "altar" Tomb
+ScenicRockObject stone_column "stone column"
+with
+    name 'stone' 'column',
+    initial [;
+        print "A stone column stands in the center of the room";
+        if (sun_key_hole has examined) {
+            print ", a ", (name) sun_key_hole, " in the floor next to it";
+        }
+        ".";
+    ],
+    description [;
+        print "The column is round and carved out of stone, ";
+        if (self.height == 5) {
+            print " it reaches from floor to ceiling. ";
+        } else {
+            print " it reaches up from the floor toward the ceiling. ";
+        }
+        if (~~sun_key_hole has examined) {
+            print "Your keen eye notices a small and peculiar hole in the floor
+            next to it. ";
+        }
+        "";
+    ],
+    found_in Tomb,
+    ! The height of the column reduces until zero
+    height 5,
+    ! lower the column by one unit
+    lower [;
+        if (self.height == 0) {
+            "Nothing happens.";
+        }
+        if (--self.height == 0) {
+            remove self;
+            move stone_altar to location;
+            "A low thud echoes through the ground as the column comes to a rest.";
+        }
+        "The column lowers into the ground with the sound of grinding stone.";
+    ],
+    before [;
+        Climb, Enter:
+            "It is too smooth on all sides to get a grip.";
+    ],
+    has ~scenery;
+
+ScenicRockObject sun_key_hole
+with
+    name 'hole' 'keyhole',
+    short_name "strange hole",
+    found_in Tomb,
+    before [;
+        Examine:
+            if (~~self has examined) {
+                give self examined;
+                self.short_name = "sun-shaped hole";
+            }
+            "The shallow hole is no more than a fist deep and a hand wide, it 
+            has been carved out of the stone floor, and is in the shape of a
+            sun.";
+        Search:
+            if (~~sun_key in sun_key_hole) {
+                "You peer into the hole and see a glyph engraved in the bottom,
+                and recognize it as Sowilu.";
+            }
+        Insert:
+            "That does not fit in the keyhole.";
+    ],
+    has scenery container open;
+
+ScenicRockObject stone_altar "altar"
 with
     name 'altar',
-    initial "There is an altar in the center of the room.",
-    description "The altar is made of stone and wood, it is fixed to the floor
-    and extrudes up to the height of your chest. The top surface is a wooden
-    plate inset into the stone base.",
+    initial [;
+        print "A stone altar is here in the room, ";
+        if (golden_egg in self) {
+            print_ret (the) golden_egg, " sits attractively on top of it!";
+        }
+        if (stone_egg in self) {
+            print_ret (the) stone_egg, " on top of it.";
+        }
+    ],
+    description "The stone altar extrudes up from the floor, its top surface
+    reaches up to your chest, there is a wooden plate inset into the top.",
     each_turn [n is_weighted;
         is_weighted = false;
         objectloop (n in self) {
@@ -2430,9 +2549,13 @@ with
             deadflag = 1;
             "^The weight lifted from the altar triggers a pressure plate booby
             trap, tens of tiny poisoned darts shoot out from holes hidden in the
-            runed walls. You slump to the floor paralized, never to wake up
+            runed walls. You slump to the floor paralyzed, never to wake up
             again.";
-    }
+        } else {
+            if (golden_egg in player) {
+                Achieved(SCORE_TREASURE);
+            }
+        }
     ],
     has ~scenery supporter;
 
@@ -2934,4 +3057,5 @@ Verb 'whip' * noun -> Whip;
     }
 ];
 Verb 'notes'     * 'on' topic   -> Notes
+                 * 'about' topic-> Notes
                  * topic        -> Notes;

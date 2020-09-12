@@ -190,14 +190,13 @@ _Implemented. Tested in `pressure_plate_trap.spec`_
 * How: put the stone on the altar
 * Where: Temple (stone egg), Tomb (altar)
 
-#### Unlocking the Altar -- WIP
+#### Unlocking the Altar
 
-_Not Implemented._
+_Implemented. Tested in `pressure_plate_trap`_
 
-The stone altar is initially out of view and resembles a stone column from floor-to-ceiling. To reveal it the player has to insert a gear-like key and turn it a few times, lowering the column which turns it into the altar, revealing the treasure on top.
+The stone altar is initially out of view and resembles a stone column. To lower the column and turn it into an altar, the player has to insert the sun key into the key hole and turn it a few times, lowering the column which turns it into the altar, revealing the treasure on top.
 
-Interlocking pieces make up the key that fits in a hole inside the tomb. The key resembles a large flat amulet in the shape of a sun, the beams fashioned to resemble the teeth of a key.
-
+The key resembles a large flat amulet in the shape of a sun, the beams fashioned to resemble the teeth of a key.
 
 * Why: To reveal the treasure
 * What: The sun key
@@ -237,12 +236,12 @@ Using the task scoring system, these tasks are Achievable. See the `task_scores`
 - SCORE_RESCUE_COMPASS: Rescue your compass from the monkey (puzzle)
 - SCORE_CRAFT_TORCH: Craft a torch (puzzle)
 - SCORE_FIND_ALCOVE: Find the alcove behind the waterfall (puzzle)
-- SCORE_NO_DARTS: Avoid the poison dart trap (puzzle)
+- SCORE_TREASURE: Get the treasure (puzzle)
 - SCORE_FISHING: Catch a fish with your whip (amusing)
 - SCORE_BRIBERY: Trade with the Carver (puzzle)
 
 # TODO
-* Add HELP, ABOUT, HINT
+* Add ABOUT, HINT
 * Optimize entry descriptions for all rooms
 * Fill the journal with notes
 * Use or Remove ScenicBase?
@@ -255,6 +254,9 @@ Using the task scoring system, these tasks are Achievable. See the `task_scores`
 * Add worn items: a shoulder bag, a fedora hat, a leather jacket.
 * Add more things you can Show to Rom.
 * Add SCORE to the help topics.
+* Quotes in journal entries.
+* Rewrite parser responses and PC feedback in the first person?
+* Map with IFM.
 
 ### Done
 * Add task based scoring - DM$ $22
