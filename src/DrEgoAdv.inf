@@ -2138,7 +2138,8 @@ with
             }
         Take:
             if (noun == rope_bridge) {
-                print_ret "You try grabbing at the bridge but you are too slow.";
+                print_ret "You are off balance and the rope is just out of your
+                reach!";
             }
         Jump, JumpOver:
             print_ret "A rope bridge is a terrible place to decide to start jumping.";
@@ -2149,7 +2150,13 @@ with
             you lose your balance!^";
         }
         if (self.turn_count == 1) {
-            print "You teeter the other way -- You are about to fall!^";
+            if (fedora_hat in player) {
+                print "Teetering the other way, your fedora tumbles into the
+                gorge below -- You are about to fall!^";
+                remove fedora_hat;
+            } else {
+                print "You teeter the other way -- You are about to fall!^";
+            }
         }
         if (self.turn_count == 2) {
             deadflag = 1;
