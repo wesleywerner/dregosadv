@@ -401,13 +401,26 @@ with
 ! A door that is listed in the room description.
 Class DoorWay
 with
+    ! Some ways are visible and it is obvious what lies there, so always
+    ! print the door name.
+    obvious_way false,
     initial [;
         if (self.door_dir() == u_to) {
             print (A) self, " leads upward. ";
         } else if (self.door_dir() == d_to) {
             print (A) self, " leads downward. ";
         } else {
-            print (A) self, " is due ", (name) self.door_dir(), ". ";
+            ! If the way was visited, or if it obvious what lies that way, print the door's name
+            if (self.obvious_way || self.door_to() has visited) {
+                print (A) self, " is due ", (name) self.door_dir(), ". ";
+            ! If the way hasnt visited, print a nameless exit
+            } else {
+                if (location ofclass JungleRoom) {
+                    print "There is a path to the ", (name) self.door_dir(), ". ";
+                } else {
+                    print "There is an exit to the ", (name) self.door_dir(), ". ";
+                }
+            }
         }
     ],
     before [;
@@ -2236,7 +2249,7 @@ with
 
 ScenicPlantObject "vegetable plants" Garden
 with
-    name 'veg' 'veggie' 'veggies//p' 'vegetable' 'vegetables//p' 'plant' 'plants//p',
+    name 'veg' 'veggie' 'veggies' 'vegetable' 'vegetables' 'plant' 'plants',
     description [;
         print "The vegetable plants in the garden have grown wild without
         anybody around to harvest them. ";
@@ -2622,7 +2635,7 @@ with
 
 ScenicRockObject stone_altar "altar"
 with
-    name 'altar',
+    name 'stone' 'altar' 'column',
     initial [;
         print "A stone altar is here in the room, ";
         if (golden_egg in self) {
@@ -2686,7 +2699,7 @@ with
 
 ScenicBase statuettes "carvings"
 with 
-    name 'wood' 'wooden' 'statuettes' 'figurines' 'carvings',
+    name 'wood' 'wooden' 'statuettes' 'figurines' 'carving' 'carvings',
     description_lead "The wooden figurines are all lined up neatly. ",
     description "They depict several deities and animals.",
     found_in Tribe,
@@ -2844,6 +2857,7 @@ with
     description "From this distance, the walls of the small structure seem to be
     made of clay and mud, there is no roof and the general appearance of the hut
     gives the impression that its abandoned.",
+    obvious_way true,
     found_in Clearing Garden,
     door_to Bungalow,
     door_dir [;
@@ -2930,6 +2944,7 @@ DoorWay bridge_way "rope bridge"
 with
     name 'rope' 'bridge',
     description "The bridge is made from plait ropes.",
+    obvious_way true,
     found_in Cliff Waterfall,
     door_to [;
         if (player has burdened) {
@@ -2987,6 +3002,7 @@ with
             print "The temple is too far to see from here.^";
         }
     ],
+    obvious_way true,
     found_in [;
         if (location == Waterfall) return Waterfall;
         ! Only in the JunglePath if the Temple has been visited
