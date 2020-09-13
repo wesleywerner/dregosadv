@@ -334,7 +334,11 @@ Class NotYourPropertyObject
 Class EssentialObject
     with
         article "your",
+        takenFromBag,
         before [;
+            Take:
+                ! print custom message taking things from your satchel
+                self.takenFromBag = self in satchel;
             Examine:
                 if (self in satchel) {
                     <Take self>;
@@ -349,6 +353,13 @@ Class EssentialObject
                             (a) noun, " behind.";
             Taste, Eat:
                 print_ret (A) noun, " is not food.";
+        ],
+        after [;
+            Take:
+                if (self.takenFromBag) {
+                  self.takenFromBag = false;
+                  "You take ", (a) self, " from ", (a) satchel, ".";
+                }
         ];
 
 ! Provides a feature to print additional text when a scenic item is examined
@@ -1187,12 +1198,6 @@ EssentialObject satchel "satchel"
 with
     name 'bag' 'satchel',
     description "This is your brown shoulder bag.",
-    after [;
-        LetGo:
-            if (noun) {
-                "You take ", (the) noun, " from your satchel.";
-            }
-    ],
     has container open clothing worn;
 
 ! The sky is visible in all outdoor areas.
@@ -1548,12 +1553,16 @@ with
             monkey_speak(random(10));
             print_ret "";
         Give:
-            if (noun ofclass EssentialObject)
-                print_ret "There is no way are you giving ", (a) noun, 
+            if (noun ofclass EdibleFruitObject) {
+                "The creature smacks its lips at the sight of ", (the) noun, 
+                ", but hesitates to go near you.";
+            }
+            if (noun ofclass EssentialObject) {
+                "There is no way are you giving ", (a) noun, 
                 " to ", (the) self, "!";
-            else
-                print_ret "You offer ", (the) noun, " to the small critter, 
-                it pretends to ignore your good gesture.";
+            }
+            "You offer ", (the) noun, " to the small critter, it couldn't be
+            less interested.";
         Show:
             if (noun ofclass EdibleFruitObject)
                 print_ret "The small monkey head swivels side-to-side as you
@@ -2473,7 +2482,7 @@ with
         
         ! Look in directions
         Examine:
-            if (noun in compass && lodestar notin player) {
+            if (noun in compass && lodestar notin player && lodestar in satchel) {
                 <Take lodestar>;
             }
             if (noun == ne_obj) {
