@@ -137,6 +137,7 @@ Attribute is_torch;
 Attribute wet;
 Attribute oily;
 Attribute examined;
+Attribute burdened;
 
 ! [ ================================================================= Routines ]
 
@@ -1197,6 +1198,13 @@ EssentialObject satchel "satchel"
 with
     name 'bag' 'satchel',
     description "This is your brown shoulder bag.",
+    before [;
+        Receive:
+            if (noun ofclass WeightedObject) {
+                print (The) noun, " is too heavy for you satchel.^";
+                return true;
+            }
+    ],
     has container open clothing worn;
 
 ! The sky is visible in all outdoor areas.
@@ -1307,7 +1315,21 @@ WeightedObject stone_egg "stone egg"
 with 
     name 'stone' 'egg',
     description "The stone is carved in the shape of an egg, it is the size of a
-    head.";
+    head.",
+    !after [;
+    !    Take:
+    !        give player burdened;
+    !    Drop:
+    !        give player ~burdened;
+    !],
+    each_turn [;
+        if (self in player) {
+            give player burdened;
+            "You lug the stone with you.";
+        } else {
+            give player ~burdened;
+        }
+    ];
 
 Object sun_key "sun key"
 with
@@ -2112,6 +2134,9 @@ with
         ! Describe climbing up the tree
         Go:
             if (noun == u_obj) {
+                if (player has burdened) {
+                    "Not while carrying that heavy stone.";
+                }
                 print "You climb up the strong branches of the fig tree.^";
             }
     ];
@@ -2915,6 +2940,9 @@ with
     description "The bridge is made from plait ropes.",
     found_in Cliff Waterfall,
     door_to [;
+        if (player has burdened) {
+            "Not while carrying that heavy stone.";
+        }
         ! Random chance of falling down.
         ! We limit this deadly action to only occur once.
         ! To allows this to happen repeatedly uncomment the "Reset puzzle state"

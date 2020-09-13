@@ -1,5 +1,5 @@
 superbrief
-purloin wizard wand, sun key, stone egg
+purloin wizard wand, sun key
 gonear tomb portal
 x column
 x hole
@@ -19,5 +19,6 @@ again
 look
 take golden egg
 undo
+purloin stone egg
 put stone on altar
 take golden egg
