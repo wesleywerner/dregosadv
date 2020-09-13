@@ -242,6 +242,7 @@ Using the task scoring system, these tasks are Achievable. See the `task_scores`
 
 # TODO
 * Add ABOUT, HINT
+* Dropping things while atop the tree should move them to the ground.
 * Make the stone egg large and heavy, you lug it around?
 * Try get oil on inventory items, and examining oily things descriptions
 * Change the win condition to when you get in the canoe with the treasure
@@ -252,6 +253,7 @@ Using the task scoring system, these tasks are Achievable. See the `task_scores`
 * Fill the journal with notes
 * Quotes in journal entries.
 * Optimize entry descriptions for all rooms
+* Drop oil covers everything.
 * Rewrite parser responses and PC feedback in the first person?
 * Map with IFM.
 

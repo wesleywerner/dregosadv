@@ -819,8 +819,7 @@ with
         ],
     found_in [;
         ! Only visible when the player has crafted the torch
-        if (GetPlayerTorchObject())
-            return Waterfall;
+        return (location == Waterfall && GetPlayerTorchObject());
     ],
     before [;
         Use:
@@ -1952,7 +1951,12 @@ with
 HumanNPC carver "carver"
 with 
     name 'man' 'carver',
-    initial "A man sits nearby, carving a piece of wood.",
+    initial [;
+        if (self.carving_state == 1) {
+            "The carver gestures at you for the drawing. ";
+        }
+        "A man sits nearby, carving a piece of wood. ";
+    ],
     description [;
         if (self.carving_state == 0 || self.carving_state == 50)
             "He is busy carving a rough piece of dry wood using a knife and
@@ -2396,7 +2400,7 @@ with
 
     has light;
 
-ScenicEngravingObject "glyphs" Temple
+ScenicEngravingObject temple_glyphs "glyphs" Temple
 with
     name 'glyph' 'glyphs' 'symbol' 'symbols' 'wall' 'walls',
     description "The engravings cover all of the walls. Your attention
@@ -2639,7 +2643,7 @@ with
             !fishing nets and ropes, some are tending to a firepit while others
             !prepare pumpkins, tubers and fish. ";
             <Examine natives>;
-            print "They don't seem to mind your presence as continue with
+            print "They don't seem to mind your presence, and they carry on with
             their chores. ";
         }
     ],
@@ -2654,8 +2658,8 @@ with
 ScenicBase firepit "firepit"
 with
     name 'fire' 'pit' 'firepit',
-    description "A pit dug into the ground in which a fire is burning.",
-    description_lead "Some of the people are tending to the fire",
+    description "It is a pit dug in the ground, a fire is burning within.",
+    description_lead "Some of the people are tending to the fire. ",
     found_in Tribe;
 
 ScenicBase statuettes "carvings"
@@ -3030,7 +3034,7 @@ Extend 	'climb'		* 'up'/'down' noun				 -> GoUpDownNoun;
 ! Print help when trying to "talk to noun"
 [ TalkToNounHelpSub;
     print "Conversations have two forms: asking someone something, and telling something.
-    You can ASK ", (the) noun, " ABOUT SOMETHING, or SAY SOMETHING.";
+    You can ASK ", (the) noun, " ABOUT SOMETHING, or SAY SOMETHING. ";
 ];
 Verb    'talk'      * 'to' noun                     -> TalkToNounHelp;
 
@@ -3058,7 +3062,10 @@ Verb    'use'       * noun                          -> Use;
 ! Provides a "Dip" synonym for inserting things.
 ! Note that dipping implies insert something into the *parent* of the thing.
 [ DipSub;
-    <<Insert noun parent(second)>>;
+    if (second ofclass TorchFuelObject)
+        <<Insert noun parent(second)>>;
+    else
+        <<Insert noun second>>;
 ];
 Verb    'dip'       * noun 'in'/'into' noun         -> Dip;
 
