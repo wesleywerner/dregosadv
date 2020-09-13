@@ -644,7 +644,7 @@ with
     initial [;
         print (A) boatman, " sits in the canoe gazing out over the
         moving river, the salty water gently lapping the sides of his
-        craft.";
+        craft.^";
     ],
 
     description "The canoe is built from a hollowed-out log and wooden planks, 
@@ -653,7 +653,6 @@ with
     A fishing spear and net are in the boat.",
     
     before [;
-
         ! Prevent the player from exiting the craft before it has shored.
         Go, Exit:
             if (parent(canoe) == River) {
@@ -661,14 +660,21 @@ with
                         (the) boatman, " says with a wide grin.^";
                 return 2;
             }
-
-        ! Prevent the player from re-entering the craft.
+    ],
+    
+    after [;
         Enter:
-            if (player in canoe)
-                print_ret "Did you forget, you are already in the canoe.";
-            else
-                print_ret "You just got out, and you are eager to start
-                            looking for ", (the) golden_egg, ".";
+            ! Win condition
+            if (golden_egg in player) {
+                deadflag = 2;
+                print "^Rom's eyes light up when you show him ", (the)
+                golden_egg, ". You spend the boat ride, back to the landing
+                area, telling him of your adventure. ";
+                if (fish in canoe) print "That evening ", (a) boatman, " prepares 
+                the fish you caught, with a side of yam. ";
+                print "^^You spend the next week cataloguing the precious artifact,
+                before you donate ", (the) golden_egg, " to the archeology museum.";
+            }
     ],
 
     ! Print flavor text during the trip in the canoe
@@ -2356,20 +2362,6 @@ with
     n_to jungle_path_way,
     cant_go "That is the wrong way to get to the treasured artifact.",
     
-    each_turn [;
-        ! Win condition
-        if (golden_egg in player) {
-            deadflag = 2;
-            print "^Your guide's eyes light up as you show ", (the) golden_egg, " to
-            him, you get in ", (the) canoe, " and spend the journey 
-            telling him of your adventure. ";
-            if (fish in canoe) print "That evening ", (a) boatman, " prepares 
-            the fish you caught, you both enjoy it. ";
-            print "^^You spend the next week cataloguing the precious artifact,
-            before you donate ", (the) golden_egg, " to the archeology museum.";
-        }
-    ],
-
     before [;
         ! Senses
         Examine:
