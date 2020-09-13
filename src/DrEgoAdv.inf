@@ -3018,6 +3018,7 @@ Object debugger_wand "Wizard's Wand" with name 'wizard' 'wand' has light;
 ! [ ================================================================== Grammar ]
 
 Include "DrHelpRoutines";
+Include "DrHints";
 Include "Grammar";
 
 ! [ Extend Grammar ----------------------------------------------------------  ]
