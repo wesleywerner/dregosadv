@@ -45,7 +45,9 @@ with
                 1: HintPrint("perhaps you could distract it with something else...");
                 2: HintPrint("maybe something edible will distract it...");
                 3: HintPrint("I hear they are fond of bananas...");
-                default: HintPrint("look for a banana in the garden, outside the bungalow.");
+                4: HintPrint("find the garden, near the bungalow...");
+                5: HintPrint("your whip may be useful to get the fruit...");
+                default: HintPrint("Whip the banana tree.");
             }
         }
         if (banana in player) {
@@ -66,9 +68,6 @@ with
             3: HintPrint("you could try climbing up something...");
             default: "climb up the fig tree and LOOK in all directions.";
         }
-    }
-    if (Clearing has visited && Valley hasnt visited) {
-        HintPrint("You should try go the way which you saw from the tree-top.");
     }
     ! Finding the alcove behind the waterfall
     if (Temple has visited && alcove_door notin Waterfall) {
