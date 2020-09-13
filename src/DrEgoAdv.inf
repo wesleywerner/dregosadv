@@ -2461,13 +2461,12 @@ with
             print "You climb up the tree, as high as safely possible, and spend
             a moment to take in the view. ";
         }
-        print "You can see in all directions from this high up.";
+        "You can see in all directions from this high up. ";
     ],
     cant_go "The only way is down.",
     d_to Clearing,
     
     before [;
-    
         Go:
             if (noun == d_obj && lodestar in player && ~~lodestar.has_dropped) {
                 print "^As you descend you drop ", (a) lodestar, 
@@ -2501,6 +2500,12 @@ with
             ! else the Examine intercept will catch examining nouns too.
             if (noun ofclass CompassDirection)
                 print_ret "Only more jungle to ", (a) noun ;
+    ],
+    
+    after [;
+        Drop:
+            move noun to Clearing;
+            print_ret (The) noun, " falls down below.";
     ];
 
 ! [ --------------------------------------------------------------------- Tomb ]

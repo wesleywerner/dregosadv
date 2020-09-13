@@ -242,7 +242,6 @@ Using the task scoring system, these tasks are Achievable. See the `task_scores`
 
 # TODO
 * Add ABOUT
-* Dropping things while atop the tree should move them to the ground.
 * Make the stone egg large and heavy, you lug it around?
 * Try get oil on inventory items, and examining oily things descriptions
 * Change the win condition to when you get in the canoe with the treasure
