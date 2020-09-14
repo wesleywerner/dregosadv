@@ -602,25 +602,6 @@ with
             }
     ];
 
-! A substance that acts as fuel for a torch.
-Class TorchFuelObject
-with
-    before [;
-        Take:
-            "You'd rather keep ", (the) self, " in it's container.";
-    ],
-    each_turn [n ;
-        ! cover other objects in oil if they are in the same parent as us
-        objectloop(n in parent(self)) {
-            if (n ~= self && n hasnt oily) {
-                give n oily;
-                print (The) n, " is now covered in a film of oil.";
-                if (n ofclass TorchBaseObject) Achieved(SCORE_CRAFT_TORCH);
-                if (~~n ofclass TorchBaseObject) print " This is a fine mess.";
-            }
-        }
-    ];
-
 Class WeightedObject;
 
 ! [ ================================================================== Objects ]
@@ -2500,14 +2481,36 @@ with
 Object urn "urn"
 with
     name 'urn',
-    description "A clay vessel.",
+    description "It is a clay vessel resembling an urn. ",
+    when_open "The urn is open, an oil substance inside it. ",
+    before [;
+        LetGo:
+            if (noun == urn_oil) move urn_oil to urn;
+    ],
+    after [;
+        Receive:
+            if (noun hasnt oily) {
+                give noun oily;
+                if (noun ofclass TorchBaseObject) {
+                    Achieved(SCORE_CRAFT_TORCH);
+                }
+                print_ret "You put ", (the) noun, " in the urn, it is now
+                covered in oil. ";
+            }
+    ],
     has container openable;
 
-TorchFuelObject "oil" urn 
+Object urn_oil "oil" urn 
 with 
     name 'oil',
     article "some",
-    description "You are not sure what this was used for, but it distinctly oily.";
+    description "You are not sure what this was used for, but it distinctly
+    oily.",
+    before [;
+        Take, Drop:
+            move self to urn;
+            print_ret "You would rather keep it in the urn. ";
+    ];
 
 ! [ -------------------------------------------------------------- Top Of Tree ]
 OutdoorRoom TreeTop "Top of Tree"
@@ -3128,10 +3131,10 @@ Verb    'use'       * noun                          -> Use;
 ! Provides a "Dip" synonym for inserting things.
 ! Note that dipping implies insert something into the *parent* of the thing.
 [ DipSub;
-    if (second ofclass TorchFuelObject)
-        <<Insert noun parent(second)>>;
-    else
+    if (second has container)
         <<Insert noun second>>;
+    else
+        <<Insert noun parent(second)>>;
 ];
 Verb    'dip'       * noun 'in'/'into' noun         -> Dip;
 

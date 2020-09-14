@@ -248,8 +248,6 @@ Using the task scoring system, these tasks are Achievable. See the `task_scores`
 * Fill the journal with notes
 * Quotes in journal entries.
 * Optimize entry descriptions for all rooms
-* Try get oil on inventory items, and examining oily things descriptions
-* Drop oil covers everything.
 * Rewrite parser responses and PC feedback in the first person?
 * Map with IFM.
 
