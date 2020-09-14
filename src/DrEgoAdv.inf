@@ -110,6 +110,15 @@ Include "Parser";
 ! Override default library messages. See DM4 $25 and $A4.
 Object LibraryMessages
 with before [;
+    Take:
+        ! lm_n holds the message number, 1 is "Taken".
+        ! lm_o holds the object in question.
+        ! EssentialObject provides takenFromBag which is set true
+        ! if the item is in the satchel before taking.
+        if (lm_n == 1 && lm_o provides takenFromBag && lm_o.takenFromBag) {
+            lm_o.takenFromBag = false;
+            "You take ", (a) lm_o, " from your satchel. ";
+        }
     Miscellany:
         ! code 50 is the score message.
         ! lm_o contains the number of points scored.
@@ -125,7 +134,9 @@ with before [;
             }
             rtrue;
         }
-];
+    ],
+    after [;
+    ];
 
 Include "VerbLib";
 
@@ -378,7 +389,7 @@ Class EssentialObject
         takenFromBag,
         before [;
             Take:
-                ! print custom message taking things from your satchel
+                ! Remember that this item came from your satchel
                 self.takenFromBag = self in satchel;
             Examine:
                 if (self in satchel) {
@@ -394,13 +405,6 @@ Class EssentialObject
                             (a) noun, " behind.";
             Taste, Eat:
                 print_ret (A) noun, " is not food.";
-        ],
-        after [;
-            Take:
-                if (self.takenFromBag) {
-                  self.takenFromBag = false;
-                  "You take ", (a) self, " from ", (a) satchel, ".";
-                }
         ];
 
 ! Provides a feature to print additional text when a scenic item is examined
