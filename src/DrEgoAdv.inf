@@ -1138,12 +1138,8 @@ with
                 print (A) self, " helps you navigate while in the jungle.^";
         }
 
-        ! The boatman notices your action.
-        if (player in canoe && boatman.noticed_compass == false) {
-            boatman.noticed_compass = true;
-            print "^", (A) boatman, " notices ", (a) self, " -- ~My father
-                        had one just like that~ he says.^";
-        }
+        ! In the presence of the boatman
+        boatman.notice_lodestar();
         
         ! The monkey notices your action
         if (monkey_in_view()) {
@@ -1845,6 +1841,16 @@ HumanNPC boatman
                 print "Perhaps you should SAY HI.";
             }
         ],
+        
+        notice_lodestar [;
+            if (TestScope(self, player)) {
+                if (boatman.noticed_compass == false) {
+                    boatman.noticed_compass = true;
+                    print "^", (A) self, " notices ", (a) lodestar, " -- ";
+                }
+                print "~My father had one just like that~.^";
+            }
+        ],
 
         life [;
             Answer:
@@ -1855,9 +1861,8 @@ HumanNPC boatman
                 return boatman_ask(second);
             Show:
                 if (noun == lodestar) {
-                    boatman.noticed_compass = true;
-                    print_ret (A) self, " -- ~My father had one just like that~
-                    he says.";
+                    self.notice_lodestar();
+                    return;
                 }
                 if (noun == yam && self.expects_yam) {
                     "~Yep, that is a yam alright~";
