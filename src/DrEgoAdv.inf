@@ -233,12 +233,52 @@ Global last_known_location = 0;
 
 ! [ ================================================================== Classes ]
 
+Class Room
+with
+    !printed_ways,
+    !before [;
+    !    if (action == ##Look) {
+    !        self.printed_ways = false;
+    !    }
+    !],
+  after [item;
+    ! in location prevents printing ways while in a container (like a canoe)
+    if (action == ##Look && player in location) {
+      !print "^";
+      objectloop(item in location) {
+        if (item ofclass DoorWay) {
+          !print (A) item, " is to the ", (name) item.door_dir(), ". ";
+          if (item.door_dir() == u_to) {
+              print (A) item, " leads upward. ";
+          } else if (item.door_dir() == d_to) {
+              print (A) item, " leads downward. ";
+          } else {
+              ! If the way was visited, or if it obvious what lies that way, print the door's name
+              if (item.obvious_way || item.door_to() has visited) {
+                  print (A) item, " is due ", (name) item.door_dir(), ". ";
+              ! If the way hasnt visited, print a nameless exit
+              } else {
+                  if (location ofclass IndoorRoom) {
+                      print "There is an exit to the ", (name) item.door_dir(), ". ";
+                  } else {
+                      print "There is a path to the ", (name) item.door_dir(), ". ";
+                  }
+              }
+          }
+        }
+      }
+      print "^";
+    }
+  ];
+
 Class IndoorRoom
+class Room
 with
     cant_go "You bump into the stone wall. Ouch!";
 
 ! The outdoor room always contains the sky object, looking up examines the sky.
 Class OutdoorRoom
+class Room
 with
     before [;
         Examine:
@@ -404,30 +444,11 @@ with
     ! Some ways are visible and it is obvious what lies there, so always
     ! print the door name.
     obvious_way false,
-    initial [;
-        if (self.door_dir() == u_to) {
-            print (A) self, " leads upward. ";
-        } else if (self.door_dir() == d_to) {
-            print (A) self, " leads downward. ";
-        } else {
-            ! If the way was visited, or if it obvious what lies that way, print the door's name
-            if (self.obvious_way || self.door_to() has visited) {
-                print (A) self, " is due ", (name) self.door_dir(), ". ";
-            ! If the way hasnt visited, print a nameless exit
-            } else {
-                if (location ofclass JungleRoom) {
-                    print "There is a path to the ", (name) self.door_dir(), ". ";
-                } else {
-                    print "There is an exit to the ", (name) self.door_dir(), ". ";
-                }
-            }
-        }
-    ],
     before [;
         Take:
             print_ret (The) self, " is not something you can take.";
     ],
-has static door open;
+has static door open scenery;
 
 Class RockDoor
 with
@@ -1117,8 +1138,13 @@ with
         if (location == LostInJungle) {
             Achieved(SCORE_USE_COMPASS);
             print "^", (A) self, " guides you back to safety.^";
-            ! parameter "2" honors brief room descriptions - DM4 pg 21
-            PlayerTo(last_known_location, 2);
+            ! Parameter "1" does not perform a "look" on PlayerTo,
+            ! which seems to action ##Look twice, and causes the DoorWay
+            ! listing code in the Room class to run twice.
+            ! Manually calling <Look> resolves this duplicate case.
+            ! See DM4 $21 for more on PlayerTo.
+            PlayerTo(last_known_location, 1);
+            <Look>;
             return true;
         }
 
@@ -2134,9 +2160,9 @@ with
             print "You are in a natural clearing surrounded by jungle. ";
         }
         if (monkey in fig_tree) {
-            print "A large fig tree stands here with a monkey sitting in it.";
+            print "A large fig tree stands here with a monkey sitting in it. ";
         } else {
-            print "A large fig tree stands here.";
+            print "A large fig tree stands here. ";
         }
     ],
     e_to jungle_path_way,
@@ -2154,7 +2180,7 @@ with
         Go:
             if (noun == u_obj) {
                 if (player has burdened) {
-                    "Not while carrying that heavy stone.";
+                    "Not while carrying that heavy stone. ";
                 }
                 print "You climb up the strong branches of the fig tree.^";
             }
@@ -2229,7 +2255,7 @@ has light;
 Object rope_bridge "rope bridge" DeadlyDrop
 with
     name 'rope' 'bridge',
-    description "The bridge is made from plait ropes.",
+    description "The bridge is made from plait ropes. ",
     has scenery;
 
 ! [ ------------------------------------------------------------------- Garden ]
@@ -2239,10 +2265,10 @@ with
         if (self hasnt visited) {
             print "You enter into a small garden -- whoever kept it hasn't been
             here for a very long time. The plants are growing wild and are all
-            over the place.";
+            over the place. ";
         } else {
             print "You are in a small garden, you see some vegetable plants
-            and fruit trees.";
+            and fruit trees. ";
         }
     ],
     ne_to bungalow_way;
@@ -2254,7 +2280,7 @@ with
         print "The vegetable plants in the garden have grown wild without
         anybody around to harvest them. ";
         if (yam has concealed) {
-            print "You notice some kind of tuber growing on the ground.";
+            print "You notice some kind of tuber growing on the ground. ";
         }
         "";
     ],
@@ -2269,17 +2295,17 @@ with
     description [;
         if (self hasnt visited) {
             print "Plants of all shapes and sizes fill every nook the jungle,
-            this narrow path is drowning in vegetation.";
+            this narrow path is drowning in vegetation. ";
         } else {
-            print "You are on a narrow path surrounded by dense vegetation.";
+            print "You are on a narrow path surrounded by dense vegetation. ";
         }
     ],
     before [;
         Examine:
             if (noun == s_obj)
-                print_ret "You see a river that way.";
+                print_ret "You see a river that way. ";
             if (noun == w_obj)
-                print_ret "You see a clearing in the jungle that way.";
+                print_ret "You see a clearing in the jungle that way. ";
     ],
     n_to [;
         if (temple_way in location) return temple_way;
@@ -2671,21 +2697,23 @@ with
 JungleRoom Tribe "Tribe"
 with 
     description [;
+        if (self hasnt visited) {
+            print "You walk along the path for a short while, winding your way
+            through the jungle. You finally emerge at the other end and find
+            yourself pleasantly surprised to see other people here. ";
+        }
         print "The small tribal settlement of a dozen natives are going about
         their daily chores. ";
         if (self hasnt visited) {
-            !print "Women and men are weaving plant fibers into
-            !fishing nets and ropes, some are tending to a firepit while others
-            !prepare pumpkins, tubers and fish. ";
             <Examine natives>;
             print "They don't seem to mind your presence, and they carry on with
             their chores. ";
         }
     ],
     before [;
-        Smell: "You smell the burning fire, mixed with the earthy jungle tones.";
+        Smell: "You smell the burning fire, mixed with the earthy jungle tones. ";
         Listen: "You hear the locals chatter in their native tongue, sounds
-        like they are having a relaxed conversation.";
+        like they are having a relaxed conversation. ";
     ],
     w_to tribe_path
 ;
@@ -2701,14 +2729,14 @@ ScenicBase statuettes "carvings"
 with 
     name 'wood' 'wooden' 'statuettes' 'figurines' 'carving' 'carvings',
     description_lead "The wooden figurines are all lined up neatly. ",
-    description "They depict several deities and animals.",
+    description "They depict several deities and animals. ",
     found_in Tribe,
     before [;
         Take:
         "You don't think it would be right to take them - besides,
         you  don't see any that you be useful to you. 
         You get the feeling he will be happy to make you a carving in exchange
-        for some kind of payment.";
+        for some kind of payment. ";
     ],
     has pluralname;
 
@@ -2718,9 +2746,9 @@ with
     description [;
         if (self hasnt visited) {
             print "Pushing through the jungle you arrive in a little valley,
-            rich with flowering orchids all around you.";
+            rich with flowering orchids all around you. ";
         } else {
-            print "You are in a lush jungle valley full of vibrant orchids.";
+            print "You are in a lush jungle valley full of vibrant orchids. ";
         }
     ],
     u_to stone_stairs,
@@ -2732,7 +2760,7 @@ with
         Smell:
             print_ret "The entire area smells of sweet orchids, there are so
             many varieties that their scents mix together to create a
-            potpourri.";
+            potpourri. ";
     ];
 
 ScenicPlantObject orchids "orchids" Valley
@@ -2741,11 +2769,11 @@ with
     description "A myriad of beautiful orchids display a rich set of vibrant
     colors -- white, pink, magenta, purple, red, yellow, gold, blue.
     Their flowers come in all shapes --  oblong, slender, conical and cruciform
-    are just some of the shapes you can identify.",
+    are just some of the shapes you can identify. ",
     before [;
         Take:
             print_ret "As beautiful as they are, you did not come equipped for a
-            horticulture expedition.";
+            horticulture expedition. ";
     ],
     has pluralname;
 
@@ -2756,12 +2784,12 @@ with
         print "Water cascades down into a clear pool of water. ";
         if (self hasnt visited) {
             print "A fine mist circulates above the pool,
-            a vivid rainbow shines from the dancing spray.";
+            a vivid rainbow shines from the dancing spray. ";
         }
     ],
     before [;
         Listen:
-            "You hear the splashing sound of the cascading water.";
+            "You hear the splashing sound of the cascading water. ";
     ],
     n_to alcove_door,
     w_to bridge_way,
@@ -2770,7 +2798,7 @@ with
 Object "mist"
 with 
     name 'mist' 'rainbow',
-    description "The vibrant rainbow floats motionless above the pool.",
+    description "The vibrant rainbow floats motionless above the pool. ",
     found_in Waterfall,
     before [;
         Examine: ;
@@ -3027,10 +3055,6 @@ with
     found_in Valley Tribe,
     door_to [;
         if (location == Valley) {
-            if (Tribe hasnt visited) print "You walk along the path for a short
-            while, winding your way through the jungle. You finally emerge at
-            the other end and find yourself pleasantly surprised to see other
-            people here.^";
             return Tribe;
         }
         return Valley;

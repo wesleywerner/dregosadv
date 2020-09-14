@@ -15,27 +15,25 @@
   there before).
   
 > >  Clearing
+  A hut is due south. There is a path to the east.
   
-  A hut is due south.
-  There is a path to the east.
-> >  ; == 87
+> >  ; == 88
   
 > >  Lost in the Jungle
-  
+. 
 > >  You take your compass from your satchel.
   
   Your compass guides you back to safety.
   
   Clearing
+  A hut is due south. There is a path to the east.
   
-  A hut is due south.
-  There is a path to the east.
   [You scored your first point! Type SCORE/FULL to list them.]
   
 > >  You climb up the strong branches of the fig tree.
   
   Top of Tree
-  
+. 
   The monkey is not impressed, it climbs down the tree.
   
 > >  There! Stone stairs up the hill, in the distance to the northeast.
@@ -47,19 +45,14 @@
    --- more ---
 )   Clearing
   
-  A hut is due south.
-  There is a path to the east.
-  There is a path to the northeast.
   There is a monkey here. It has your compass.
+  A hut is due south. There is a path to the east. There is a path to the
+  northeast.
   
   The monkey makes grunting noises.
   
 > >  Valley
+  There is a path to the east. Some stone stairs leads upward. A clearing in
+  the jungle is due south.
   
-  You walk along the path for a short while, winding your way through the
-  jungle. You finally emerge at the other end and find yourself pleasantly
-  surprised to see other people here.
-  There is a path to the east.
-  Some stone stairs leads upward.
-  A clearing in the jungle is due south.
 > >

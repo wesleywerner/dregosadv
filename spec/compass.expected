@@ -19,9 +19,7 @@
   "Here we are", your guide says -- the canoe comes to a stop on the shore.
   
   River Shore (in the canoe)
-  
-  There is an exit to the north.
-  
+. 
   In the canoe you can also see a trap (which is closed and empty), a fishing
   spear and a fishing net.
   
@@ -31,14 +29,13 @@
   
   Your guide sits in the canoe gazing out over the moving river, the salty
   water gently lapping the sides of his craft.
+  There is a path to the north.
   
-  There is an exit to the north.
 > >  Jungle Path
+  There is a path to the west. The river shore is due south.
   
-  There is a path to the west.
-  The river shore is due south.
 > >  Lost in the Jungle
-  
+. 
 > >  You fumble through the jungle.
   
 > >  You fumble through the jungle.
@@ -50,17 +47,15 @@
   Your compass guides you back to safety.
   
   Jungle Path
+  There is a path to the west. The river shore is due south.
   
-  There is a path to the west.
-  The river shore is due south.
   [You scored your first point! Type SCORE/FULL to list them.]
   
 > >  Lost in the Jungle
-  
+. 
 > >  Your compass guides you back to safety.
   
   Jungle Path
+  There is a path to the west. The river shore is due south.
   
-  There is a path to the west.
-  The river shore is due south.
 > >
