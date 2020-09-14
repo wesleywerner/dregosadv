@@ -175,6 +175,8 @@ Global auto_print_help_intro = true;
             'basic', 'basics': 
                 Communication();
                 StartingInstructions();
+            'commands':
+                GameCommands();
             'go', 'going', 'travel':
                 OnMovement();
             'verb', 'verbs': 
@@ -190,7 +192,7 @@ Global auto_print_help_intro = true;
                 Abbreviations();
             'if':
                 BasicIntro();
-            'save', 'restore':
+            'save', 'restore', 'score', 'full', 'restart', 'quit':
                 MetaCommands();
             'talking':
                 AskTellNPC();
@@ -242,6 +244,7 @@ Verb meta 'help'    *                               -> Help
 	print "SAVE     ";
     print "RESTORE  ";
     print "ABOUT    ";
+    print "SCORE    ";
     print "^";
     
     print "IF       ";
@@ -881,44 +884,46 @@ Verb meta 'help'    *                               -> Help
 #ifnot;	
 	font on;
 #endif;
+];
 
-	print (ESB) "Game Commands^";
-    
-#ifdef TARGET_GLULX;
-	glk_set_style(style_Preformatted);
-#ifnot;	
-	font off;
-#endif; 
+[ GameCommands flag;
+    print (ESB) "Game Commands^";
 
-	print "RESTART    RESTORE     SAVE^";
-	print "QUIT       UNDO        PRONOUNS^";
-	print "SCRIPT ON  SCRIPT OFF  VERIFY^";
+    #ifdef TARGET_GLULX;
+    glk_set_style(style_Preformatted);
+    #ifnot;	
+    font off;
+    #endif; 
 
-#ifndef NO_PLACES;
-	print "OBJECTS    PLACES     ^";
-#endif;
-#ifdef MAX_SCORE; 
-	if (max_score > 0)
-	{	print "SCORE      ";
-		print "NOTIFY ON  ";
-		print "NOTIFY OFF ";
-		flag = 1;
-	}
-#endif; 
-#ifdef TASKS_PROVIDED;
-	if (max_score > 0)
-	{
-		print "FULL SCORE";
-		flag = 1;
-	}
-#endif;
-	if (flag) print "^";
+    print "RESTART    RESTORE     SAVE^";
+    print "QUIT       UNDO        PRONOUNS^";
+    print "SCRIPT ON  SCRIPT OFF  VERIFY^";
+
+    #ifndef NO_PLACES;
+    print "OBJECTS    PLACES     ^";
+    #endif;
+    #ifdef MAX_SCORE; 
+    if (max_score > 0)
+    {	print "SCORE      ";
+        print "NOTIFY ON  ";
+        print "NOTIFY OFF ";
+        flag = 1;
+    }
+    #endif; 
+    #ifdef TASKS_PROVIDED;
+    if (max_score > 0)
+    {
+        print "FULL SCORE";
+        flag = 1;
+    }
+    #endif;
+    if (flag) print "^";
     new_line;
-#ifdef TARGET_GLULX;
-	glk_set_style(style_Normal);
-#ifnot;	
-	font on;
-#endif;
+    #ifdef TARGET_GLULX;
+    glk_set_style(style_Normal);
+    #ifnot;	
+    font on;
+    #endif;
 ];
 
 [ Abbreviations; 
@@ -1140,6 +1145,8 @@ Verb meta 'help'    *                               -> Help
 	print (ESB) "SAVE", " -- Saves a story progress, to RESTORE later.^";
 	print (ESB) "RESTORE", " -- Restore a previously saved story.^";
 	print (ESB) "RESTART", " -- Restart the story from the beginning.^";
+	print (ESB) "SCORE", " -- Prints your score.^";
+	print (ESB) "FULL", " -- Lists each completed task that scored points.^";
 	print (ESB) "QUIT", " -- Ends the story.^^";
 ];
 

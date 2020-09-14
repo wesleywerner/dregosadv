@@ -23,7 +23,7 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT
+  SAVE     RESTORE  ABOUT    SCORE
   IF       STUCK    ABBREVIATIONS (AB)
   
 > >  BASICS
@@ -50,7 +50,7 @@
   from room to room, and check out every location available.
 ***MORE***  Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT
+  SAVE     RESTORE  ABOUT    SCORE
   IF       STUCK    ABBREVIATIONS (AB)
   
 > >  THINGS
@@ -69,7 +69,7 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT
+  SAVE     RESTORE  ABOUT    SCORE
   IF       STUCK    ABBREVIATIONS (AB)
   
 > >  Here is a list of verbs you can use in this story. To read more about a
@@ -105,18 +105,27 @@
   ASK ABOUT  ASK FOR    GIVE
   ANSWER     KISS       SAY        SHOW       TELL
   
-  Game Commands
-  RESTART    RESTORE     SAVE
-  QUIT       UNDO        PRONOUNS
-  SCRIPT ON  SCRIPT OFF  VERIFY
-  OBJECTS    PLACES
-  SCORE      NOTIFY ON  NOTIFY OFF FULL SCORE
+  Type HELP followed by one of these words to learn more:
+  BASICS   GOING    THINGS   VERBS    TALKING
+  SAVE     RESTORE  ABOUT    SCORE
+  IF       STUCK    ABBREVIATIONS (AB)
+  
+> >  SYSTEM COMMANDS
+  There are a few simple commands for managing your story progress:
+  
+  SAVE -- Saves a story progress, to RESTORE later.
+  RESTORE -- Restore a previously saved story.
+  RESTART -- Restart the story from the beginning.
+  SCORE -- Prints your score.
+  FULL -- Lists each completed task that scored points.
+  QUIT -- Ends the story.
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT
+  SAVE     RESTORE  ABOUT    SCORE
   IF       STUCK    ABBREVIATIONS (AB)
-***MORE***> >  ABOUT THIS STORY
+  
+> >  ABOUT THIS STORY
   TODO.
 . 
 > >  INTERACTIVE FICTION
@@ -176,7 +185,7 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT
+  SAVE     RESTORE  ABOUT    SCORE
   IF       STUCK    ABBREVIATIONS (AB)
   
 > >  Explore.  Examine every object mentioned in room descriptions, and
@@ -207,7 +216,7 @@
 . 
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT
+  SAVE     RESTORE  ABOUT    SCORE
   IF       STUCK    ABBREVIATIONS (AB)
   
 > >  Abbreviations:
@@ -223,7 +232,7 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT
+  SAVE     RESTORE  ABOUT    SCORE
   IF       STUCK    ABBREVIATIONS (AB)
   
 > >    go north
@@ -235,7 +244,7 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT
+  SAVE     RESTORE  ABOUT    SCORE
   IF       STUCK    ABBREVIATIONS (AB)
   
 > >    light the candle with the blowtorch
@@ -246,7 +255,7 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT
+  SAVE     RESTORE  ABOUT    SCORE
   IF       STUCK    ABBREVIATIONS (AB)
   
 > >    climb the fig tree
@@ -258,7 +267,7 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT
+  SAVE     RESTORE  ABOUT    SCORE
   IF       STUCK    ABBREVIATIONS (AB)
   
 > >    dig in the ground
@@ -269,7 +278,7 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT
+  SAVE     RESTORE  ABOUT    SCORE
   IF       STUCK    ABBREVIATIONS (AB)
   
 > >    consult the book about roman history
@@ -283,7 +292,7 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT
+  SAVE     RESTORE  ABOUT    SCORE
   IF       STUCK    ABBREVIATIONS (AB)
   
 > >    cut the paper with the scissors
@@ -294,7 +303,7 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT
+  SAVE     RESTORE  ABOUT    SCORE
   IF       STUCK    ABBREVIATIONS (AB)
   
 > >    go up (when there are stairs)
@@ -308,7 +317,7 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT
+  SAVE     RESTORE  ABOUT    SCORE
   IF       STUCK    ABBREVIATIONS (AB)
   
 > >    drop the hot potato.
@@ -320,7 +329,7 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT
+  SAVE     RESTORE  ABOUT    SCORE
   IF       STUCK    ABBREVIATIONS (AB)
   
 > >    empty the rucksack
@@ -332,7 +341,7 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT
+  SAVE     RESTORE  ABOUT    SCORE
   IF       STUCK    ABBREVIATIONS (AB)
   
 > >    enter the small red car
@@ -345,7 +354,7 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT
+  SAVE     RESTORE  ABOUT    SCORE
   IF       STUCK    ABBREVIATIONS (AB)
   
 > >    examine the ming vase
@@ -359,7 +368,7 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT
+  SAVE     RESTORE  ABOUT    SCORE
   IF       STUCK    ABBREVIATIONS (AB)
   
 > >    exit (when inside the hovercraft)
@@ -371,7 +380,7 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT
+  SAVE     RESTORE  ABOUT    SCORE
   IF       STUCK    ABBREVIATIONS (AB)
   
 > >    go in
@@ -383,7 +392,7 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT
+  SAVE     RESTORE  ABOUT    SCORE
   IF       STUCK    ABBREVIATIONS (AB)
   
 > >    take inventory
@@ -394,7 +403,7 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT
+  SAVE     RESTORE  ABOUT    SCORE
   IF       STUCK    ABBREVIATIONS (AB)
   
 > >    unlock the iron gate with the key
@@ -406,7 +415,7 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT
+  SAVE     RESTORE  ABOUT    SCORE
   IF       STUCK    ABBREVIATIONS (AB)
   
 > >    look
@@ -420,7 +429,7 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT
+  SAVE     RESTORE  ABOUT    SCORE
   IF       STUCK    ABBREVIATIONS (AB)
   
 > >    open the door
@@ -430,7 +439,7 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT
+  SAVE     RESTORE  ABOUT    SCORE
   IF       STUCK    ABBREVIATIONS (AB)
   
 > >    push the cupboard
@@ -446,7 +455,7 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT
+  SAVE     RESTORE  ABOUT    SCORE
   IF       STUCK    ABBREVIATIONS (AB)
   
 > >    put the vase on the pedestal
@@ -457,7 +466,7 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT
+  SAVE     RESTORE  ABOUT    SCORE
   IF       STUCK    ABBREVIATIONS (AB)
   
 > >    remove the pearl necklace
@@ -468,7 +477,7 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT
+  SAVE     RESTORE  ABOUT    SCORE
   IF       STUCK    ABBREVIATIONS (AB)
   
 > >    search the rubble
@@ -481,7 +490,7 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT
+  SAVE     RESTORE  ABOUT    SCORE
   IF       STUCK    ABBREVIATIONS (AB)
   
 > >    switch the lamp on
@@ -492,7 +501,7 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT
+  SAVE     RESTORE  ABOUT    SCORE
   IF       STUCK    ABBREVIATIONS (AB)
   
 > >    get the wooden spoon
@@ -506,7 +515,7 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT
+  SAVE     RESTORE  ABOUT    SCORE
   IF       STUCK    ABBREVIATIONS (AB)
   
 > >    throw the frisbee at rex
@@ -519,7 +528,7 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT
+  SAVE     RESTORE  ABOUT    SCORE
   IF       STUCK    ABBREVIATIONS (AB)
   
 > >    transfer candy to treat bag
@@ -531,7 +540,7 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT
+  SAVE     RESTORE  ABOUT    SCORE
   IF       STUCK    ABBREVIATIONS (AB)
   
 > >    tie the bed sheet to the window frame
@@ -541,7 +550,7 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT
+  SAVE     RESTORE  ABOUT    SCORE
   IF       STUCK    ABBREVIATIONS (AB)
   
 > >    turn the dial
@@ -551,7 +560,7 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT
+  SAVE     RESTORE  ABOUT    SCORE
   IF       STUCK    ABBREVIATIONS (AB)
   
 > >    wear the top hat
@@ -561,7 +570,7 @@
   
   Type HELP followed by one of these words to learn more:
   BASICS   GOING    THINGS   VERBS    TALKING
-  SAVE     RESTORE  ABOUT
+  SAVE     RESTORE  ABOUT    SCORE
   IF       STUCK    ABBREVIATIONS (AB)
   
 > >
