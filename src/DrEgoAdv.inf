@@ -242,6 +242,51 @@ Global last_known_location = 0;
     return false;
 ];
 
+[ PrintWinWording;
+    print "^^You spend the next week cataloguing the precious artifact,
+    before you donate ", (the) golden_egg, " to the museum of
+    Natural History and Archeology. ";
+];
+
+! Alternate ending: you have a fish dinner with Rom
+[ SetupFishDinnerScene;
+    move wood_stool to Shore;
+    move fish_fire to Shore;
+    move yam to fish_fire;
+    move fish to fish_fire;
+    !remove canoe;
+    move boatman to Shore;
+];
+
+Object wood_stool "stool"
+with 
+    name 'stool' 'chair' 'log',
+    description [; 
+        print_ret "It is a piece of log used as a makeshift stool, ", (a) boatman,
+        " is sitting on a similar log, next to a fire. ";],
+    before [;
+        Enter:
+            deadflag = 2;
+            print "You sit down with ", (a) boatman, " to a delightful fish 
+            and yam dinner, while you recount your adventure. ", (a) boatman, 
+            " then tells you stories about his family and other legends of
+            Papua New Guinea, while you take notes in your journal about 
+            his tales. ";
+            PrintWinWording();
+    ],
+    has supporter;
+
+Object fish_fire "fire" !ScenicBase
+with
+    name 'fire',
+    description "The fire is burning hot, a fish is impaled on a stick 
+    and suspended over the fire. ",
+    before [;
+        Take, Touch: 
+            "It is too hot to handle safely. ";
+    ],
+    has supporter;
+
 ! [ ================================================================== Classes ]
 
 Class Room
@@ -661,9 +706,13 @@ with
 
     ! Room Description when outside the canoe
     initial [;
-        print (A) boatman, " sits in the canoe gazing out over the
-        moving river, the salty water gently lapping the sides of his
-        craft.^";
+        if (boatman in self) {
+            print (A) boatman, " sits in the canoe gazing out over the
+            moving river, the salty water gently lapping the sides of his
+            craft.^";
+        } else {
+            print "The salty water gently lapping the sides of the canoe.^";
+        }
     ],
 
     description "The canoe is built from a hollowed-out log and wooden planks, 
@@ -679,6 +728,11 @@ with
                         (the) boatman, " says with a wide grin.^";
                 return 2;
             }
+        Enter:
+            if (fish_fire in location) {
+                "There is no rush, besides you are famished and that fish 
+                cooking over the fire smells inviting. ";
+            }
     ],
     
     after [;
@@ -686,13 +740,10 @@ with
             ! Win condition
             if (golden_egg in player) {
                 deadflag = 2;
-                print "^Rom's eyes light up when you show him ", (the)
-                golden_egg, ". You spend the boat ride, back to the landing
-                area, telling him of your adventure. ";
-                if (fish in canoe) print "That evening ", (a) boatman, " prepares 
-                the fish you caught, with a side of yam. ";
-                print "^^You spend the next week cataloguing the precious artifact,
-                before you donate ", (the) golden_egg, " to the archeology museum.";
+                print "You get in the canoe, ", (a) boatman ,"'s eyes light up
+                when you show him ", (the) golden_egg, ". 
+                You spend the time telling him of your adventure. ";
+                PrintWinWording();
             }
     ],
 
@@ -800,8 +851,12 @@ with
     ],
 
     before [;
-        Take: print_ret "You decide to leave the fish for ",
-                (a) boatman, ".";
+        Take: 
+            if (parent(self) == fish_fire) {
+                "Best you take a seat first. ";
+            } else {
+                "You decide to leave the fish for ", (a) boatman, ". ";
+            }
     ],
 
     after [;
@@ -1842,9 +1897,14 @@ HumanNPC boatman
         ! he told you to bring him a yam in exchange for the trap
         expects_yam false,
 
-        ! Hide the room description (in the boat you see your guide)
+        ! Hide the room listing (in the boat you see your guide)
         initial [;
-            return true;
+            if (self in canoe) {
+                return true;
+            } else if (fish_fire in location) {
+                "", (A) self, " is here, sitting on a makeshift stool next
+                to a fire. He beckons you to take a seat on a stool. ";
+            }
         ],
 
         each_turn [;
@@ -1988,8 +2048,7 @@ HumanNPC boatman
         'canoe', 'boat', 'oar':
             "~I have the canoe for many years now, built it myself,~ ",
             (a) self, " says proudly"
-            , (string) pause,
-            "He taps the boat hull with his hand. ";
+            , (string) pause;
         'river', 'maro', 'water':
             "~The ancient waters of the Maro will swallow you whole if you try
             to swim,~ he says mournfully"
@@ -2009,7 +2068,13 @@ HumanNPC boatman
             , (string) pause,
             "I throw it out into the water, haul it back in.~ ";
         'fish':
-            "~If you catch us a fish, we will cook it,~ he says in jest. ";
+            if (fish in fish_fire) {
+                "~It smells good, and almost done.~";
+            } else if (fish in canoe) {
+                "~We will have some good dinner tonight!~";
+            } else {
+                "~If you catch us a fish, we will cook it,~ he says in jest. ";
+            }
         'fishing':
             <Ask self 'spear'>;
             <<Ask self 'net'>>;
@@ -2394,6 +2459,10 @@ with
                 print_ret "You see a river that way. ";
             if (noun == w_obj)
                 print_ret "You see a clearing in the jungle that way. ";
+        Go:
+            if (fish in canoe && (golden_egg in player || golden_egg in satchel)) {
+                SetupFishDinnerScene();
+            }
     ],
     n_to [;
         if (temple_way in location) return temple_way;
@@ -2502,6 +2571,10 @@ with
                 print_ret "You see the river.";
         Listen:
             print_ret "You hear the sound of water lapping the canoe.";
+        Smell:
+            if (fish_fire in location) {
+                print "You smell the fish cooking over the fire. ";
+            }
     ];
 
 ! [ ------------------------------------------------------------------- Temple ]
