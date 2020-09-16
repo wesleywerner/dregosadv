@@ -1176,7 +1176,22 @@ with
 SparkThrowerObject matchbook "matchbook"
 with 
     name 'match' 'matches' 'matchbook',
-    description "A booklet of lucifer matches.",
+    description "It is a booklet of matches with red phosphorous heads,
+    ~Red Herring Lucifers~ is printed on the back.",
+    stock 5,
+    before [;
+        Burn:
+            if (--self.stock == 0) {
+                remove self;
+                "The last match crumbles without so much as a spark, 
+                you are not surprised.
+                You discard the booklet, which is as useless now as
+                it was 5 lucifers ago.";
+            } else {
+                "You strike a match, the red phosphor crumbles into dust.
+                They must have gotten wet, and are now useless.";
+            }
+    ],
     has wet;
 
 !
@@ -1855,81 +1870,164 @@ HumanNPC boatman
                 print "~My father had one just like that~.^";
             }
         ],
-
-        life [;
+        
+        life [pname pause pause_n;
+            ! Refers to the player by name, if introduced
+            if (self has proper) {
+                pname = player.short_name;
+            } else {
+                pname = "mister";
+            }
+            ! Takes a pause between sentences
+            pause_n = random(14);
+            switch (pause_n) {
+                1: pause = ",~ he says, taking a moment to listen to the sound
+                of the river, and continues, ~";
+                5: pause = ",~ he turns his gaze up to judge the weather, then
+                back at you, ~";
+                9: if (parent(canoe) == River) {
+                        ! On the river specifically
+                        pause = ",~ he pauses to steer the craft around 
+                        a floating tree trunk, ~";
+                    } else {
+                        pause = ",~ he ruminates, ~";
+                    }
+                13: if (parent(canoe) == River) {
+                        ! On the river specifically
+                        pause = ",~ he muses while paddling with the oar, ~";
+                    } else {
+                        pause = ",~ he pauses to listen to the sound of a monkey
+                        barking in the jungle, ~";
+                    }
+                default:
+                    pause = ". ";
+            }
             Answer:
                 return boatman_answers(noun);
             Ask:
-                return boatman_ask(second);
+                return boatman_ask(second, pause);
             Tell:
-                return boatman_ask(second);
+                return boatman_ask(second, pause);
             Show:
                 if (noun == lodestar) {
                     self.notice_lodestar();
                     return;
                 }
                 if (noun == yam && self.expects_yam) {
-                    "~Yep, that is a yam alright~";
+                    "~Yep, that is a yam alright, it will make a good meal.~ ";
                 }
-                print_ret (A) self, " looks amusingly at ", (the) noun, " ";
+                if (noun == banana) {
+                    "~Those are good for eating, the wild monkeys that live
+                    in the jungle here, they like them bananas too.~ ";
+                }
+                if (noun == box_trap) {
+                    boatman_ask('trap');
+                }
+                if (noun == bullwhip) {
+                    "~I have seen whips before, ", (string)pname, ", but we
+                    don't have much use for them"
+                    , (string) pause,
+                    "We farm the waters mostly, and some pigs too.~ ";
+                }
+                if (noun == leather_jacket) {
+                    "~I like your jacket, ", (string)pname, ".~ ";
+                }
+                if (noun == fedora_hat) {
+                    "~That is one fine hat, ", (string)pname, ", but I never
+                    cared for having one myself.~ ";
+                }
+                if (noun == golden_egg) {
+                    "", (a) self, "'s are sparkle with delight - 
+                    ~The legends were true!~ ";
+                }
+                if (noun == matchbook) {
+                    "~Those are useful, but hard to get those around here"
+                    , (string) pause,
+                    "I make fire with a fire plough, rubbing a stick in a 
+                    groove, or using a piece of flint. Those are plentiful
+                    near running water.~ ";
+                }
+                if (noun == satchel) {
+                    "~Nice bag you got there, ", (string)pname, ".~ ";
+                }
+                if (noun == seed_pouch) {
+                    "~You put those in the trap to lure the chicken inside.~ ";
+                }
+                print_ret (A) self, " looks amusingly at ", (the) noun, ". ";
             Give:
                 if (self.expects_yam && noun == yam) {
                     move yam to self;
                     move box_trap to player;
                     move seed_pouch to player;
                     print "~This will do fine!~ he says with a laugh. He hands
-                    you a pouch filled with seeds, along with the trap.^^
-                    ~Remember to set the trap, then pull the string
-                    when the chicken is inside. Good luck!~";
+                    you a pouch filled with seeds, along with the trap. 
+                    ~Remember to SET the trap, then PULL the string
+                    when the chicken is inside. Good luck!~ ";
                     return true;
                 }
                 "~No thanks~, ", (a) self, " politely declines.";
             Order:
                 if (Tribe has visited && (second == box_trap || noun == box_trap)) {
                     if (yam in self) {
-                        "~I hope you caught that chicken you were after!~";
+                        "~I hope you caught that chicken you were after!~ ";
                     } else if (self.expects_yam) {
                         "~Of course you are free to use my trap, just find me a
-                        yam~, ", (a) self, " says smiling.";
+                        yam~, ", (a) self, " says smiling. ";
                     } else {
                         self.expects_yam = true;
                         "~You know, I will lend you my chicken trap, if you find
-                        me a yam. I think yam and fish will make a good meal.~";
+                        me a yam. I think yam and fish will make a good meal.~ ";
                     }
                 } else
-                "You have no reason to ask for that.";
+                "You have no reason to ask for that. ";
         ],
 ;
 
-[ boatman_ask second;
+[ boatman_ask second pause;
     switch (second) {
         'canoe', 'boat', 'oar':
-            "~I have the canoe for many years now, built it myself~, ",
-            (a) self, " says proudly.";
+            "~I have the canoe for many years now, built it myself,~ ",
+            (a) self, " says proudly"
+            , (string) pause,
+            "He taps the boat hull with his hand. ";
         'river', 'maro', 'water':
             "~The ancient waters of the Maro will swallow you whole if you try
-            to swim~, he says mournfully.";
+            to swim,~ he says mournfully"
+            , (string) pause,
+            "It may not look it, but the current is strong and the water is
+            cold.~ ";
         'father':
-            "~He taught me how to build boats and how to fish... taught me
-            everything to live and survive out here~";
+            "~He taught me how to build boats and fish, taught me
+            everything to live and survive out here.~ ";
         'spear':
             "~We call that a Kalawai~, nodding at the spear in the
-            boat, ~Good for catching dinner!~";
+            boat"
+            , (string) pause,
+            "Good for catching dinner.~ ";
         'net':
-            "~That is a cast net, I throw it out into the water, and haul it
-            back in~.";
+            "~That is a cast net"
+            , (string) pause,
+            "I throw it out into the water, haul it back in.~ ";
+        'fish':
+            "~If you catch us a fish, we will cook it,~ he says in jest. ";
         'fishing':
             <Ask self 'spear'>;
-            print "He continues, ";
             <<Ask self 'net'>>;
         'time', 'longer':
-            "~We will reach the shore soon~, he replies.";
+            "~We will reach the shore soon.~ ";
         'trap':
-            "~That, my friend, is a chicken trap. When you set the trap you
-            prop the door open with this stick, and then you pull on the
-            trigger string to swing the door shut~.";
+            "~That, my friend, is a chicken trap"
+            , (string) pause,
+            "You set the trap - prop the door open with this wooden rod - 
+            and pull on the this string to swing the door shut.~ ";
+        'pig', 'pigs':
+            "~Had a pig once, had it as a pet, but then I lost pig,~ 
+            he chuckles as if thinking about something funny. ";
+        'lost', 'pig':
+            "~It ran away, into a place under ground - never did find that
+            pig.~ ";
     }
-    print_ret (The) self, " grins at you and nods.";
+    print_ret (The) self, " grins at you and nods. ";
 ];
 
 [ boatman_answers noun;
