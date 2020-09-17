@@ -252,40 +252,11 @@ Global last_known_location = 0;
 [ SetupFishDinnerScene;
     move wood_stool to Shore;
     move fish_fire to Shore;
+    give yam ~concealed;
     move yam to fish_fire;
     move fish to fish_fire;
-    !remove canoe;
     move boatman to Shore;
 ];
-
-Object wood_stool "stool"
-with 
-    name 'stool' 'chair' 'log',
-    description [; 
-        print_ret "It is a piece of log used as a makeshift stool, ", (a) boatman,
-        " is sitting on a similar log, next to a fire. ";],
-    before [;
-        Enter:
-            deadflag = 2;
-            print "You sit down with ", (a) boatman, " to a delightful fish 
-            and yam dinner, while you recount your adventure. ", (a) boatman, 
-            " then tells you stories about his family and other legends of
-            Papua New Guinea, while you take notes in your journal about 
-            his tales. ";
-            PrintWinWording();
-    ],
-    has supporter;
-
-Object fish_fire "fire" !ScenicBase
-with
-    name 'fire',
-    description "The fire is burning hot, a fish is impaled on a stick 
-    and suspended over the fire. ",
-    before [;
-        Take, Touch: 
-            "It is too hot to handle safely. ";
-    ],
-    has supporter;
 
 ! [ ================================================================== Classes ]
 
@@ -708,10 +679,10 @@ with
     initial [;
         if (boatman in self) {
             print (A) boatman, " sits in the canoe gazing out over the
-            moving river, the salty water gently lapping the sides of his
+            moving river, the salty water lapping up the sides of his
             craft.^";
         } else {
-            print "The salty water gently lapping the sides of the canoe.^";
+            print "The canoe is nearby, the river gently lapping at its sides.^";
         }
     ],
 
@@ -827,7 +798,7 @@ with
     ],
     has container open light;
 
-!
+! A black bass that you catch with your whip
 Object fish "fish"
 with
     name 'fish',
@@ -851,7 +822,7 @@ with
     ],
 
     before [;
-        Take: 
+        Take:
             if (parent(self) == fish_fire) {
                 "Best you take a seat first. ";
             } else {
@@ -874,6 +845,19 @@ with
         }
     ];
 
+Object fish_fire "fire"
+with
+    name 'fire',
+    description "The fire is burning hot, a fish is impaled on a stick 
+    and suspended over the fire. ",
+    before [;
+        Take, Touch: 
+            "It is too hot to handle safely. ";
+        Receive:
+            "Let us not, but say we did. ";
+    ],
+    has supporter;
+
 !
 NotYourPropertyObject fishing_spear "fishing spear" canoe
 with
@@ -884,7 +868,7 @@ with
 NotYourPropertyObject fishing_net "fishing net" canoe
 with
     name 'fishing' 'net',
-    description "A fishing net is heaped here inside the canoe.";
+    description "The brown net seems to be hand woven from natural fibers. ";
 
 !
 SparkThrowerObject flint_stone "flint"
@@ -1260,6 +1244,10 @@ with
             "The tuber is partially exposed above ground.";
         }],
     before [;
+        Take:
+            if (parent(self) == fish_fire) {
+                "Best you take a seat first. ";
+            }
         Eat:
             print_ret "It would be better served cooked.";
     ],
@@ -1902,8 +1890,8 @@ HumanNPC boatman
             if (self in canoe) {
                 return true;
             } else if (fish_fire in location) {
-                "", (A) self, " is here, sitting on a makeshift stool next
-                to a fire. He beckons you to take a seat on a stool. ";
+                "", (A) self, " is sitting here next to a fire. 
+                He beckons you to take a seat. ";
             }
         ],
 
@@ -1997,7 +1985,7 @@ HumanNPC boatman
                     cared for having one myself.~ ";
                 }
                 if (noun == golden_egg) {
-                    "", (a) self, "'s are sparkle with delight - 
+                    "", (A) self, "'s are sparkle with delight - 
                     ~The legends were true!~ ";
                 }
                 if (noun == matchbook) {
@@ -2104,9 +2092,9 @@ HumanNPC boatman
             else {
                 print "You introduce yourself to ", (a) self, ". ^^~Nice to meet
                         you, ", (a) player, "~, he says with a grin, ~I am
-                        Rompinjimp-Nanganbia Tiki~.^";
+                        Rompinjimp-Nanganbia Tiki. ";
                 boatman_rename();
-                print "^~You can call me ", (a) self, "~, he adds.^";
+                print "Call me ", (a) self, ".~^ ";
                 return true;
             }
         'bye', 'goodbye', 'cheers':
@@ -3019,6 +3007,24 @@ with
         Touch:
             "The water is cold.";
     ];
+
+Object wood_stool "stool"
+with 
+    name 'stool' 'chair' 'log',
+    description [; 
+        print_ret "It is a piece of log used as a makeshift stool, ", (A) boatman,
+        " is sitting on a similar log, next to a fire. ";],
+    before [;
+        Enter:
+            deadflag = 2;
+            print "You sit down with ", (A) boatman, " to a delightful fish 
+            and yam dinner, while you recount your adventure. ", (A) boatman, 
+            " then tells you stories about his family and other legends of
+            Papua New Guinea, while you take notes in your journal about 
+            his tales. ";
+            PrintWinWording();
+    ],
+    has supporter;
 
 ! [ ========================================================== Doors & Bridges ]
 ! [ For auxiliary objects the player can enter to travel between rooms ]
