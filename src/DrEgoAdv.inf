@@ -622,7 +622,19 @@ with
             }
     ];
 
-Class WeightedObject;
+Class WeightedObject
+with 
+    each_turn [;
+        if (action == ##Go && self in player) {
+            give player burdened;
+            "You lug ", (the) self," with you. ";
+        } else {
+            give player ~burdened;
+        }
+        if (self provides swings_shut) {
+            self.swings_shut();
+        }
+];
 
 ! [ ================================================================== Objects ]
 
@@ -1285,7 +1297,7 @@ with
     before [;
         Receive:
             if (noun ofclass WeightedObject) {
-                print (The) noun, " is too heavy for you satchel.^";
+                print (The) noun, " is too heavy for the satchel.^";
                 return true;
             }
     ],
@@ -1399,21 +1411,7 @@ WeightedObject stone_egg "stone egg"
 with 
     name 'stone' 'egg',
     description "The stone is carved in the shape of an egg, it is the size of a
-    head.",
-    !after [;
-    !    Take:
-    !        give player burdened;
-    !    Drop:
-    !        give player ~burdened;
-    !],
-    each_turn [;
-        if (self in player) {
-            give player burdened;
-            "You lug the stone with you.";
-        } else {
-            give player ~burdened;
-        }
-    ];
+    head.";
 
 Object sun_key "sun key"
 with
@@ -1483,7 +1481,7 @@ with
 Object some_seed "seed"
 has pluralname;
 
-Object box_trap "trap"
+WeightedObject box_trap "trap"
 with
     name 'trap',
     description "The trap is a crude box consisting of a wooden frame and
@@ -1520,7 +1518,7 @@ with
             trap.";
     ],
     
-    each_turn [;
+    swings_shut [;
         if (self has open && self.is_set == false) {
             give self ~open;
             print "The trap door swings shut by itself.^";
@@ -2013,6 +2011,14 @@ HumanNPC boatman
                     when the chicken is inside. Good luck!~ ";
                     return true;
                 }
+                if (noun == box_trap || noun == seed_pouch) {
+                    if (carver.carving_state == 0) {
+                        "No, you still have to catch that sneaky chicken. ";
+                    }
+                    move box_trap to canoe;
+                    move seed_pouch to canoe;
+                    "~Thanks friend, I hope you caught that chicken.~ ";
+                }
                 "~No thanks~, ", (a) self, " politely declines.";
             Order:
                 if (Tribe has visited && (second == box_trap || noun == box_trap)) {
@@ -2079,6 +2085,12 @@ HumanNPC boatman
         'lost', 'pig':
             "~It ran away, into a place under ground - never did find that
             pig.~ ";
+        'chicken':
+            if (carver.carving_state == 0) {
+                "~You will no doubt see some chickens roaming these parts.~ ";
+            } else {
+                "~Glad to hear you caught it!~ ";
+            }
     }
     print_ret (The) self, " grins at you and nods. ";
 ];
@@ -2104,6 +2116,8 @@ HumanNPC boatman
             if (location == Shore)
                 "~Safe travels ", (a) player, ", I hope you find what you are
                 looking for!~, ", (a) self, " waves.";
+        'yes':
+            "~Glad to hear it!~ ";
         default:
             print_ret (A) self, " does not reply.";
     }
@@ -2200,8 +2214,9 @@ with
                 remove sun_drawing;
                 self.carving_state = 2;
                 Achieved(SCORE_BRIBERY);
-                "The man takes the drawing from you, he picks a piece of wood
-                from his pile and begins carving.";
+                "He takes the drawing from you, picks a piece of wood
+                from his pile and begins carving. This may take a while, 
+                you could return the trap while you wait. ";
             }
             else if (noun == box_trap && chicken in box_trap && self.carving_state == 0) {
                 remove chicken;
@@ -2321,7 +2336,7 @@ with
         Go:
             if (noun == u_obj) {
                 if (player has burdened) {
-                    "Not while carrying that heavy stone. ";
+                    "Not while carrying that heavy thing. ";
                 }
                 print "You climb up the strong branches of the fig tree.^";
             }
@@ -3165,7 +3180,7 @@ with
     found_in Cliff Waterfall,
     door_to [;
         if (player has burdened) {
-            "Not while carrying that heavy stone.";
+            "Not while carrying that heavy thing.";
         }
         ! Random chance of falling down.
         ! We limit this deadly action to only occur once.
