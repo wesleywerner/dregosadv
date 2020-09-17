@@ -2552,18 +2552,28 @@ OutdoorRoom Shore "River Shore"
 with
     description [;
         if (player in canoe) {
-            print "You are in the canoe on the shore, you can exit the canoe.";
+            print "You are in the canoe on the shore, you can exit the canoe. ";
         }
         else {
-            print "The shore is wet and muddy from the river and extends
-            east-to-west.";
+            print "The shore is wet and muddy and extends east-to-west. ";
         }
     ],
     
     n_to jungle_path_way,
-    cant_go "That is the wrong way to get to the treasured artifact.",
+    cant_go "You walk that way and soon realize there are no paths leading
+            into the jungle, you return to the site where the canoe landed,
+            where you see the easiest path into the jungle. ",
     
     before [;
+        Go:
+            if (noun == s_obj || noun == sw_obj || noun == se_obj) {
+                "The river is that way, and you don't need to get yourself 
+                soaking wet, or worse, drowned. ";
+            }
+            if (noun == ne_obj || noun == nw_obj) {
+                "You try enter the jungle that way, but the dense vegetation
+                resists your attempts. ";
+            }
         ! Senses
         Examine:
             if (noun == u_obj)

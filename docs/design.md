@@ -242,8 +242,6 @@ Using the task scoring system, these tasks are Achievable. See the `task_scores`
 
 # TODO
 * Add ABOUT
-* Returning to the canoe, if you had caught the fish, you find it cooking over a fire
-* Enhance going e-w on the river shore
 * Fill the journal with notes
 * Quotes in journal entries.
 * Optimize entry descriptions for all rooms
