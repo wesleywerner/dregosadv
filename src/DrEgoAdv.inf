@@ -2214,6 +2214,7 @@ with
                 remove sun_drawing;
                 self.carving_state = 2;
                 Achieved(SCORE_BRIBERY);
+                StartDaemon(self);
                 "He takes the drawing from you, picks a piece of wood
                 from his pile and begins carving. This may take a while, 
                 you could return the trap while you wait. ";
@@ -2224,11 +2225,11 @@ with
                 "The carver has a big grin on his face, he removes the hen
                 from the trap and takes her over to the firepit, handing the
                 hen to another man. He returns and gestures to you for the
-                drawing.";
+                drawing. ";
             }
             else
                 "He takes ", (the) noun, " and examines it, turns it around a
-                few times, and finally hands it back to you.";
+                few times, and finally hands it back to you. ";
         Show:
             if (noun ofclass EssentialObject)
                 "He seems more interested in his carvings than ", (the) noun, ".";
@@ -2244,11 +2245,12 @@ with
             }
     ],
     
-    each_turn [;
+    daemon [;
         if (self.carving_state > 1 && self.carving_state < 50) {
-            if (++self.carving_state == 12) {
+            if (++self.carving_state == 20) {
                 self.carving_state = 50;
                 move sun_key to Tribe;
+                StopDaemon(self);
                 if (player in Tribe) {
                     "The carver gestures to you that he is done with the 
                     carving.";
