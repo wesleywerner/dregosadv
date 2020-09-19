@@ -11,6 +11,9 @@ Constant Headline
 
 ! [ ================================================================ Constants ]
 
+! Enable beta test functions
+Constant BETA_TEST;
+
 ! Mention to dead players that they can UNDO the last action.
 Constant DEATH_MENTION_UNDO;
 
@@ -106,6 +109,11 @@ Constant ROOM_SCORE 1;
 ! [ ================================================================= Includes ]
 
 Include "Parser";
+
+! Beta test helper
+#ifdef BETA_TEST;
+Include "BetaTest";
+#endif;
 
 ! Override default library messages. See DM4 $25 and $A4.
 Object LibraryMessages
@@ -206,17 +214,33 @@ Attribute burdened;
 
     ! Print the preface text (for non debug builds)
     #ifdef DEBUG;
-    print_ret "THIS GAME IS IN DEBUG MODE";
+    print "THIS GAME IS IN DEBUG MODE^";
     #ifnot;
-    print_ret "^April 10th, 1940.
+    print   "^April 10th, 1940.
             ^^Your journey started a few days ago after
             docking at Port Moresby, from there it was two days ride on
             the back of a truck to Kerema, followed by a small aircraft
             flight and landing near the mouth of the Maro River.
             ^^You met your guide and his canoe, who will take you up-river
             to your final destination -- a remote and relatively uncharted
-            area in New Guinea -- to find the legendary ", (name) golden_egg;
+            area in New Guinea -- to find the legendary ",
+            (name) golden_egg, ".^";
     #endif;
+    
+    ! Print beta test banner
+    #ifndef DEBUG;
+    #ifdef BETA_TEST;
+    style underline;
+    print "^This story is in testing -- 
+    type BETA to enable beta features (recommended)^";
+    style roman;
+    #endif;
+    #endif;
+    
+    ! Auto enable beta mode
+    !#ifdef BETA_TEST;
+    !<<BetaTestOn>>;
+    !#endif;
 ];
 
 ! Remember the last known location of the player, before they get lost
