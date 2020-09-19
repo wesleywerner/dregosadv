@@ -241,10 +241,7 @@ Using the task scoring system, these tasks are Achievable. See the `task_scores`
 - SCORE_BRIBERY: Trade with the Carver (puzzle)
 
 # TODO
-* Add ABOUT
-* Add verb for tester notes
 * Fill the journal with notes
 * Quotes in journal entries.
-* Optimize entry descriptions for all rooms
 * Rewrite parser responses and PC feedback in the first person?
 * Map with IFM.

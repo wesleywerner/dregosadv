@@ -3035,9 +3035,8 @@ with
     
     before [;
         Smell:
-            print_ret "The entire area smells of sweet orchids, there are so
-            many varieties that their scents mix together to create a
-            potpourri. ";
+            print_ret "You smell the scents of all the many varieties of
+            orchids, mixed together they create a floral potpourri. ";
     ];
 
 ScenicPlantObject orchids "orchids" Valley
