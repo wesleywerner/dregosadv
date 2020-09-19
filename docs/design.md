@@ -242,14 +242,9 @@ Using the task scoring system, these tasks are Achievable. See the `task_scores`
 
 # TODO
 * Add ABOUT
+* Add verb for tester notes
 * Fill the journal with notes
 * Quotes in journal entries.
 * Optimize entry descriptions for all rooms
 * Rewrite parser responses and PC feedback in the first person?
 * Map with IFM.
-
-### Done
-* Add task based scoring - DM$ $22
-* Changing weather in the sky object
-* Add ways (doors) to locations so that player can GO WAY
-* Include "Scenic" and write up some scenery

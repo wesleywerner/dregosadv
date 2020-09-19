@@ -221,8 +221,29 @@ Verb meta 'help'    *                               -> Help
 !--------------------------------------------------------------------------- 
 
 [ AboutSub;
-    print (ESB) "ABOUT THIS STORY^";
-    print "TODO.^^";
+    print (ESB) "ABOUT^";
+    print "I began writing this story in April 2020.
+    I was watching the Indiana Jones films at the time, so I decided to draw
+    some inspiration from the plucky protagonist.
+    ^^
+    I also wanted to learn a new interactive fiction authoring system,
+    having already written stories in Inform 7 and Quest, and being versed
+    in multiple programming languages, I decided on a system that follows
+    more traditional programming paradigms.
+    ^^
+    Initially I tried TADS.
+    I devoured the Getting Started Guide, System Manual and Library Reference,
+    taking notes along the way.
+    Eight pages of notes and half a story later, yet I was unable to grok it.
+    I changed gears and switched to Inform 6, it provided a more familiar
+    syntax and the Designers Manual, 4th edition, has everything you need.";
+    
+    print (ESB) "^^CREDITS^";
+    print "My thanks go to, and in no particular order:
+    ^- Graham Nelson, for creating Inform
+    ^- Emily Short, for putting HelpRoutines.h in the public domain
+    ^-
+    ";
 ];
 
 [ HelpMenu;
