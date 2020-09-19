@@ -15,7 +15,7 @@
   there before).
   
 > >  Clearing
-  A hut is due south. There is a path to the east.
+  A hut is due south. An unexplored path is to the east.
   
 > >  You take your compass from your satchel.
   The needle points towards north.
@@ -23,14 +23,16 @@
   
 > >  It seems curious about the compass.
   
-> >  Conversations have two forms: asking someone something, and telling
-  something. You can ASK the monkey ABOUT SOMETHING, or SAY SOMETHING.
+> >  Conversations have two forms: asking someone something, and telling them
+  something. Try ASK the monkey ABOUT THE JUNGLE, or SAY HI. For more help on
+  talking, type HELP TALKING.
+  
 > >  "*Grunts*"
   
 > >  You climb up the strong branches of the fig tree.
   
   Top of Tree
-. 
+  
   The monkey is not impressed, it climbs down the tree.
   
 > >  As you descend you drop your compass to the ground below. CLINK!
@@ -39,7 +41,9 @@
 )   Clearing
   
   There is a monkey here. It has your compass.
-  A hut is due south. There is a path to the east.
+  A hut is due south. An unexplored path is to the east.
+  
+  The monkey makes grunting noises.
   
 > >  When you approach the small critter it deftly moves out of your reach.
   "*Pants*Grunt*"
@@ -60,7 +64,7 @@
   
 > >  (the sky)
   You crack the whip at the sky -- *SNAP*
-. 
+  
   The piercing sound startles the monkey, it launches up into the air and
   scrambles up the fig tree.
   
@@ -75,7 +79,7 @@
 > >  Taken.
   
 > >  Clearing
-  A hut is due south. There is a path to the east.
+  A hut is due south. An unexplored path is to the east.
   
 > >  The small monkey head swivels side-to-side as you wave the banana, showing
   it off. The monkey likes what it sees but looks hesitant to go near you.
@@ -104,6 +108,6 @@
   
 > >  Taken.
   
-  The monkey picks something off the ground, and eats it.
+  "Ook ook" says the monkey.
   
 > >

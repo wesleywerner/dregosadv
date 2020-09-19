@@ -17,13 +17,14 @@
   there before).
   
 > >  Clearing
-  A hut is due south. There is a path to the east.
+  A hut is due south. An unexplored path is to the east.
   
 > >  Jungle Path
-  A clearing in the jungle is due west. There is a path to the south.
+  A clearing in the jungle is due west. An unexplored path is to the south.
   
 > >  (the sky)
   Rolling clouds move overhead.
+  
 > >  You hear the sounds of the jungle - faint rustling of leaves in the wind,
   faint chirps of insects, and occasionally some small critter moving under
   cover of the dense foliage.
@@ -134,29 +135,27 @@
   Cold drops land on your arms.
   
 > >  Time passes.
+  Cold drops fall on your arms.
   
 > >  Time passes.
-  Rain drops fall on your face.
+  Rain drops fall on your head.
   
 > >  (the sky)
-  You feel the rain on your face as you look up. You see dark rain bearing
-  clouds moving overhead. Drops of rain land on your face.
+  You see dark rain bearing clouds moving overhead.
+  Rain drops spatter on your head.
   
 > >  You hear the pitter-patter of rain around you.
   
 > >  Time passes.
+  Cold drops fall on your arms.
   
 > >  Time passes.
-  Cold drops fall on your head.
-  
-> >  Time passes.
-  
-> >  Time passes.
-  
-> >  Time passes.
+  Cold drops spatter on your back.
   
 > >  Time passes.
   Drops of rain land on your back.
+  
+> >  Time passes.
   
 > >  Time passes.
   
@@ -191,11 +190,10 @@
 > >  Time passes.
   
 > >  Time passes.
+  Rain drops land on your head.
   
 > >  Time passes.
-  Rain drops spatter on your face.
-  
-> >  Time passes.
+  Drops of rain land on your cheek.
   
 > >  Time passes.
   
@@ -224,7 +222,15 @@
 > >  Time passes.
   Clouds flicker menacingly with lightning.
   
+> >  Time passes.
+  
+> >  Time passes.
+  
+> >  Time passes.
+  Your ears ring from the sudden clap of a lightning strike.
+  
 > >  Rolling clouds move overhead.
+  
 > >  You hear the sounds of the jungle - faint rustling of leaves in the wind,
   faint chirps of insects, and occasionally some small critter moving under
   cover of the dense foliage.
