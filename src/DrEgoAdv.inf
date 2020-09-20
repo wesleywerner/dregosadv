@@ -700,7 +700,7 @@ with
     after [;
         Take:
             give player burdened;
-        Drop:
+        Drop, Insert:
             give player ~burdened;
     ],
     each_turn [;
@@ -785,7 +785,9 @@ with
         if (boatman in self) {
             print (A) boatman, " sits in the canoe gazing out over the
             moving river, the salty water lapping up the sides of his
-            craft.^";
+            craft -- Inside it is ";
+            WriteListFrom(child(canoe), ENGLISH_BIT + WORKFLAG_BIT);
+            print ".^";
         } else {
             print "The canoe is nearby, the river gently lapping at its sides.^";
         }
@@ -1579,7 +1581,8 @@ with
     before [;
         Take:
             ! Cannot take it before it is given to you
-            if (~~self has moved) print_ret (The) noun, " is not mine to take.";
+            if (~~self has moved) print_ret (The) noun, " is not mine to take.
+            But I can ask ", (A) boatman, " for it. ";
             remove some_seed;
             remove trap_string;
             self.is_set = false;
@@ -2101,6 +2104,7 @@ HumanNPC boatman
                     move yam to self;
                     move box_trap to player;
                     move seed_pouch to player;
+                    give player burdened;
                     print "~This will do fine!~ he says with a laugh. He hands
                     you a pouch filled with seeds, along with the trap. 
                     ~Remember to SET the trap, then PULL the string
@@ -2113,6 +2117,7 @@ HumanNPC boatman
                     }
                     move box_trap to canoe;
                     move seed_pouch to canoe;
+                    give player ~burdened;
                     "~Thanks friend, I hope you caught that chicken.~ ";
                 }
                 "~No thanks~, ", (a) self, " politely declines. ";
@@ -2810,8 +2815,8 @@ with
 ScenicBase tomb_artifacts "artifacts"
 with
     name 'artifact' 'artifacts' 'clay' 'pot' 'pots' 'idol' 'idols',
-    description "The artifacts consist of old clay pots and idols,
-    carved out of wood, and depicts various animals: oxen, pigs and dogs. ",
+    description "The artifacts consist of old clay pots,
+    idols carved out of wood depicting oxen, pigs and dogs. ",
     found_in Tomb,
     before [;
         Take, Search:
@@ -2957,6 +2962,8 @@ with
                 print "I notice a hole in the floor. ";
                 <<Examine sun_key_hole>>;
             }
+        Exit:
+            <<Go u_obj>>;
     ];
 
 ScenicEngravingObject "glyphs" Tomb
@@ -3001,6 +3008,7 @@ with
         if (--self.height == 0) {
             remove self;
             move stone_altar to location;
+            move altar_plate to location;
             "A low thud echoes through the ground as the column comes to a rest. ";
         }
         "The column lowers into the ground with the sound of grinding stone. ";
@@ -3035,6 +3043,22 @@ with
     ],
     has scenery container open;
 
+ScenicBase altar_plate "altar plate"
+with
+    name 'plate',
+    description [;
+            print "The plate is wooden and set into the top surface of the altar. ";
+            if (golden_egg in stone_altar) { 
+                print "The Golden Egg is resting on this plate, 
+                I should be careful removing it, as it may be booby trapped.
+                If I can find something heavy to replace the egg... ";
+            }
+            print "^";
+    ],
+    before [;
+        Take: "I can't take that. ";
+    ];    
+
 ScenicRockObject stone_altar "altar"
 with
     name 'stone' 'altar' 'column',
@@ -3048,7 +3072,7 @@ with
         }
     ],
     description "The stone altar extrudes up from the floor, its top surface
-    reaches up to my chest, there is a wooden plate inset into the top. ",
+    reaches up to my chest, there is a plate inset on top. ",
     each_turn [n is_weighted;
         is_weighted = false;
         objectloop (n in self) {
@@ -3109,8 +3133,7 @@ with
     found_in Tribe,
     before [;
         Take:
-        "I don't think it would be right to take them.
-        Besides, I don't see any that you be useful to me. ";
+        "I don't want any of those carvings. ";
     ],
     has pluralname;
 

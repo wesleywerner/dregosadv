@@ -125,7 +125,7 @@ with
                     3: "You would think the Carver can make a replica, given the drawing...";
                     4: "The Carver wants a chicken as payment...";
                     5: "There must be a way to trap the chicken...";
-                    default: "Go see Rom, your guide, for advice on catching chickens.";
+                    default: "Rom, your guide, has a something in his boat that will help. ";
                 }
             }
             else if (box_trap has moved) {
