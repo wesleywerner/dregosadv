@@ -41,11 +41,11 @@ Constant THUNDER_ROLL 10;
 ! Multiplier for chance of thunder in DRY state (1 in n*THUNDER_ROLL)
 Constant THUNDER_MULTIPLIER 3;
 ! Chance of rain (1 in n)
-Constant RAIN_START_ROLL 60;
+Constant RAIN_START_ROLL 20;
 ! Chance of rain stop (1 in n)
-Constant RAIN_STOP_ROLL 30;
+Constant RAIN_STOP_ROLL 20;
 ! Chance of rain drops falling on player when wet (1 in n)
-Constant RAIN_ON_PLAYER_ROLL 3;
+Constant RAIN_ON_PLAYER_ROLL 2;
 
 ! Show the option to list AMUSING things you can try (at the End of the story)
 Constant AMUSING_PROVIDED;
@@ -269,8 +269,8 @@ Global last_known_location = 0;
 ];
 
 [ PrintWinWording;
-    print "^^You spend the next week cataloguing the precious artifact,
-    before you donate ", (the) golden_egg, " to the museum of
+    print "^^For the next few days you catalogue the precious artifact,
+    and then you donate ", (the) golden_egg, " to the museum of
     Natural History. ";
 ];
 
@@ -384,6 +384,23 @@ with
     se_to LostInJungle,
     e_to LostInJungle,
     w_to LostInJungle,
+    ! Leave any WeightedObject behind before getting lost
+    before [item crflag;
+        Go:
+            ! When going in a compass direction, and it leads to LostInJungle
+            if (noun in compass && location ~= LostInJungle && self.(noun) == LostInJungle) {
+                ! Leave all WeightedObject behind
+                objectloop(item in player && item ofclass WeightedObject) {
+                    print "I am leaving this heavy ", (name) item,
+                    " behind, before I venture into the jungle. ";
+                    move item to location;
+                    crflag = true;
+                }
+                if (crflag) {
+                    print "^";
+                }
+            }
+    ],
     ! Record the last known good location
     after [;
         Go:
@@ -581,6 +598,9 @@ with
     ! This value should be set on instances.
     material "nondescript",
     
+    ! Turns of light remaining
+    light_left,
+    
     ! The torch can be made of multiple things, display the material which
     ! this torch is made of, in the display name.
     short_name [;
@@ -593,6 +613,10 @@ with
     ],
     
     before [;
+        Insert:
+            if (second == satchel && self has light) {
+                "I can't put the lit torch in my satchel. ";
+            }
         Burn:
             if (self has light)
                 "", (The) self, " is already lit. ";
@@ -603,10 +627,12 @@ with
             if (~~second ofclass SparkThrowerObject)
                 "I can't light ", (the) self, " with ", (the) second ,". ";
             if (second has wet)
-                "", (The) second, " is wet, it won't light ", (the) self, ". ";
+                <<Burn second>>;
+                !"", (The) second, " is wet, it won't light ", (the) self, ". ";
             if (self hasnt oily)
                 "", (The) self, " is not burning, the wick needs some kind of fuel. ";
             give self light;
+            self.light_left = 20;
             print_ret "I strike ", (the) second, ", it is sparking
             onto the wick, a few more times...
             A small flame appears, carefully now, blow on the flame, that's it! 
@@ -622,7 +648,18 @@ with
             "Taking ", (the) self, ". ";
     ],
     
-    has;
+    each_turn [;
+        if (self has light) {
+            if (self.light_left < 4) {
+                print "My torch flickers and dims.^";
+            }
+            if (self.light_left > 0 && --self.light_left == 0) {
+                give self ~light;
+                give self ~oily;
+                "My torch has gone out. ";
+            }
+        }
+    ];
 
 ! A material that acts as a wick
 Class TorchWickObject
@@ -633,6 +670,12 @@ with
                 print_ret "Perhaps I meant to TIE ", (the) self, " around ", (the) second, ". ";
             }
         Tie:
+            if (self in satchel) {
+                <Take self>;
+            }
+            if (second in satchel) {
+                <Take second>;
+            }
             ! Remove this wick when tying it on a TorchBase.
             ! Then change the torch's name and give it the torch attribute.
             if (second ofclass TorchBaseObject) {
@@ -646,14 +689,28 @@ with
     ];
 
 Class WeightedObject
-with 
+with
+    before [;
+        ! Prevent taking if already burdened
+        Take:
+            if (player has burdened) {
+                "I can't carry that, I am already burdened. ";
+            }
+    ],
+    after [;
+        Take:
+            give player burdened;
+        Drop:
+            give player ~burdened;
+    ],
     each_turn [;
         if (action == ##Go && self in player) {
-            give player burdened;
+            !give player burdened;
             "Hrmpf, this ", (name) self," sure is heavy. ";
-        } else {
-            give player ~burdened;
         }
+        !} else {
+        !    give player ~burdened;
+        !}
         if (self provides swings_shut) {
             self.swings_shut();
         }
@@ -702,13 +759,26 @@ with
         Use:
             print_ret "If I want to whip something, I should WHIP IT, 
             like WHIP THE TREE. ";
+        Insert:
+            if (second == satchel) {
+                if (self has worn) {
+                    "No need to stash it in the bag,
+                    I can just wear it on my belt. ";
+                } else {
+                    <<Wear self>>;
+                }
+            }
+    ],
+    after [;
+        Wear:
+            "I attach my whip on my belt. ";
     ],
     has clothing worn;
 
 !
 Object canoe "canoe"
 with
-    name 'boat' 'canoe' 'oar',
+    name 'boat' 'canoe' 'oar' 'craft',
 
     ! Room Description when outside the canoe
     initial [;
@@ -738,17 +808,14 @@ with
                 "There is no rush, besides, I am famished and that fish 
                 cooking over the fire smells inviting. ";
             }
-    ],
-    
-    after [;
-        Enter:
             ! Win condition
             if (golden_egg in player) {
                 deadflag = 2;
-                print "You get in the canoe, ", (a) boatman ,"'s eyes light up
-                when you show him ", (the) golden_egg, ". 
-                You spend the time telling him of your adventure. ";
+                print "I get in the canoe, ", (a) boatman ,"'s eyes light up
+                when I show him ", (the) golden_egg, ". 
+                I spend the evening telling him of my adventure. ";
                 PrintWinWording();
+                return true;
             }
     ],
 
@@ -972,8 +1039,8 @@ with
     after [;
         Take:
             if (~~self has moved) {
-                print_ret "Okay, now lifting ", (the) self, " carefully from
-                it's resting place. ";
+                print_ret "I lift ", (the) self, " carefully from
+                its resting place. ";
             }
     ],
     has concealed;
@@ -981,7 +1048,7 @@ with
 !
 EssentialObject journal "journal"
     with
-        name 'my' 'diary' 'journal' 'book',
+        name 'my' 'diary' 'journal' 'book' 'notes',
         
         description [;
         "My journal is filled with notes about Papua
@@ -1151,8 +1218,9 @@ EssentialObject journal "journal"
 ! The jungle is visible in all JungleRooms
 SearchableObject jungle_scenery "jungle"
     with
-        name 'vegetation' 'jungle' 'foliage' 'plant' 'plants' 'bush' 'brush' 'shrub',
-        description "The jungle foliage is dense and lush. ",
+        name 'vegetation' 'jungle' 'foliage' 'plant' 'plants' 'bush' 'brush' 'shrub' 'vine' 'vines',
+        description "The jungle is dense and lush, and comprises various
+        plants, shrubs and vines, with foliage of all shapes and sizes. ",
         auto_take true,
         found_in [;
             return (location ofclass JungleRoom);
@@ -1256,7 +1324,7 @@ with
                 it was 5 lucifers ago. ";
             } else {
                 "I strike a match, the red phosphor crumbles into dust.
-                They must have gotten wet, and are now useless. ";
+                They must be wet, how useless. ";
             }
     ],
     has wet;
@@ -1334,7 +1402,7 @@ Object sky "sky"
             } else if (self.state == WEATHER_RAIN) {
                 ! Random flavour text
                 if (random(2) == 1) {
-                    print "I feel the rain on my face as you look up. ";
+                    print "I see clouds above, and feel the rain on my face. ";
                 }
                 "I see dark rain-bearing clouds moving overhead. ";
             }
@@ -1371,7 +1439,7 @@ Object sky "sky"
         if (self.thunder_in > 0) {
             self.thunder_in = self.thunder_in - 1;
             if (self.thunder_in == 0) {
-                print (string) random("The sound of thunder rumbles overhead",
+                print "^", (string) random("The sound of thunder rumbles overhead",
                 "The air trembles with the rolling thunder",
                 "My ears ring from the sudden clap of a lightning strike"),
                 ".^";
@@ -1385,21 +1453,21 @@ Object sky "sky"
             if (random(THUNDER_ROLL * THUNDER_MULTIPLIER) == 1) {
                 ! Let the player hear the thunder in n turns
                 self.thunder_in = random(3);
-                print (string) random("Lightning arcs across the sky.",
-                "Lightning flashes in the distance.",
-                "Clouds flicker menacingly with lightning."), "^";
+                print "^", (string) random("Lightning arcs across the sky",
+                "Lightning flashes in the distance",
+                "Lightning dances menacingly within the clouds above"), ".^";
             }
             ! Chance of rain
             if (self.counter > RAIN_START_T && random(RAIN_START_ROLL) == 1) {
                 self.counter = 0;
                 self.state = WEATHER_RAIN;
-                print "It starts to rain.^";
+                print "^It starts to rain.^";
             }
         } else if (self.state == WEATHER_RAIN) {
             ! Rain messages
             if (random(RAIN_ON_PLAYER_ROLL) == 1) {
-                print 
-                (string) random("Cold drops", "Rain drops", "Drops of rain"), 
+                print "^I feel ",
+                (string) random("cold drops of rain", "raindrops", "the rain"), 
                 " ",
                 (string) random("fall", "land", "spatter"),
                 " on my ",
@@ -1410,15 +1478,15 @@ Object sky "sky"
             if (self.thunder_in == 0 && random(THUNDER_ROLL) == 1) {
                 ! Let the player hear the thunder in n turns
                 self.thunder_in = random(3);
-                print (string) random("Lightning arcs across the sky.",
-                "Lightning flashes in the distance.",
-                "Clouds flicker menacingly with lightning."), "^";
+                print "^", (string) random("Lightning arcs across the sky",
+                "Lightning flashes in the distance",
+                "Clouds flicker menacingly with lightning"), ".^";
             }
             ! Clears up
             if (self.counter > RAIN_STOP_T && self.thunder_in == 0 && random(RAIN_STOP_ROLL) == 1) {
                 self.counter = 0;
                 self.state = WEATHER_DRY;
-                print "The rain ", 
+                print "^The rain ", 
                 (string) random("subsides", "peters out", "eases off"),
                 ".^";
             }
@@ -1680,7 +1748,7 @@ with
         Give:
             if (noun ofclass EdibleFruitObject) {
                 "The creature smacks its lips at the sight of ", (the) noun, 
-                ", but hesitates to go near me. ";
+                ", but hesitates to come near me. ";
             }
             if (noun ofclass EssentialObject) {
                 "There is no way I am giving ", (a) noun, 
@@ -1708,6 +1776,10 @@ with
             if (noun == lodestar) {
                 monkey_speak(random(10));
                 print_ret " it replies, gripping the device tightly. ";
+            }
+        Take:
+            if (noun == banana) {
+                <<Show banana self>>;
             }
     ],
     
@@ -2127,6 +2199,8 @@ HumanNPC boatman
             } else {
                 "~Glad to hear you caught it!~ ";
             }
+        'compass':
+            "~I don't need one, I know these waters and jungles quite well.~";
     }
     print_ret (The) self, " grins at you and nods. ";
 ];
@@ -2251,7 +2325,8 @@ with
                 self.carving_state = 2;
                 Achieved(SCORE_BRIBERY);
                 StartDaemon(self);
-                "I give him the drawing, picks a piece of wood
+                "I give him the drawing, he looks at it for a moment
+                then picks a piece of wood
                 from his pile and begins carving. This may take a while, 
                 I could return the trap to ", (a) boatman, " while I wait. ";
             }
@@ -2396,6 +2471,16 @@ with
     s_to stone_stairs,
     e_to bridge_way;
 
+ScenicBase "gorge"
+with 
+    name 'gorge',
+    description "The gorge is a long way down. ",
+    found_in Cliff,
+    before [;
+        Enter: "Not possible, the only way across is over that rope bridge. ";
+        Search: "I don't see any identifying landmarks at the bottom. ";
+    ];
+
 ! [ -------------------------------------------------------------- Deadly Drop ]
 OutdoorRoom DeadlyDrop "Deadly Drop"
 with
@@ -2459,19 +2544,26 @@ JungleRoom Garden "Garden"
 with
     description [;
         if (self hasnt visited) {
-            print "I enter into a small garden -- whoever kept it hasn't been
-            here for a very long time. The plants are growing wild and are all
-            over the place. ";
+            print "I enter a small garden, it looks like it has not been maintained
+            for a very long time and the plants have grown wild. ";
         } else {
-            print "I am in a small garden, I see some vegetable plants
+            print "The small garden has grown wild, I see some vegetable plants
             and fruit trees. ";
         }
     ],
     ne_to bungalow_way;
 
-ScenicPlantObject "vegetable plants" Garden
+ScenicPlantObject "garden"
+with 
+    name 'garden',
+    found_in Garden,
+    before [;
+        Examine: <<Look>>;
+    ];
+
+ScenicPlantObject "vegetables" Garden
 with
-    name 'veg' 'veggie' 'veggies' 'vegetable' 'vegetables' 'plant' 'plants',
+    name 'veg' 'veggie' 'veggies' 'vegetable' 'vegetables',
     description [;
         print "The vegetable plants in the garden have grown wild without
         anybody around to harvest them. ";
@@ -2490,10 +2582,10 @@ JungleRoom JunglePath "Jungle Path"
 with
     description [;
         if (self hasnt visited) {
-            print "Plants of all shapes and sizes fill every nook the jungle,
-            this narrow path is drowning in vegetation. ";
+            print "I walk along the jungle path, it looks frequently used and
+            is surrounded by dense vegetation. ";
         } else {
-            print "I am on a narrow path surrounded by dense vegetation. ";
+            print "The path is surrounded by vegetation. ";
         }
     ],
     before [;
@@ -2718,7 +2810,8 @@ with
 ScenicBase tomb_artifacts "artifacts"
 with
     name 'artifact' 'artifacts' 'clay' 'pot' 'pots' 'idol' 'idols',
-    description "I see clay pots and idols carved from wood. ",
+    description "The artifacts consist of old clay pots and idols,
+    carved out of wood, and depicts various animals: oxen, pigs and dogs. ",
     found_in Tomb,
     before [;
         Take, Search:
@@ -2730,22 +2823,27 @@ Object urn "urn"
 with
     name 'urn',
     description "It is a clay vessel resembling an urn. ",
-    when_open "The urn is open, an oil substance inside it. ",
+    when_open "The urn is open, an oily substance is inside it. ",
     before [;
         Open:
             if (self in satchel) {
                 print "I take the urn from my satchel. ";
                 move self to player;
             }
-        LetGo:
-            if (noun == urn_oil) move urn_oil to urn;
+        !LetGo:
+        !    print "LetGo ", (name) noun;
+        !    if (noun == urn_oil) {
+        !        print "NO.";
+        !        move urn_oil to urn;
+        !        return true;
+        !    }
     ],
     after [;
         Receive:
             move noun to player;
             if (noun hasnt oily) {
                 if (noun ofclass TorchBaseObject && noun hasnt is_torch) {
-                    "Hmm, nothing happens. ";
+                    "I dip it in the oil, nothing happens. ";
                 }
                 give noun oily;
                 if (noun has is_torch) {
@@ -2763,7 +2861,13 @@ with
     article "some",
     description "I am not sure what this was used for, but it distinctly oily. ",
     before [;
-        Take, Drop:
+        PutOn:
+            move self to urn;
+            if (second == torch_of_wood || second == torch_of_bone) {
+                <<Dip second urn>>;
+            }
+            print_ret "That will only make a mess. ";
+        Take, Drop, Remove:
             move self to urn;
             print_ret "I would rather keep it in the urn. ";
     ];
@@ -2800,6 +2904,9 @@ with
         
         ! Look in directions
         Examine:
+            if (lodestar notin player && lodestar notin satchel) {
+                "I can't look in a direction without my compass. ";
+            }
             if (noun in compass && lodestar notin player && lodestar in satchel) {
                 <Take lodestar>;
             }
@@ -3047,11 +3154,11 @@ with
 JungleRoom Waterfall "Waterfall"
 with
     description [;
-        print "Water cascades down into a clear pool of water. ";
         if (self hasnt visited) {
-            print "A fine mist circulates above the pool,
-            a vivid rainbow shines from the dancing spray. ";
+            print "I cross the rope bridge safely and arrive at a serene sight: ";
         }
+        "Water cascades down into a clear pool, where a fine mist is circulating.
+        A vivid rainbow shines through the dancing spray. ";
     ],
     before [;
         Listen:
@@ -3113,10 +3220,10 @@ with
     before [;
         Enter:
             deadflag = 2;
-            print "You sit down with ", (A) boatman, " to a delightful fish 
-            and yam dinner, while you recount your adventure. ", (A) boatman, 
-            " then tells you stories about his family and other legends of
-            Papua New Guinea, while you take notes in your journal about 
+            print "I sit down with ", (A) boatman, " to a delightful fish 
+            and yam dinner, while I recount my adventure. ", (A) boatman, 
+            " then tells me stories about his family and other legends of
+            Papua New Guinea, while I take notes in my journal about 
             his tales. ";
             PrintWinWording();
     ],
@@ -3232,7 +3339,7 @@ with
         if (~~torch)
             print_ret "I would rather not enter without a light. ";
         if (torch hasnt light)
-            "It is pitch black in there. If only mt torch was lit. ";
+            "It is pitch black in there. If only my torch was lit. ";
         print "I steady my torch and head down the dark passage.^";
         return Tomb;
     ],
@@ -3305,13 +3412,12 @@ with
     name 'temple' 'building',
     description [;
         if (location == Waterfall) {
-            print "The temple is about three times mt height, it is
-            constructed of carved stone blocks and seems partially swallowed by
-            vines and plant growth. An opening South in the front serves as a
-            door.^";
+            "The temple is about three times the height of a man, it is
+            built from stone blocks, and seems partially swallowed by
+            vines and plant growth. An opening in the stone serves as a door. ";
         }
         if (location == JunglePath) {
-            print "The temple is too far to see from here.^";
+            "The temple is too far to see from here. ";
         }
     ],
     obvious_way true,
