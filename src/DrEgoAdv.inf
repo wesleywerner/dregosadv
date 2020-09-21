@@ -704,13 +704,14 @@ with
             give player ~burdened;
     ],
     each_turn [;
-        if (action == ##Go && self in player) {
-            !give player burdened;
+        if (self in player) {
+            give player burdened;
+        } else {
+            give player ~burdened;
+        }
+        if (action == ##Go && player has burdened) {
             "Hrmpf, this ", (name) self," sure is heavy. ";
         }
-        !} else {
-        !    give player ~burdened;
-        !}
         if (self provides swings_shut) {
             self.swings_shut();
         }
@@ -2088,9 +2089,10 @@ HumanNPC boatman
                 if (noun == matchbook) {
                     "~Those are useful, but hard to get those around here"
                     , (string) pause,
-                    "I make fire with a fire plough, rubbing a stick in a 
-                    groove, or using a piece of flint. Those are plentiful
-                    near running water.~ ";
+                    "I make fire with flint stones. Those are plentiful
+                    near running water"
+                    , (string) pause,
+                    "The stone has a blue shine.~ ";
                 }
                 if (noun == satchel) {
                     "~Nice bag you got there, ", (string)pname, ".~ ";
@@ -2108,7 +2110,7 @@ HumanNPC boatman
                     print "~This will do fine!~ he says with a laugh. He hands
                     you a pouch filled with seeds, along with the trap. 
                     ~Remember to SET the trap, then PULL the string
-                    when the chicken is inside. Good luck!~ ";
+                    when the chicken is inside. Good luck!~^";
                     return true;
                 }
                 if (noun == box_trap || noun == seed_pouch) {
