@@ -693,6 +693,9 @@ with
     before [;
         ! Prevent taking if already burdened
         Take:
+            if (self in player) {
+                "I already have that. ";
+            }
             if (player has burdened) {
                 "I can't carry that, I am already burdened. ";
             }
@@ -2414,6 +2417,7 @@ with
     The critter scurries out of sight. I continue my search and find ",
     search_concludes "I take it. ",
     auto_take true,
+    article "some",
     before [;
         ! Alias Dig as searching
         Dig:
@@ -2421,8 +2425,7 @@ with
         ! Hide the rubble from the room description when searched
         Search:
             give self scenery;
-    ],
-    has pluralname;
+    ];
 
 ! [ ----------------------------------------------------------------- Clearing ]
 JungleRoom Clearing "Clearing"
@@ -2792,7 +2795,7 @@ with
 
 ScenicEngravingObject temple_stone_box "engraved sun" Temple
 with
-    name 'stone' 'slab' 'hole' 'engraved' 'sun',
+    name 'slab' 'hole' 'engraved' 'sun',
     description "The image of the sun is engraved into a slab of stone, embedded
     into the floor. I also see holes in the slab, it may be possible to open. ",
     short_name "engraved sun",
