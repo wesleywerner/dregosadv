@@ -127,6 +127,11 @@ with before [;
             lm_o.takenFromBag = false;
             "Taking ", (a) lm_o, " from my satchel. ";
         }
+        ! Override lm_n 13 "(putting x into SACK_OBJECT to make room)"
+        ! for any WeightedObject, which is moved to the floor by its class.
+        if (lm_n == 13 && lm_o ofclass WeightedObject) {
+            "(putting ", (the) lm_o, " down to free up my hands)";
+        }
     Miscellany:
         ! code 50 is the score message.
         ! lm_o contains the number of points scored.
@@ -189,6 +194,7 @@ Attribute burdened;
     StartDaemon(monkey);
     StartDaemon(sky);
     StartDaemon(chicken);
+    StartDaemon(burden_giver);
 
     ! enable debugging actions:
     #ifdef DEBUG;
@@ -690,29 +696,19 @@ with
 
 Class WeightedObject
 with
-    before [;
-        ! Prevent taking if already burdened
-        Take:
-            if (self in player) {
-                "I already have that. ";
-            }
-            if (player has burdened) {
-                "I can't carry that, I am already burdened. ";
-            }
-    ],
-    after [;
-        Take:
-            give player burdened;
-        Drop, Insert:
-            give player ~burdened;
-    ],
     each_turn [;
-        if (self in player) {
-            give player burdened;
-        } else {
-            give player ~burdened;
+        if (self in SACK_OBJECT) {
+            ! The message for this is handled in LibraryMessages().
+            ! We allow the WeightedObject to be placed in the satchel,
+            ! and override the default message (placing x in bag to make room)
+            ! then silently move it in each_turn below.
+            ! Reason: if preventing from inserting into satchel the parser
+            ! ends up printing "you are carrying too many things already".
+            ! This way the last action succeeds at the expense of the heavy
+            ! item being left on the ground.
+            move self to location;
         }
-        if (action == ##Go && player has burdened) {
+        if (action == ##Go && self in player) {
             "Hrmpf, this ", (name) self," sure is heavy. ";
         }
         if (self provides swings_shut) {
@@ -722,7 +718,26 @@ with
 
 ! [ ================================================================== Objects ]
 
-!
+! This daemon tests for multiple objects of WeightedObject in the player
+! and drops all but one
+Object burden_giver
+with daemon [item;
+    give player ~burdened;
+    item = child(player);
+    while (item) {
+        if (item ofclass WeightedObject) {
+            if (player has burdened) {
+                move item to location;
+                print "I can't carry two heavy things.
+                I drop ", (the) item, ".^";
+            } else {
+                give player burdened;
+            }
+        }
+        item = sibling(item);
+    }
+];
+
 EdibleFruitObject banana "banana"
 with
     name 'banana' 'bananas',
@@ -1386,10 +1401,6 @@ with
     description "This is my brown shoulder bag. ",
     before [;
         Receive:
-            if (noun ofclass WeightedObject) {
-                print (The) noun, " is too heavy for my satchel.^";
-                return true;
-            }
             if (noun == urn && urn has open) {
                 "It might make a mess if the open urn spills in my bag. ";
             }
