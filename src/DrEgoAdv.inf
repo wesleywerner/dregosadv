@@ -2514,6 +2514,8 @@ with
     description "",
     turn_count 0,
     before [;
+        Examine:
+            "Now is not the time! ";
         Whip:
             ! Whip the bridge to save yourself
             if (noun == rope_bridge) {
@@ -2553,11 +2555,12 @@ with
             print "^You plummet into the gorge below, cracking your head
             on a rocky outcropping, far down below. Weeks pass before the small
             search party discover your broken body.
-            (If only you tried your WHIP)";
+            ^^If only you tried your WHIP";
         }
         self.turn_count = self.turn_count + 1;
     ],
-has light;
+    cant_go "I can't! ",
+    has light;
 
 Object rope_bridge "rope bridge" DeadlyDrop
 with
