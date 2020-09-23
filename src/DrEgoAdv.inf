@@ -118,6 +118,12 @@ Include "BetaTest";
 ! Override default library messages. See DM4 $25 and $A4.
 Object LibraryMessages
 with before [;
+    Swim:
+        "I prefer to stay dry. ";
+    Jump:
+        "Now is not the time to fool around. ";
+    Listen:
+        "It sounds like a jungle. ";
     Take:
         ! lm_n holds the message number, 1 is "Taken".
         ! lm_o holds the object in question.
@@ -199,8 +205,6 @@ Attribute walls;
 
     ! enable debugging actions:
     #ifdef DEBUG;
-      ! allow skipping the long boat ride with GO FASTER
-      move canoe_hasten to River;
       ! disable the weather - the rng consumed each turn affects tests
       sky.enabled = false;
     #endif;
@@ -860,19 +864,6 @@ with
         }
     ],
     has   enterable static container open;
-
-! A debug-only object that provides the GO FASTER command to skip the ride.
-#ifdef DEBUG;
-Object canoe_hasten
-    with
-        name 'faster',
-        before [;
-            Enter:
-                canoe.time_left = 0;
-                print_ret "You hasten your journey.";
-        ],
-    has scenery enterable;
-#endif;
 
 TorchWickObject cloth "strip of canvas"
 with 
@@ -2696,6 +2687,14 @@ with
             " paddles with his oar. ";
         Smell:
             print_ret "I smell fresh air. ";
+        Jump:
+            "I don't want to rock the boat. ";
+        Swim:
+            "These waters look dangerous. I would not dare swim. ";
+        Wait:
+            SetTime(the_time + canoe.time_left);
+            canoe.time_left = 0;
+            "I sit back and enjoy the boat ride until... ";
     ];
 
 Object "jungle"

@@ -1,5 +1,5 @@
 superbrief
-go faster
+wait
 exit
 north
 southwest

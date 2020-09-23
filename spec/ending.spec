@@ -1,5 +1,5 @@
 superbrief
-go faster
+wait
 gonear waterf
 purloin golden egg
 go south
