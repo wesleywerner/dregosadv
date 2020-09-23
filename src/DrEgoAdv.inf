@@ -489,10 +489,7 @@ Class ScenicRockObject
 with
     before [;
         Take, Push, Pull:
-            if (noun has pluralname)
-                print_ret (The) self, " are too large and heavy to move. ";
-            else
-                print_ret (The) self, " is too large and heavy to move. ";
+            print_ret (The) self, " is too large and heavy to move. ";
     ],
 has scenery static;
 
@@ -520,10 +517,7 @@ Class RockDoor
 with
     before [;
         Take:
-            if (noun has pluralname)
-                print_ret (The) self, " are too large and heavy to move. ";
-            else
-                print_ret (The) self, " is too large and heavy to move. ";
+            print_ret (The) self, " is too large and heavy to move. ";
     ],
 has scenery static door open;
 
@@ -1589,7 +1583,7 @@ with
     has edible;
 
 Object some_seed "seed"
-has pluralname;
+with article "some";
 
 WeightedObject box_trap "trap"
 with
@@ -2801,10 +2795,10 @@ with
 ScenicEngravingObject temple_glyphs "glyphs" Temple
 with
     name 'glyph' 'glyphs' 'symbol' 'symbols' 'wall' 'walls',
+    article "some",
     description "The engravings cover all of the walls. My attention
     is drawn to a circular pattern in the glyphs as they converge and surround
-    one large glyph -- I recognize this glyph as ~air terjun~. ",
-    has pluralname;
+    one large glyph -- I recognize this glyph as ~air terjun~. ";
 
 ScenicEngravingObject "glyphs" Temple
 with
@@ -2841,14 +2835,14 @@ with
 ScenicBase tomb_artifacts "artifacts"
 with
     name 'artifact' 'artifacts' 'clay' 'pot' 'pots' 'idol' 'idols',
+    article "some",
     description "The artifacts consist of old clay pots,
     idols carved out of wood depicting oxen, pigs and dogs. ",
     found_in Tomb,
     before [;
         Take, Search:
             "I don't see anything worth taking. ";
-    ],
-    has pluralname;
+    ];
 
 Object urn "urn"
 with
@@ -3158,14 +3152,14 @@ with
 ScenicBase statuettes "carvings"
 with 
     name 'wood' 'wooden' 'statuettes' 'figurines' 'carving' 'carvings',
+    article "some",
     description_lead "The wooden figurines are all lined up neatly. ",
     description "They depict several deities and animals. ",
     found_in Tribe,
     before [;
         Take:
         "I don't want any of those carvings. ";
-    ],
-    has pluralname;
+    ];
 
 ! [ ------------------------------------------------------------------- Valley ]
 JungleRoom Valley "Valley"
@@ -3192,6 +3186,7 @@ with
 ScenicPlantObject orchids "orchids" Valley
 with 
     name 'flower' 'flowers' 'flowering' 'plant' 'plants' 'orchid' 'orchids',
+    article "some",
     description "A myriad of beautiful orchids display a rich set of vibrant
     colors -- white, pink, magenta, purple, red, yellow, gold, blue.
     Their flowers come in all shapes --  oblong, slender, conical and cruciform
@@ -3200,8 +3195,7 @@ with
         Take:
             print_ret "As beautiful as they are, I did not come equipped for a
             horticulture expedition. ";
-    ],
-    has pluralname;
+    ];
 
 ! [ ---------------------------------------------------------------- Waterfall ]
 JungleRoom Waterfall "Waterfall"
@@ -3362,11 +3356,11 @@ with
 DoorWay tomb_stairs "stairs"
 with
     name 'stair' 'stairs',
+    article "some",
     description "Carved out of the stone, they lead up. ",
     found_in Tomb,
     door_dir u_to,
-    door_to Waterfall
-    has pluralname;
+    door_to Waterfall;
 
 ! Connect the Waterfall with the Tomb via an Alcove
 RockDoor alcove_door "alcove"
@@ -3439,6 +3433,7 @@ with
 DoorWay stone_stairs "stone stairs"
 with
     name 'stone' 'stairs' 'steps' 'hill' 'staircase',
+    article "some",
     description "The individual steps are carved from stone and laid out to form
     a staircase on the hill. ",
     found_in Valley Cliff,
@@ -3456,8 +3451,7 @@ with
         ! Allow climbing the steps to go their way
         Climb:
             <<Go (self.door_dir())>>;
-    ],
-    has pluralname;
+    ];
 
 ! Ways to the Temple
 DoorWay temple_way "temple"
