@@ -162,6 +162,7 @@ Attribute wet;
 Attribute oily;
 Attribute examined;
 Attribute burdened;
+Attribute walls;
 
 ! [ ================================================================= Routines ]
 
@@ -317,7 +318,7 @@ with
                   print (A) item, " is due ", (name) item.door_dir(), ". ";
               ! If the way hasnt visited, print a nameless exit
               } else {
-                  if (location ofclass IndoorRoom) {
+                  if (location ofclass IndoorRoom || location has walls) {
                       print "There is an exit to the ", (name) item.door_dir(), ". ";
                   } else {
                       print "An unexplored path is to the ", (name) item.door_dir(), ". ";
@@ -2413,24 +2414,31 @@ with
                 <<Examine sky>>;
             }
     ],
-    cant_go "The only exits are North and Southwest. ",
+    cant_go "The only exits are north to the clearing, and southwest to the garden. ",
     n_to clearing_way,
-    sw_to garden_way;
+    sw_to garden_way,
+    has walls;
 
 SearchableObject bungalow_rubble "rubble"
 with 
-    name 'rubble' 'detritus' 'junk' 'debris' 'roof' 'floor' 'bungalow' 'hut' 'room',
+    name 'rubble' 'detritus' 'junk' 'debris' 'roof' 'floor' 'bungalow' 'hut' 'pile',
     found_in Bungalow,
-    description "A pile of debris litters the floor, made up of chunks of roof
-    thatching and broken remnants of furniture. ",
-    search_lead "I scrounge amid the rubble and disturb a giant centipede --
+    description [;
+        print "It is a pile of debris that used to be the roof.
+        It now litters the floor. ";
+        if (child(self)) {
+            print "I wonder if there is anything useful in there. ";
+        }
+        print "^";
+    ],
+    search_lead "I scrounge amid the rubble and disturb a giant centipede.
     The critter scurries out of sight. I continue my search and find ",
     search_concludes "I take it. ",
     auto_take true,
     article "some",
     before [;
         ! Alias Dig as searching
-        Dig:
+        Dig, LookUnder:
             <<Search self>>;
         ! Hide the rubble from the room description when searched
         Search:
