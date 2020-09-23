@@ -125,7 +125,7 @@ with before [;
         ! if the item is in the satchel before taking.
         if (lm_n == 1 && lm_o provides takenFromBag && lm_o.takenFromBag) {
             lm_o.takenFromBag = false;
-            "Taking ", (a) lm_o, " from my satchel. ";
+            "I take ", (a) lm_o, " from my satchel. ";
         }
         ! Override lm_n 13 "(putting x into SACK_OBJECT to make room)"
         ! for any WeightedObject, which is moved to the floor by its class.
@@ -333,7 +333,7 @@ with
 Class IndoorRoom
 class Room
 with
-    cant_go "I can't, there is a wall in the way. ";
+    cant_go "There is a wall that way. ";
 
 ! The outdoor room always contains the sky object, looking up examines the sky.
 Class OutdoorRoom
@@ -418,7 +418,7 @@ Class NonPlayerCharacter
 with
     life [;
         Attack:
-            print_ret "No way, I am not fond of hurting living things. ";
+            print_ret "I am not fond of hurting living things. ";
     ];
 
 Class HumanNPC
@@ -426,7 +426,7 @@ Class HumanNPC
     with
         before [;
             Take:
-                print_ret "No way, I think human trafficking is deplorable. ";
+                print_ret "I think human trafficking is deplorable. ";
         ],
     has animate;
 
@@ -435,7 +435,7 @@ Class AnimalNPC
     with
         before [;
             Take:
-                print_ret "No way, I think animal trafficking is deplorable. ";
+                print_ret "I think animal trafficking is deplorable. ";
         ],
     has animate;
 
@@ -820,7 +820,7 @@ with
         ! Prevent the player from exiting the craft before it has shored.
         Go, Exit:
             if (parent(canoe) == River) {
-                print "~We will reach your destination soon~ ",
+                print "~We will reach your destination soon,~ ",
                         (the) boatman, " says with a wide grin.^";
                 return 2;
             }
@@ -859,8 +859,8 @@ with
             PlayerTo(Shore, 1);
             move canoe to Shore;
             move player to canoe;
-            print "^~Here we are~, ", (a) boatman,
-                    " says -- the canoe comes to a stop on the shore.^";
+            print "^~Here we are,~ ", (a) boatman,
+                    " says as the canoe lands on the shore.^";
             <<Look>>;
         }
     ],
@@ -1167,9 +1167,9 @@ EssentialObject journal "journal"
                 
                 'Maro River':
                 "The Maro river flows from north-east to south-west into the
-                Arafura Sea. It runs over 124 miles or 200 kilometers in length,
-                and is up to 1 kilometer or two thirds of a mile wide.
-                It is a complex system of swamps and oxbow lakes which hosts a
+                Arafura Sea. It runs over 124 miles, or 200 kilometers, in length.
+                The river is up to two-thirds of a mile, or one kilometer, wide.
+                It is a complex system of swamps and oxbow lakes, hosting a
                 large number of birds and reptiles.";
                 
                 'Glyphs':
@@ -1313,7 +1313,7 @@ with
         Take, Remove:
             if (self in monkey) {
                 if (parent(monkey) == location) {
-                    print "The small critter deftly moves out of my reach. ";
+                    print "The small creature moves deftly out of my reach. ";
                     ! monkey_forget_about_food();
                     monkey_frighten();
                     monkey_speak(random(10));
@@ -1335,17 +1335,23 @@ with
     description "It is a booklet of matches with red phosphorous heads,
     ~Red Herring Lucifers~ is printed on the back. ",
     stock 5,
+    full_text true,
     before [;
         Burn:
             if (--self.stock == 0) {
                 remove self;
-                "The last match crumbles without so much as a spark, 
-                I am not surprised.
-                I discard the booklet, which is as useless now as
-                it was 5 lucifers ago. ";
+                "The last match crumbles without so much as a spark. 
+                I discard the booklet.
+                I will have to find another way to make fire. ";
             } else {
-                "I strike a match, the red phosphor crumbles into dust.
-                They must be wet, how useless. ";
+                if (self.full_text) {
+                    self.full_text = false;
+                    "I strike a match. The red phosphor crumbles into dust.
+                    They must be wet. ";
+                } else {
+                    "I strike another match. ", 
+                    (string)random("It crumbles, too. ", "No luck that time. ", "It fails to light. ");
+                }
             }
     ],
     has wet;
@@ -1372,9 +1378,9 @@ with
         Take:
         if (self hasnt moved) {
             give self ~concealed;
-            print_ret "I reach down and pull on the leafy parts of the plant,
-            a yam emerges from of the ground. I discard the leaves and
-            keep the yam. ";
+            print_ret "I reach down and pull on the leafy parts of the plant.
+            A yam emerges from of the ground.
+            I discard the leaves and keep the yam. ";
         }
     ],
     has concealed edible;
@@ -1769,11 +1775,10 @@ with
                 ", but hesitates to come near me. ";
             }
             if (noun ofclass EssentialObject) {
-                "There is no way I am giving ", (a) noun, 
-                " to ", (the) self, ". ";
+                "I am not giving ", (a) noun, " to ", (the) self, ". ";
             }
-            "I offer ", (the) noun, " to the small critter, it couldn't be
-            less interested. ";
+            "I offer ", (the) noun, " to ", (the) self,".
+            It is not interested. ";
         Show:
             if (noun ofclass EdibleFruitObject)
                 print_ret "The small monkey head swivels side-to-side as I
@@ -1806,7 +1811,7 @@ with
     
         ! Move to the clearing if the player is in the tree
         if (self in fig_tree && location == TreeTop) {
-            print "The monkey is not impressed, it climbs down the tree.^";
+            print (The) self,", unimpressed, climbs down from the tree.^";
             give self curious;
             move self to Clearing;
             return;
@@ -2015,7 +2020,7 @@ HumanNPC boatman
 
         description [;
             print "A native to Papua New Guinea, he seems to navigate
-            this river like he has done it for all his years. ";
+            this river like he has done it for all his years.^";
             if (self hasnt proper) {
                 print "Perhaps I should SAY HI.^";
             }
@@ -2150,7 +2155,7 @@ HumanNPC boatman
                         me a yam. I think yam and fish will make a good meal.~ ";
                     }
                 } else
-                "I have no reason to ask for that. ";
+                "I do not need that right now. ";
         ],
 ;
 
@@ -2207,7 +2212,7 @@ HumanNPC boatman
             "~That, my friend, is a chicken trap"
             , (string) pause,
             "You set the trap - prop the door open with this wooden rod - 
-            and pull on the this string to swing the door shut.~ ";
+            and pull on the string to swing the door shut.~ ";
         'pig', 'pigs':
             "~Had a pig once, had it as a pet, but then I lost pig,~ 
             he chuckles as if thinking about something funny. ";
@@ -2470,7 +2475,7 @@ with
         Go:
             if (noun == u_obj) {
                 if (player has burdened) {
-                    "Not while carrying that heavy thing. ";
+                    "I can't climb while carrying this heavy thing. ";
                 }
                 print "I climb up the strong branches of the fig tree.^";
             }
@@ -2565,8 +2570,8 @@ JungleRoom Garden "Garden"
 with
     description [;
         if (self hasnt visited) {
-            print "I enter a small garden, it looks like it has not been maintained
-            for a very long time and the plants have grown wild. ";
+            print "I enter a small garden, which looks like it has not been
+            maintained for a very long time. The plants have grown wild. ";
         } else {
             print "The small garden has grown wild, I see some vegetable plants
             and fruit trees. ";
@@ -2642,13 +2647,17 @@ with
     before [;
         Go:
             if (random(OddsOfFindingWayWhenLost) == 1) {
-                print "^By change, I happen to find my way back.^";
+                print "^I find my way back by chance. ";
+                if (lodestar in player || lodestar in satchel) {
+                    print "Next time I should read my compass. ";
+                }
+                print "^";
                 ! parameter "2" honors brief room descriptions - DM4 pg 21
                 PlayerTo(last_known_location, 2);
                 return true;
             }
             else
-                print_ret "I fumble through the jungle. ";
+                print_ret "I walk slowly through the thick jungle. ";
     ];
 
 ! [ --------------------------------------------------------------- Maro River ]
@@ -2659,7 +2668,7 @@ with
     #ifnot;
     description [;
         if (self hasnt visited) {
-            print "The ", (a) canoe, " rocks gently on the water as I ride
+            print (The) canoe, " rocks gently on the water as I ride
             down the river. ", (A) boatman, " sits at the other end of the craft
             rowing with an oar. I wonder how much longer this will take, I
             have been in this ", (a) canoe, " for a while now. I am anxious
@@ -2756,10 +2765,11 @@ with
             print "A sun is engraved in the floor. ";
         }
         print "The stone walls are engraved with symbols. I hear water falling
-        from the north entrance, and see jungle through the south exit. ";
+        from the north entrance, and I see jungle through the south exit. ";
     ],
     n_to Waterfall,
     s_to JunglePath,
+    cant_go "The only exits are north to the waterfall, and south to the jungle. ",
     before [;
         Exit:
             if (~~noun)
@@ -2808,7 +2818,7 @@ ScenicEngravingObject temple_stone_box "engraved sun" Temple
 with
     name 'slab' 'hole' 'engraved' 'sun',
     description "The image of the sun is engraved into a slab of stone, embedded
-    into the floor. I also see holes in the slab, it may be possible to open. ",
+    into the floor. I also see holes in the slab. It may be possible to open. ",
     short_name "engraved sun",
     before [;
         Take:
@@ -2880,7 +2890,7 @@ Object urn_oil "oil" urn
 with 
     name 'oil',
     article "some",
-    description "I am not sure what this was used for, but it distinctly oily. ",
+    description "I am not sure what this was used for, but it's distinctly oily. ",
     before [;
         PutOn:
             move self to urn;
@@ -2891,6 +2901,9 @@ with
         Take, Drop, Remove:
             move self to urn;
             print_ret "I would rather keep it in the urn. ";
+        Smell:
+            "It smells a bit rancid, but my nose tells me that it is oil,
+            without a doubt. ";
     ];
 
 ! [ -------------------------------------------------------------- Top Of Tree ]
@@ -2969,6 +2982,7 @@ with
         "Engravings on the walls dance under the flicker of my torch. ";
     ],
     u_to tomb_stairs,
+    cant_go "The only way out is up the stairs. ",
     before [;
         Examine:
             if (noun == u_obj) {
@@ -3406,7 +3420,7 @@ with
     found_in Cliff Waterfall,
     door_to [;
         if (player has burdened) {
-            "Not while carrying this heavy thing. ";
+            "I can't go that way while carrying this heavy thing. ";
         }
         ! Random chance of falling down.
         ! We limit this deadly action to only occur once.
@@ -3533,6 +3547,9 @@ Extend 	'climb'		* 'up'/'down' noun				 -> GoUpDownNoun;
     For more help on talking, type HELP TALKING. ";
 ];
 Verb    'talk'      * 'to' noun                     -> TalkToNounHelp;
+
+! Strike is a synonym for Burn
+Verb    'strike' = 'burn';
 
 ! Add a synonym for search, as "look behind the noun".
 ! The default rules does not have "look behind".
