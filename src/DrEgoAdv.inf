@@ -57,6 +57,10 @@ Constant LOOK_DOWN_REPLY = "The ground is below you -- thank heavens!";
 Constant MAX_CARRIED = 2;
 Constant SACK_OBJECT = satchel;
 
+! Turns the carver takes to carve the replica.
+! The PC can WAIT in the location to speed this up.
+Constant CarvingTurns = 20;
+
 ! [ ========================================================= Scoring & Status ]
 
 ! Show the time instead of the turn number
@@ -2370,15 +2374,19 @@ with
     
     daemon [;
         if (self.carving_state > 1 && self.carving_state < 50) {
-            if (++self.carving_state == 20) {
-                self.carving_state = 50;
-                move sun_key to Tribe;
-                StopDaemon(self);
-                if (player in Tribe) {
-                    "The carver gestures to me that he is done with the 
-                    carving.";
-                }
+            if (++self.carving_state == CarvingTurns) {
+                self.finish_carving();
             }
+        }
+    ],
+    
+    finish_carving [;
+        self.carving_state = 50;
+        move sun_key to Tribe;
+        StopDaemon(self);
+        if (player in Tribe) {
+            "The carver gestures to me that he is done.
+            He puts the replica sun key on the ground. ";
         }
     ];
 
@@ -3145,6 +3153,13 @@ with
         Smell: "I smell the burning fire, mixed with the earthy jungle tones. ";
         Listen: "I hear the locals chatter in their native tongue, sounds
         like they are having a relaxed conversation. ";
+        Wait:
+            if (carver.carving_state > 1 && carver.carving_state < 50) {
+                SetTime(the_time + (CarvingTurns-carver.carving_state));
+                print "I wait patiently while the carver works. ";
+                carver.finish_carving();
+                return true;
+            }
     ],
     w_to tribe_path
 ;
