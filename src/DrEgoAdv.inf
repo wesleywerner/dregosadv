@@ -2111,6 +2111,11 @@ HumanNPC boatman
                 }
                 print_ret (A) self, " looks amusingly at ", (the) noun, ". ";
             Give:
+                if (noun ofclass EdibleFruitObject) {
+                    remove noun;
+                    print_ret (The) self, " takes ", (the) noun, " and eats it.
+                    ~Thanks!~";
+                }
                 if (self.expects_yam && noun == yam) {
                     move yam to self;
                     move box_trap to player;
@@ -2330,6 +2335,10 @@ with
         Ask,Answer,Tell:
             "The man says something unintelligible while gesturing to his works. ";
         Give:
+            if (noun ofclass EdibleFruitObject) {
+                remove noun;
+                print_ret (The) self, " takes ", (the) noun, " and eats it. ";
+            }
             if (noun ofclass EssentialObject) {
                 "He refuses to take ", (a) noun, ". ";
             }
