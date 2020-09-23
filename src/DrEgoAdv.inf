@@ -1024,6 +1024,8 @@ with
         Whip:
             if (parent(banana) ~= garden_trees)
                 print_ret "I don't need another banana right now. ";
+        Attack:
+            "I give the tree a good shake. That did not work. ";
     ],
     after [;
         Whip:
@@ -2585,10 +2587,9 @@ with
         if (self hasnt visited) {
             print "I enter a small garden, which looks like it has not been
             maintained for a very long time. The plants have grown wild. ";
-        } else {
-            print "The small garden has grown wild, I see some vegetable plants
-            and fruit trees. ";
         }
+        "The small garden has grown wild, I see some vegetable plants
+        and fruit trees. ";
     ],
     ne_to bungalow_way;
 
@@ -2598,6 +2599,10 @@ with
     found_in Garden,
     before [;
         Examine: <<Look>>;
+        Search:
+            if (yam has concealed) {
+                <<Take yam>>;
+            }
     ];
 
 ScenicPlantObject "vegetables" Garden
@@ -3578,6 +3583,9 @@ Verb    'talk'      * 'to' noun                     -> TalkToNounHelp;
 
 ! Strike is a synonym for Burn
 Verb    'strike' = 'burn';
+
+! Shake is a synonym for attack
+Verb    'shake' = 'attack';
 
 ! Add a synonym for search, as "look behind the noun".
 ! The default rules does not have "look behind".
