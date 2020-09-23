@@ -27,24 +27,24 @@ Constant TurnsInCanoe 12;
 ! Reading the compass returns them back on track, but if the player lost
 ! the device or does not use it, these are the odds of finding their way back:
 ! 1 in OddsOfFindingWayWhenLost.
-Constant OddsOfFindingWayWhenLost 16;
+Constant OddsOfFindingWayWhenLost 6;
 
 ! Weather states
 Constant WEATHER_DRY 1;
 Constant WEATHER_RAIN 2;
-! Turns in dry state before rain may start
+! Turns in dry state before rain may start:
 Constant RAIN_START_T 40;
-! Turns in wet state before rain may stop
+! Turns in wet state before rain may stop:
 Constant RAIN_STOP_T 20;
-! Chance of thunder when it RAINS (1 in n)
+! Chance of thunder when it RAINS (1 in n):
 Constant THUNDER_ROLL 10;
-! Multiplier for chance of thunder in DRY state (1 in n*THUNDER_ROLL)
+! Multiplier for chance of thunder in DRY state (1 in n*THUNDER_ROLL):
 Constant THUNDER_MULTIPLIER 3;
-! Chance of rain (1 in n)
+! Chance of rain (1 in n):
 Constant RAIN_START_ROLL 20;
-! Chance of rain stop (1 in n)
+! Chance of rain stop (1 in n):
 Constant RAIN_STOP_ROLL 20;
-! Chance of rain drops falling on player when wet (1 in n)
+! Chance of rain drops falling on player when wet (1 in n):
 Constant RAIN_ON_PLAYER_ROLL 2;
 
 ! Show the option to list AMUSING things you can try (at the End of the story)
