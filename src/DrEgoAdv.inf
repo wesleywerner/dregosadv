@@ -1330,7 +1330,7 @@ with
 
 SparkThrowerObject matchbook "matchbook"
 with 
-    name 'match' 'matches' 'matchbook',
+    name 'match' 'matches' 'matchbook' 'book',
     description "It is a booklet of matches with red phosphorous heads,
     ~Red Herring Lucifers~ is printed on the back. ",
     stock 5,
