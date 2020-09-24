@@ -1289,13 +1289,16 @@ with
             return true;
         }
 
-        ! Display a random text when examining this.
-        self.rnd_no = random(5); ! 1..n
-        switch (self.rnd_no) {
-            1: print "I am exactly where I need to be.^";
-            2: print "The needle points towards north.^";
-            default:
-                print (A) self, " helps me navigate while in the jungle.^";
+        ! Print first time examine usage
+        if (self hasnt examined) {
+            give self examined;
+            print (A) self, " tells me which way north is.
+            This helps me to navigate in the jungle, especially when lost.
+            All I need to do is READ it.^";
+        } else {
+            print (string)random("I am exactly where I need to be.^",
+                        "The needle points north.^",
+                        "I am not lost, yet.^");
         }
 
         ! In the presence of the boatman
@@ -1309,6 +1312,8 @@ with
     ],
     
     before [;
+        Use:
+            <<Examine self>>;
         Take, Remove:
             if (self in monkey) {
                 if (parent(monkey) == location) {
@@ -1321,11 +1326,6 @@ with
                     print_ret "It is out of my reach. ";
                 }
             }
-    ],
-    
-    after [;
-        Use:
-            "To use ", (the) self, ", I must READ it. ";
     ];
 
 SparkThrowerObject matchbook "matchbook"
