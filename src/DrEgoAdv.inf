@@ -69,10 +69,10 @@ Statusline time;
 ! Use task-based scoring - as listed in doc.md
 Constant TASKS_PROVIDED;
 Constant NUMBER_TASKS = 9;
-Constant MAX_SCORE = 108;
+Constant MAX_SCORE = 9;
 
 ! List of points for each task completed via the `Achieved` keyword.
-Array task_scores -> 1 1 1 1 1 1 100 1 1;
+Array task_scores -> 1 1 1 1 1 1 1 1 1;
 
 ! List of score achievement indices
 Constant SCORE_USE_COMPASS = 0;
@@ -1049,11 +1049,18 @@ with
     article "the",
     name 'gold' 'golden' 'egg',
     description "It shimmers with golden light. ",
+    before [;
+        Push, Pull:
+            if (self in stone_altar) {
+                give self ~concealed;
+                move self to location;
+                "Hrmpf. ", (The) self, " falls to the ground. ";
+            }
+    ],
     after [;
         Take:
             if (~~self has moved) {
-                print_ret "I lift ", (the) self, " carefully from
-                its resting place. ";
+                "I have it! It is magnificent. ";
             }
     ],
     has concealed;
@@ -3112,8 +3119,11 @@ with
             print "^";
     ],
     before [;
-        Take: "I can't take that. ";
-    ];    
+        Take: "I can't take that. It is part of the altar. ";
+        Receive:
+            <<PutOn noun stone_altar>>;
+    ],
+    has supporter;
 
 ScenicRockObject stone_altar "altar"
 with
@@ -3138,7 +3148,7 @@ with
         if (~~is_weighted) {
             deadflag = 1;
             "^The weight lifted from the altar triggers a pressure plate booby
-            trap, tens of tiny poisoned darts shoot out from holes hidden in the
+            trap. Tens of tiny poisoned darts shoot out from holes hidden in the
             runed walls. I slump to the floor paralyzed, never to wake up
             again. ";
         } else {
