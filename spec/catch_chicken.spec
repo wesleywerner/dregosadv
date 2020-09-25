@@ -3,7 +3,7 @@ ask rom for the trap
 gonear garden portal
 search veggies
 take tuber
-gonear tribe portal
+purloin drawing
 gonear rom
 ask rom for the trap
 give yam to rom

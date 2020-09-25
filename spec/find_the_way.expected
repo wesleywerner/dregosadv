@@ -17,7 +17,11 @@
 > >  Clearing
   A hut is due south. An unexplored path is to the east.
   
-> >  ; == 88
+> >  Jungle Path
+  A clearing in the jungle is due west. An unexplored path is to the south.
+  
+> >  Clearing
+  A hut is due south. A jungle path is due east.
   
 > >  Lost in the Jungle
 . 
@@ -25,7 +29,7 @@
   My compass guides me back to the Clearing.
   
   Clearing
-  A hut is due south. An unexplored path is to the east.
+  A hut is due south. A jungle path is due east.
   
   [I scored my first point! Type SCORE/FULL to list them.]
   
@@ -45,8 +49,8 @@
 )   Clearing
   
   There is a monkey here. It has my compass.
-  A hut is due south. An unexplored path is to the east. An unexplored path
-  is to the northeast.
+  A hut is due south. A jungle path is due east. An unexplored path is to the
+  northeast.
   
   The monkey makes grunting noises.
   

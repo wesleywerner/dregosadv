@@ -1,4 +1,4 @@
-; sky.enabled = true
+turn weather on
 superbrief
 gonear clearing portal
 go jungle path

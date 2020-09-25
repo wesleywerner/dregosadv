@@ -61,6 +61,13 @@ Constant SACK_OBJECT = satchel;
 ! The PC can WAIT in the location to speed this up.
 Constant CarvingTurns = 20;
 
+! [ ================================================================== Globals ]
+
+! Remember the last known location of the player, before they get lost
+! in the jungle, and return the player to this good location when they
+! find their way back.
+Global last_known_location = 0;
+
 ! [ ========================================================= Scoring & Status ]
 
 ! Show the time instead of the turn number
@@ -261,10 +268,20 @@ Attribute walls;
     !#endif;
 ];
 
-! Remember the last known location of the player, before they get lost
-! in the jungle, and return the player to this good location when they
-! find their way back.
-Global last_known_location = 0;
+! Tests if an item is in the player or satchel
+[ ItemInPlayer item;
+    return (item in player) || (item in satchel && satchel in player);
+];
+
+! Tests if an item is in the player or satchel
+[ ItemOfClassInPlayer cls n;
+    objectloop (n in player && n ofclass cls)
+        return n;
+    if (satchel notin player) return false;
+    objectloop (n in satchel && n ofclass cls)
+        return n;
+    return false;
+];
 
 ! Print out amusing things to try (only available after game is won).
 [ Amusing;
@@ -279,6 +296,8 @@ Global last_known_location = 0;
 ! Get a torch object carried by the player.
 [ GetPlayerTorchObject n;
     objectloop (n in player && n has is_torch)
+        return n;
+    objectloop (n in satchel && n has is_torch)
         return n;
     return false;
 ];
@@ -1333,7 +1352,7 @@ with
     name 'match' 'matches' 'matchbook' 'book',
     description "It is a booklet of matches with red phosphorous heads,
     ~Red Herring Lucifers~ is printed on the back. ",
-    stock 5,
+    stock 4,
     full_text true,
     before [;
         Burn:
@@ -1444,6 +1463,15 @@ Object sky "sky"
         ! Switch to turn the weather off
         enabled true,
         
+    ! allow turning weather on in debug (is off by default)
+    #ifdef DEBUG;
+    before [;
+        SwitchOn:
+            self.enabled = true;
+            "You flip the weather switch on. ";
+    ],
+    #endif;
+    
     daemon [;
         
         ! The weather is not enabled
@@ -2147,7 +2175,7 @@ HumanNPC boatman
                 }
                 "~No thanks~, ", (a) self, " politely declines. ";
             Order:
-                if (Tribe has visited && (second == box_trap || noun == box_trap)) {
+                if (ItemInPlayer(sun_drawing) && (second == box_trap || noun == box_trap)) {
                     if (yam in self) {
                         "~I hope you caught that chicken you were after!~ ";
                     } else if (self.expects_yam) {
@@ -2231,6 +2259,11 @@ HumanNPC boatman
             }
         'compass':
             "~I don't need one, I know these waters and jungles quite well.~";
+        'fire', 'torch':
+            "~I make fire with flint stones.
+            Those are plentiful near running water"
+            , (string) pause,
+            "The stone has a blue shine.~ ";
     }
     print_ret (The) self, " grins at you and nods. ";
 ];

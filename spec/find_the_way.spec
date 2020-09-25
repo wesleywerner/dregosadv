@@ -1,6 +1,7 @@
 superbrief
 gonear clearing portal
-; last_known_location = location
+go east
+go west
 go northeast
 read compass
 climb the tree

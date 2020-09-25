@@ -62,9 +62,9 @@ Global betamode = false;
   !VersionSub();
   transcript_mode = true;
   print "^Beta testing mode is now on. Comments may be entered by preceding
-  the line with an exclamation mark, they will not be parsed by the game, eg.^";
+  the line with exclamation ~!~ or semicolon ~;~, eg.^^";
   font off;
-  print "~! this is my comment~^";
+  print "~; this is my comment~^";
   font on;
 ];
 	
@@ -101,7 +101,10 @@ Global betamode = false;
 ];
 
 [ BetaCommentSub;
-  if (betamode) rtrue;
+  if (betamode) {
+      print "(Noted)^";
+      rtrue;
+  }
   "Comments can only be used in beta testing mode.";
 ];
 
@@ -115,5 +118,6 @@ Verb meta 'beta'
 
 Verb meta '!'
          * topic        ->BetaComment;
+Verb meta ';' = '!';
 
 
