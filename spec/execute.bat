@@ -16,6 +16,7 @@ cat weather.spec | dfrotz -s 0 -p ..\build\Debug.z5 > weather.actual
 cat help.spec | dfrotz -s 0 -p ..\build\Debug.z5 > help.actual
 cat catch_chicken.spec | dfrotz -s 0 -p ..\build\Debug.z5 > catch_chicken.actual
 cat bribing_the_carver.spec | dfrotz -s 0 -p ..\build\Debug.z5 > bribing_the_carver.actual
+cat hints.spec | dfrotz -s 0 -p ..\build\Debug.z5 > hints.actual
 
 ::REM Diff Results
 if exist test_results.txt del test_results.txt
@@ -61,6 +62,9 @@ diff --ignore-space-change weather.expected weather.actual >> test_results.txt
 
 echo [ Help --------------------------------------------------------------] >> test_results.txt
 diff --ignore-space-change help.expected help.actual >> test_results.txt
+
+echo [ Hints -------------------------------------------------------------] >> test_results.txt
+diff --ignore-space-change hints.expected hints.actual >> test_results.txt
 
 ::REM Output Results
 cat test_results.txt

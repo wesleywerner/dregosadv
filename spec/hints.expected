@@ -1,0 +1,325 @@
+  THIS GAME IS IN DEBUG MODE
+  
+  Dr Ego and the Egg of Man-Toomba
+  An Interactive Fiction Story
+  by Special Agent.
+  Release 1 / Serial number 400410 / Inform v6.33 Library v6.12.3pre SX
+  
+  The Maro River (in the canoe)
+. 
+  In the canoe I can also see a trap (which is closed and empty), a fishing
+  spear and a fishing net.
+  
+> >  Dr Ego and the Egg of Man-Toomba is now in its "superbrief" mode, which
+  always gives short descriptions of locations (even if you haven't been
+  there before).
+  
+> >  You are about to ask Dr Hint for advice. Each time you type HINT you are
+  given the next clue, based on my current situation, and each will be more
+  of a spoiler. If you are sure you want a clue, type HINT again.
+  
+> >  I sit back and enjoy the boat ride until...
+  
+  "Here we are," my guide says as the canoe lands on the shore.
+  
+  River Shore (in the canoe)
+. 
+  In the canoe I can also see a trap (which is closed and empty), a fishing
+  spear and a fishing net.
+  
+> >  Comments can only be used in beta testing mode.
+  
+> >  Clearing
+  A hut is due south. An unexplored path is to the east.
+  
+> >  I can't find the way past the clearing: The path is overgrown, and visible
+  from a higher vantage point.
+  
+> >  I can't find the way past the clearing: I can try climb a tall tree.
+  
+> >  I can't find the way past the clearing: Climb the fig tree.
+  
+> >  I climb up the strong branches of the fig tree.
+  
+  Top of Tree
+  
+  The monkey, unimpressed, climbs down from the tree.
+  
+> >  I can't find the way past the clearing: The path is overgrown, and visible
+  from a higher vantage point.
+  
+> >  I can't find the way past the clearing: From the top of the tree, I can
+  look in all directions.
+  
+> >  I can't find the way past the clearing: The river is south, so I want to
+  look in the opposite direction.
+  
+> >  I take my compass from my satchel.
+  There! I see stone stairs leading up that hill, to the northeast.
+  
+  [I scored my first point! Type SCORE/FULL to list them.]
+  
+> >  I don't have any hints right now. Try exploring a bit more.
+  
+> >  As I descend my compass accidentally falls to the ground below. *CLINK*
+  
+   --- more ---
+)   Clearing
+  
+  There is a monkey here. It has my compass.
+  A hut is due south. An unexplored path is to the east. An unexplored path
+  is to the northeast.
+  
+  The monkey makes grunting noises.
+  
+> >  The monkey has my compass: Distract it with something else.
+  
+> >  The monkey has my compass: They are fond of bananas.
+  
+> >  The monkey has my compass: Look in the garden for a banana.
+  
+> >  The monkey has my compass: My whip is useful to grab things out of reach.
+  
+> >  The monkey has my compass: Whip the bananas.
+  
+> >  [Purloined.]
+  
+> >  The monkey has my compass: Show the banana to the monkey.
+  
+> >  The monkey has my compass: Leave the banana on the ground.
+  
+> >  The monkey has my compass: Drop the banana and wait.
+  
+> >  [Purloined.]
+  
+> >  I don't have any hints right now. Try exploring a bit more.
+  
+> >  Comments can only be used in beta testing mode.
+  
+> >  Jungle Path
+  A clearing in the jungle is due west. The river shore is due south.
+  
+> >  Lost in the Jungle
+. 
+> >  I can read my compass to find the way back.
+  
+> >  Comments can only be used in beta testing mode.
+  
+> >  Waterfall
+  A temple is due south. A rope bridge is due west.
+  
+> >  Temple
+. 
+> >  A way is hidden near the temple.
+  
+> >  The writing is on the walls, as the saying goes.
+  
+> >  An ancient form of writing in the temple provides a clue.
+  
+> >  Examine the symbols on the temple walls.
+  
+> >  The engravings cover all of the walls. My attention is drawn to a circular
+  pattern in the glyphs as they converge and surround one large glyph -- I
+  recognize this glyph as "air terjun".
+  
+> >  My journal contains notes on some symbols.
+  
+> >  I should read my notes on the symbol I see in the temple.
+  
+> >  Look behind the waterfall.
+  
+> >  Waterfall
+  A temple is due south. A rope bridge is due west.
+  
+> >  I lean into the narrow space behind the cascading water and see an alcove
+  behind the waterfall.
+  
+  [I scored another point.]
+  
+> >  Comments can only be used in beta testing mode.
+  
+> >  I need a light to enter the alcove: I could make a torch. I need something
+  long for the base of the torch, something that will work as a wick, and
+  some kind of fuel.
+  
+> >  I need a light to enter the alcove: A stick or bone, but not a stone, will
+  work as a base for a torch.
+  
+> >  I need a light to enter the alcove: The jungle should be full of sticks.
+  
+> >  I need a light to enter the alcove: Search the jungle.
+  
+> >  [Purloined.]
+  
+> >  Dropped.
+  
+> >  [Purloined.]
+  
+> >  I need a light to enter the alcove: A torch needs a wick. Some cloth might
+  do the trick.
+  
+> >  I need a light to enter the alcove: Search amongst some junk for wicking
+  material.
+  
+> >  I need a light to enter the alcove: Search the rubble in the bungalow.
+  
+> >  [Purloined.]
+  
+> >  I need a light to enter the alcove: To make a wick, bind some cloth to the
+  base.
+  
+> >  I need a light to enter the alcove: Tie the strip of canvas to the bone.
+  
+> >  I wrap the strip of canvas around the bone to make a crude torch.
+  
+> >  I need a light to enter the alcove: The torch needs some kind of fuel.
+  
+> >  I need a light to enter the alcove: Oil can be used as fuel for the torch.
+  
+> >  I need a light to enter the alcove: I can find oil in the temple.
+  
+> >  I need a light to enter the alcove: Dip the torch in the oil.
+  
+> >  (first opening the urn)
+  I put the bone torch in the urn, it is now covered in a film of oil.
+  
+  [I scored another point.]
+  
+> >  I need a light to enter the alcove: Light the bone torch with the
+  matchbook.
+  
+> >  (first taking the matchbook)
+  (putting the banana into the satchel to make room)
+  I strike a match. The red phosphor crumbles into dust. They must be wet.
+  
+> >  I strike another match. No luck that time.
+  
+> >  I strike another match. It crumbles, too.
+  
+> >  The last match crumbles without so much as a spark. I discard the booklet.
+  I will have to find another way to make fire.
+  
+> >  I need a light to enter the alcove: I need something that makes sparks, to
+  light the torch.
+  
+> >  I need a light to enter the alcove: I could ask my guide about fire.
+  
+> >  I need a light to enter the alcove: I could even find fire in the tribe.
+  
+> >  [Purloined.]
+  
+> >  I need a light to enter the alcove: Light the bone torch with the flint.
+  
+> >  I strike the flint, it is sparking onto the wick, a few more times... A
+  small flame appears, carefully now, blow on the flame, that's it! It's
+  growing, consuming the wick, there -- the entire wick is now lit.
+  
+> >  I need a light to enter the alcove: The torch is lit. I can enter it now.
+  
+> >  Comments can only be used in beta testing mode.
+  
+> >  [Purloined.]
+  
+> >  Underground Tomb
+  
+  A stone column stands in the center of the room.
+  Some stairs leads upward.
+  
+> >  Examine the stone column in the tomb.
+  
+> >  Examine the hole next to the stone column in the tomb.
+  
+> >  Look inside the hole in the tomb.
+  
+> >  [Purloined.]
+  
+> >  I should visit the tribe.
+  
+> >  Tribe
+  
+  A man sits nearby, carving a piece of wood.
+  An unexplored path is to the west.
+  
+> >  I suspect the carver can make a replica key, given the drawing.
+  
+> >  Show the drawing to the carver.
+  
+> >  The carver wants payment to make a carving.
+  
+> >  There must be a way to trap the chicken.
+  
+> >  Rom, my guide, has a something to help catch chickens.
+  
+> >  [Purloined.]
+  
+> >  Set the trap down on the ground.
+  
+> >  There should be seed in the trap, to lure the chicken in.
+  
+> >  Remember to set the trap.
+  
+> >  Pull the string when the chicken is in the trap.
+  
+> >  drop trap. put seed in it. set it. wait. pull the string.
+  
+> >  [Abstracted.]
+  
+> >  [Purloined.]
+  
+> >  Dropped.
+  
+> >  The carver has finished making the replica of the sun key.
+  
+> >  (putting the compass into the satchel to make room)
+  Taken.
+  The monkey appears nearby.
+  
+> >  Comments can only be used in beta testing mode.
+  
+> >  Time to use the sun key. Return to the tomb, via the alcove by the
+  waterfall.
+  
+> >  Underground Tomb
+  
+  A stone column stands in the center of the room.
+  Some stairs leads upward.
+  
+> >  Usually one inserts a key into a keyhole.
+  
+> >  I put the sun key into the strange hole.
+  
+> >  You have to turn the key a few times, until it can't turn any more.
+  
+> >  The column lowers into the ground with the sound of grinding stone.
+  
+> >  The column lowers into the ground with the sound of grinding stone.
+  
+> >  The column lowers into the ground with the sound of grinding stone.
+  
+> >  The column lowers into the ground with the sound of grinding stone.
+  
+> >  A low thud echoes through the ground as the column comes to a rest.
+  
+> >  The altar has a pressure sensitive surface.
+  
+> >  I can put something heavy on the altar to prevent the pressure plate from
+  activating.
+  
+> >  I can find something heavy in the temple.
+  
+> >  Put a heavy thing on the altar, then take the treasure.
+  
+> >  [Purloined.]
+  
+> >  To stop the pressure plate from activating, I should put this heavy item on
+  the altar, before taking the treasure.
+  
+> >  I put the stone egg on the altar.
+  
+> >  With the weight on the plate, the prize should be safe to take.
+  
+> >  [Purloined.]
+  
+> >  I have the treasure already, hooray for me! Guess I won't need a hint then.
+. 
+> >
