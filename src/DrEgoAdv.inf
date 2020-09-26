@@ -1361,11 +1361,10 @@ with
         Take, Remove:
             if (self in monkey) {
                 if (parent(monkey) == location) {
-                    print "The small creature moves deftly out of my reach. ";
-                    ! monkey_forget_about_food();
+                    print "The monkey moves deftly out of my reach. ";
                     monkey_frighten();
                     monkey_speak(random(10));
-                    print_ret "";
+                    print_ret " it retorts. ";
                 } else {
                     print_ret "It is out of my reach. ";
                 }
@@ -1827,7 +1826,7 @@ with
     life [;
         Ask, Answer, Tell:
             monkey_speak(random(10));
-            print_ret "";
+            print_ret " it replies. ";
         Give:
             if (noun ofclass EdibleFruitObject) {
                 "The creature smacks its lips at the sight of ", (the) noun, 
@@ -1887,7 +1886,7 @@ with
             if (self.first_fright && action == ##Whip) {
                 self.first_fright = false;
                 print "^The piercing sound startles ", (the) self, 
-                ", it launches up into the air and ";
+                ", it launches up into the air and";
             } else {
                 print "^", (The) self;
             }
@@ -2037,14 +2036,13 @@ with
 ! hoot, scream, howl, coo, rumble, bark, pant, grunt, whoop, screech, gibber.
 [ monkey_speak n;
     switch (n % 8) {
-        1: print "~*Coo*coo*~";
-        2: print "~*Whoop*whoop*~";
-        3: print "~*Howls*~";
-        4: print "~*Pants*Grunt*~";
-        4: print "~*Gibbers*~";
-        6: print "~*Screech*~";
-        7: print "~*Rumble*~";
-        default: print "~*Grunts*~";
+        1: print "~Oo oo~";
+        2: print "~Whoop whoop!~";
+        3: print "~Hoo hoo hoo~";
+        4: print "~Hoo eek!~";
+        5: print "~Screek!~";
+        6: print "~Eek eek ook~";
+        default: print "~Ook ook~";
     }
 ];
 
