@@ -2225,18 +2225,20 @@ HumanNPC boatman
 
 [ boatman_ask second pause;
     switch (second) {
-        'papua', 'new', 'guinea':
-            "~Lived here all my life, just like my family before me.~";
+        'self', 'rom', 'himself', 'papua', 'new', 'guinea', 'land':
+            "~Lived here all my life, just like my family has for generations.~";
         'family', 'wife':
             "~My wife and I live in a village nearby, she makes fishing nets
             and beaded jewelry"
             , (string) pause,
             "I catch fish and give boat rides.~ ";
-        'jungle', 'forest':
+        'jungle', 'forest', 'trees', 'tree':
             "~The jungle is our home, our past and our present, 
             and our livelihood.~ ";
         'path':
-            "~That path to the north will take you into the jungle.~ ";
+            if (location == Shore) {
+                "~That path to the north will take you into the jungle.~ ";
+            }
         'canoe', 'boat', 'oar':
             "~I have the canoe for many years now, built it myself,~ ",
             (a) self, " says proudly"
@@ -2267,7 +2269,7 @@ HumanNPC boatman
             } else {
                 "~If you catch us a fish, we will cook it,~ he says in jest. ";
             }
-        'fishing':
+        'fishing', 'fisherman':
             <Ask self 'spear'>;
             <<Ask self 'net'>>;
         'time', 'longer':
@@ -2289,6 +2291,9 @@ HumanNPC boatman
             } else {
                 "~Glad to hear you caught it!~ ";
             }
+        'egg', 'eggs':
+            "~Some people here farm hens and fowls for their eggs.
+            I am a fisherman myself.~";
         'compass':
             "~I don't need one, I know these waters and jungles quite well.~";
         'fire', 'torch':
@@ -2296,6 +2301,12 @@ HumanNPC boatman
             Those are plentiful near running water"
             , (string) pause,
             "The stone has a blue shine.~ ";
+        'gold', 'golden', 'treasure':
+            "~I have heard the stories of ancient treasures,
+            I do not know how true they are.
+            For me, the real treasure is our land.~";
+        'air':
+            "~The air smells fresh, doesn't it.~";
     }
     print_ret (The) self, " grins at you and nods. ";
 ];
