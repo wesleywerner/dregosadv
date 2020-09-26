@@ -234,8 +234,8 @@ Attribute walls;
 
     ! Give the player a name and description
     player.short_name = "Dr Ego";
-    player.description = "You are Dr Ego, purveyor of artifacts,
-                            seeker of treasure, adventurous archeologist. ";
+    player.description = "I am Dr Ego. Purveyor of artifacts,
+                            seeker of treasure, and adventurous archeologist. ";
 
     ! Print the preface text (for non debug builds)
     #ifdef DEBUG;
@@ -500,6 +500,8 @@ Class EssentialObject
                 print_ret "I am not leaving ", (a) noun, " behind.";
             Taste, Eat:
                 print_ret (A) noun, " is not edible. ";
+            Disrobe:
+                "I would rather keep it on. ";
         ];
 
 ! Provides a feature to print additional text when a scenic item is examined
