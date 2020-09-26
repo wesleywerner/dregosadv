@@ -149,6 +149,20 @@ with before [;
         if (lm_n == 13 && lm_o ofclass WeightedObject) {
             "(putting ", (the) lm_o, " down to free up my hands)";
         }
+        ! Override "It is fixed in place"
+        if (lm_n == 11) {
+            "Hrmpf. It won't budge. ";
+        }
+    Push:
+        ! That is fixed in place
+        if (lm_n == 2) {
+            "Hrmpf. It won't budge. ";
+        }
+    Pull:
+        ! That is fixed in place
+        if (lm_n == 2) {
+            "Hrmpf. It won't budge. ";
+        }
     Miscellany:
         ! code 50 is the score message.
         ! lm_o contains the number of points scored.
@@ -1457,12 +1471,6 @@ EssentialObject satchel "satchel"
 with
     name 'bag' 'satchel',
     description "This is my brown shoulder bag. ",
-    before [;
-        Receive:
-            if (noun == urn && urn has open) {
-                "It might make a mess if the open urn spills in my bag. ";
-            }
-    ],
     has container open clothing worn;
 
 ! The sky is visible in all outdoor areas.
@@ -2939,6 +2947,8 @@ with
             "I hear the waterfall outside. ";
         Smell:
             "It smells earthy in here. ";
+        Open:
+            if (noun == d_obj) <<Open temple_stone_box>>;
     ],
 
     has light;
@@ -2961,12 +2971,12 @@ with
 
 ScenicEngravingObject temple_stone_box "engraved sun" Temple
 with
-    name 'slab' 'hole' 'engraved' 'sun',
-    description "The image of the sun is engraved into a slab of stone, embedded
-    into the floor. I also see holes in the slab. It may be possible to open. ",
+    name 'slab' 'hole' 'holes' 'engraved' 'sun',
+    description "The sun is engraved into a slab of stone, embedded
+    in the floor. There are holes in the slab. It may be possible to open. ",
     short_name "engraved sun",
     before [;
-        Take:
+        Take, Pull:
             <<Open self>>;
     ],
     after [;
@@ -2983,6 +2993,16 @@ with
     ],
     has container openable static;
 
+ScenicBase "dirt"
+with
+    name 'dirt',
+    description "Dust and dead leaves litter the floor. ",
+    found_in Temple,
+    before [;
+        Take:
+            "I don't want it. ";
+    ];
+
 ScenicBase tomb_artifacts "artifacts"
 with
     name 'artifact' 'artifacts' 'clay' 'pot' 'pots' 'idol' 'idols',
@@ -2995,25 +3015,11 @@ with
             "I don't see anything worth taking. ";
     ];
 
-Object urn "urn"
+WeightedObject urn "urn"
 with
     name 'urn',
-    description "It is a clay vessel resembling an urn. ",
+    description "It is a large clay vessel. ",
     when_open "The urn is open, an oily substance is inside it. ",
-    before [;
-        Open:
-            if (self in satchel) {
-                print "I take the urn from my satchel. ";
-                move self to player;
-            }
-        !LetGo:
-        !    print "LetGo ", (name) noun;
-        !    if (noun == urn_oil) {
-        !        print "NO.";
-        !        move urn_oil to urn;
-        !        return true;
-        !    }
-    ],
     after [;
         Receive:
             move noun to player;
@@ -3025,7 +3031,7 @@ with
                 if (noun has is_torch) {
                     Achieved(SCORE_CRAFT_TORCH);
                 }
-                print_ret "I put ", (the) noun, " in the urn, it is now
+                print_ret "I put ", (the) noun, " in the urn. It is now
                 covered in a film of oil. ";
             }
     ],
@@ -3144,10 +3150,9 @@ with
 ScenicEngravingObject "glyphs" Tomb
 with
     name 'glyph' 'glyphs' 'engraving' 'engravings' 'wall' 'walls',
-    description_lead "I lean in toward the engravings and raise my torch up
-    to get a better look. ",
-    description "The engravings cover all of the walls, I recognize some as
-    mannaz, ehwaz, gebo, peorth. ";
+    description "I lean in toward the engravings and raise my torch up
+    to get a better look. The engravings cover all of the walls, but I
+    don't recognize any of them. ";
 
 ScenicRockObject stone_column "stone column"
 with
