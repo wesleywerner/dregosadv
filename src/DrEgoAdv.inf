@@ -1090,10 +1090,14 @@ EssentialObject journal "journal"
         name 'my' 'diary' 'journal' 'book' 'notes',
         
         description [;
-        "My journal is filled with notes about Papua
-        New Guinea, its people and ", (the) golden_egg, ".
-        To consult my journal about a topic, type NOTES ON <topic>.
-        To read about the Maro River, enter NOTES ON THE MARO. ";
+            print "My journal is filled with my research notes.
+            To consult my journal type NOTES ON <topic>.
+            This can be abbreviated as J <topic> (J as in journal). ";
+            if (self hasnt examined) {
+                print "To read about the Maro River, type J MARO. ";
+                give self examined;
+            }
+            "";
         ],
         
     before [w1 w2 context;
@@ -1111,13 +1115,13 @@ EssentialObject journal "journal"
             if (w1=='Papua' || w2=='Guinea' || w1=='land' || w2=='land')
                 context = 'New Guinea';
                 
-            if (w1=='people' || w1=='native' || w1=='natives')
+            if (w1=='people' || w1=='native' || w1=='natives' || w1=='tribe' || w1=='settlement')
                 context = 'People';
             
             if (w1=='jungle' || w1=='forest' || w1=='rainforest')
                 context = 'Jungle';
                 
-            if (w1=='yam' || w1=='yams' || w1=='karuka')
+            if (w1=='yam' || w1=='yams' || w1=='karuka' || w1=='egg' || w1=='eggs')
                 context = 'Edibles';
     
             if (w1=='maro' || w1=='river' || w2=='river')
@@ -1132,7 +1136,7 @@ EssentialObject journal "journal"
             if (w1=='Kalawai' || w1=='spear' || w1=='fishing' || w2=='fishing')
                 context = 'Fishing';
             
-            if (w1=='treasure' || w2=='treasure')
+            if (w1=='treasure' || w1=='treasures' || w2=='treasure')
                 context = 'Treasure';
             
             if ((w1=='gold' || w1=='golden') && (w2=='egg'))
@@ -1141,14 +1145,24 @@ EssentialObject journal "journal"
             if (w1=='mannaz' || w1=='ehwaz' || w1=='gebo' || w1=='peorth')
                 context = 'Glyphs';
             
-            if (w1=='Sowilu' || w2=='Sowilu')
-                context = 'Sowilu';
+            if (w1=='sun' || w1=='weather' || w1=='climate' || w1=='rain' || w1='sky')
+                context = 'Climate';
                 
+            if ((w1=='Sowilu' || w2=='Sowilu') || (w1=='sun' && w2=='key'))
+                context = 'Sowilu';
+                    
             if ((parent(boatman)==parent(player)) && 
                 (w1=='canoe' || w1=='boat' || w1=='craft'))
                 context = 'Ask Rom';
             
             switch (context) {
+                
+                'Climate':
+                "The climate here is hot and humid. Much of the land 
+                is covered by rainforests and there is no dry season.
+                Temperatures are relatively consistent throughout the year
+                at around 86 degrees Fahrenheit, or 30 degrees Celsius. ";
+                
                 'New Guinea':
                 "It is a country in Oceania that occupies the eastern
                 half of the island. Its capital, located along its southeastern
@@ -1166,20 +1180,21 @@ EssentialObject journal "journal"
                 'People':
                 "Papua New Guinea has more than a thousand cultural groups, the
                 majority being from the group known as Papuans, whose ancestors
-                arrived in the New Guinea region tens of thousands of years
-                ago. Most of these cultural groups have their own language.
-                People typically live in villages that rely on subsistence
+                arrived in the New Guinea region tens of thousands of years ago.
+                Most of these cultural groups have their own language.
+                ^^People typically live in villages that rely on subsistence
                 farming. In some areas people hunt and collect wild plants (such
                 as yam roots and karuka) to supplement their diets. Those who
                 become skilled at hunting, farming and fishing earn a great deal
                 of respect.";
                 
                 'Edibles':
-                "Yam roots and karuka are popular foods in Papua New Guinea.
-                A yam is a starchy edible tuber, it has a rough skin that is
+                "Chicken eggs, guinea fowl eggs, yam roots and
+                karuka are popular foods in Papua New Guinea.
+                ^^A yam is a starchy edible tuber, it has a rough skin that is
                 difficult to peel but readily softened by heating. The skins
                 vary in color from dark brown to light pink.
-                Karuka is a nut bearing tree that is a cultivated crop, the
+                ^^Karuka is a nut tree that is a cultivated crop, the
                 fruit are more nutritious than coconuts and has been used as a
                 major food source for over 30 millennia.";
                 
@@ -1233,14 +1248,16 @@ EssentialObject journal "journal"
                 'Sowilu':
                 print "Sowilu is the rune for the sun, and because of its symbolic
                 power, it is rumored that the treasure can only be unlocked with
-                a key of the sun.^";
+                a key of the sun. ";
                 if (~~sun_drawing has moved) {
                     move sun_drawing to player;
                     sun_key_hole.short_name = "keyhole";
-                    "^Here on the opposite page is a pencil drawing of the key,
-                    I remove the page, hmmm, comparing it to the hole...
-                    A perfect fit. It appears that is a keyhole.";
+                    "Here on the opposite page is a pencil drawing of the key.
+                    ^^I tear the page out.
+                    ^^I compare the drawing to the hole,
+                    it is a perfect fit. It appears that is a keyhole. ";
                 }
+                print_ret "";
                 
                 'Ask Rom':
                 print "I can't find anything in my journal about that topic,
@@ -3709,3 +3726,5 @@ Verb 'whip' * noun -> Whip;
 Verb 'notes'     * 'on' topic   -> Notes
                  * 'about' topic-> Notes
                  * topic        -> Notes;
+Verb 'note' = 'notes';
+Verb 'j' = 'notes';
