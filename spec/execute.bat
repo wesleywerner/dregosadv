@@ -17,6 +17,7 @@ cat help.spec | dfrotz -s 0 -p ..\build\Debug.z5 > help.actual
 cat catch_chicken.spec | dfrotz -s 0 -p ..\build\Debug.z5 > catch_chicken.actual
 cat bribing_the_carver.spec | dfrotz -s 0 -p ..\build\Debug.z5 > bribing_the_carver.actual
 cat hints.spec | dfrotz -s 0 -p ..\build\Debug.z5 > hints.actual
+cat torch_variation.spec | dfrotz -s 0 -p ..\build\Debug.z5 > torch_variation.actual
 
 ::REM Diff Results
 if exist test_results.txt del test_results.txt
@@ -53,6 +54,9 @@ diff --ignore-space-change catch_fish.expected catch_fish.actual >> test_results
 
 echo [ Device: Compass ---------------------------------------------------] >> test_results.txt
 diff --ignore-space-change compass.expected compass.actual >> test_results.txt
+
+echo [ Device: Torch Variation -------------------------------------------] >> test_results.txt
+diff --ignore-space-change torch_variation.expected torch_variation.actual >> test_results.txt
 
 echo [ Ending ------------------------------------------------------------] >> test_results.txt
 diff --ignore-space-change ending.expected ending.actual >> test_results.txt

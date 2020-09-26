@@ -662,6 +662,11 @@ with
             rfalse;
     ],
     
+    set_aflame [;
+        give self light;
+        self.light_left = 40;
+    ],
+    
     before [;
         Insert:
             if (second == satchel && self has light) {
@@ -678,15 +683,12 @@ with
                 "I can't light ", (the) self, " with ", (the) second ,". ";
             if (second has wet)
                 <<Burn second>>;
-                !"", (The) second, " is wet, it won't light ", (the) self, ". ";
             if (self hasnt oily)
                 "", (The) self, " is not burning, the wick needs some kind of fuel. ";
-            give self light;
-            self.light_left = 20;
-            print_ret "I strike ", (the) second, ", it is sparking
-            onto the wick, a few more times...
-            A small flame appears, carefully now, blow on the flame, that's it! 
-            It's growing, consuming the wick, there -- the entire wick is now lit. ";
+            self.set_aflame();
+            print_ret "I strike ", (the) second, ", it sparks onto the wick,
+            A small flame appears, I blow on the flame, carefully.
+            The flame grows until the entire wick is lit. ";
     ],
     
     ! Describe the wick tied to this object, if any.
@@ -717,7 +719,7 @@ with
     before [;
         PutOn:
             if (second ofclass TorchBaseObject) {
-                print_ret "Perhaps I meant to TIE ", (the) self, " around ", (the) second, ". ";
+                <<Tie self second>>;
             }
         Tie:
             if (self in satchel) {
@@ -736,6 +738,9 @@ with
                 second.&name-->0 = 'torch';
                 return true;
             }
+        Burn:
+            "It would work better if I tied ", (the) self, " to something
+            long, to make a kind of torch. ";
     ];
 
 Class WeightedObject
@@ -919,7 +924,7 @@ with
 
 TorchWickObject cloth "strip of canvas"
 with 
-    name 'cloth' 'canvas',
+    name 'strip' 'cloth' 'canvas',
     description "A strip of dirty canvas cloth the length of my arm. ";
 
 EssentialObject fedora_hat "fedora"
@@ -1044,9 +1049,16 @@ with
         ! Only visible when the player has crafted the torch
         return (location == Waterfall && GetPlayerTorchObject());
     ],
-    before [;
+    before [item;
         Use:
             print_ret "To use the flint, I should LIGHT TORCH WITH FLINT. ";
+        Attack:
+            item = ItemOfClassInPlayer(TorchBaseObject);
+            if (item) {
+                <<Burn item self>>;
+            } else {
+                "I don't have a torch to light. ";
+            }
     ],
     after [;
         Take:
@@ -1403,6 +1415,8 @@ with
     stock 4,
     full_text true,
     before [;
+        Attack:
+            <<Burn self>>;
         Burn:
             if (--self.stock == 0) {
                 remove self;
@@ -3055,7 +3069,10 @@ with
         Smell:
             "It smells a bit rancid, but my nose tells me that it is oil,
             without a doubt. ";
-    ];
+        Receive:
+            <<Dip noun urn>>;
+    ],
+    has container open;
 
 ! [ -------------------------------------------------------------- Top Of Tree ]
 OutdoorRoom TreeTop "Top of Tree"
@@ -3135,6 +3152,17 @@ with
     u_to tomb_stairs,
     cant_go "The only way out is up the stairs. ",
     before [;
+        Go:
+            if (noun == u_obj) {
+                if (torch_of_wood in location) {
+                    move torch_of_wood to player;
+                    print "I take my torch with me. ";
+                }
+                if (torch_of_bone in location) {
+                    move torch_of_bone to player;
+                    print "I take my torch with me. ";
+                }
+            }
         Examine:
             if (noun == u_obj) {
                 "I see a stone ceiling. ";
@@ -3313,7 +3341,21 @@ with
     name 'fire' 'pit' 'firepit',
     description "It is a pit dug in the ground, a fire is burning within. ",
     description_lead "Some of the people are tending to the fire. ",
-    found_in Tribe;
+    found_in Tribe,
+    before [;
+        Receive:
+            if (noun has is_torch) {
+                if (noun has oily) {
+                    noun.set_aflame();
+                    "I light the business end of ", (the) noun, " in the firepit.
+                    My torch is now lit. ";
+                } else {
+                    "I need some kind of fuel on the wick first. ";
+                }
+            }
+            "I don't want to burn ", (the)noun, ". ";
+    ],
+    has container open;
 
 ScenicBase statuettes "carvings"
 with 
@@ -3708,11 +3750,13 @@ Extend 	'climb'		* 'up'/'down' noun				 -> GoUpDownNoun;
 ];
 Verb    'talk'      * 'to' noun                     -> TalkToNounHelp;
 
-! Strike is a synonym for Burn
-Verb    'strike' = 'burn';
-
-! Shake is a synonym for attack
+! Shake, Strike is a synonym for attack
 Verb    'shake' = 'attack';
+Verb    'strike' = 'attack';
+
+! Alternate forms to TIE thing ON/AROUND 
+Extend 'tie' * held 'on' held -> Tie;
+Extend 'tie' * held 'around' held -> Tie;
 
 ! Add a synonym for search, as "look behind the noun".
 ! The default rules does not have "look behind".

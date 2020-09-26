@@ -1,0 +1,113 @@
+  THIS GAME IS IN DEBUG MODE
+  
+  Dr Ego and the Egg of Man-Toomba
+  An Interactive Fiction Story
+  by Special Agent.
+  Release 1 / Serial number 400410 / Inform v6.33 Library v6.12.3pre SX
+  
+  The Maro River (in the canoe)
+. 
+  In the canoe I can also see a trap (which is closed and empty), a fishing
+  spear and a fishing net.
+  
+> >  Dr Ego and the Egg of Man-Toomba is now in its "superbrief" mode, which
+  always gives short descriptions of locations (even if you haven't been
+  there before).
+  
+> >  I sit back and enjoy the boat ride until...
+  
+  "Here we are," my guide says as the canoe lands on the shore.
+  
+  River Shore (in the canoe)
+. 
+  In the canoe I can also see a trap (which is closed and empty), a fishing
+  spear and a fishing net.
+  
+> >  Tribe
+  
+  A man sits nearby, carving a piece of wood.
+  An unexplored path is to the west.
+  
+> >  stick: [Purloined.]
+  bone: [Purloined.]
+  strip of canvas: [Purloined.]
+  urn: [Purloined.]
+  flint: [Purloined.]
+  
+> >  Dropped.
+  
+> >  Comments can only be used in beta testing mode.
+  
+> >  I wrap the strip of canvas around the stick to make a crude torch.
+  
+> >  (first opening the urn)
+  I put the wooden torch in the urn. It is now covered in a film of oil.
+  
+  [I scored my first point! Type SCORE/FULL to list them.]
+  
+> >  I strike the flint, it sparks onto the wick, A small flame appears, I blow
+  on the flame, carefully. The flame grows until the entire wick is lit.
+  
+> >  Dropped.
+  
+> >  Comments can only be used in beta testing mode.
+  
+> >  [Purloined.]
+  
+> >  The urn is too heavy for my satchel. I put it down instead.
+  (first taking the bone)
+  I don't want to burn the bone.
+  
+> >  I wrap the strip of canvas around the bone to make a crude torch.
+  
+> >  I need some kind of fuel on the wick first.
+  
+> >  I put the bone torch in the urn. It is now covered in a film of oil.
+  
+> >  I light the business end of the bone torch in the firepit. My torch is now
+  lit.
+  
+> >  Comments can only be used in beta testing mode.
+  
+> >  Waterfall
+  A temple is due south. A rope bridge is due west.
+  
+> >  I lean into the narrow space behind the cascading water and see an alcove
+  behind the waterfall.
+  
+  [I scored another point.]
+  
+> >  I steady my torch and head down the dark passage.
+  
+  Underground Tomb
+  
+  A stone column stands in the center of the room.
+  Some stairs leads upward.
+  
+> >  Dropped.
+  
+> >  I take my torch with me.
+  Waterfall
+  
+  There is an alcove through the cascading water, to the North.
+  A temple is due south. A rope bridge is due west.
+  
+> >  It is a part of a human leg, a femur bone.
+  A crude wick is tied to the one end.
+  
+> >  I steady my torch and head down the dark passage.
+  
+  Underground Tomb
+  
+  A stone column stands in the center of the room.
+  Some stairs leads upward.
+  
+> >  Waterfall
+  
+  There is an alcove through the cascading water, to the North.
+  A temple is due south. A rope bridge is due west.
+  
+> >  It is a part of a human leg, a femur bone.
+  A crude wick is tied to the one end.
+  
+> >
