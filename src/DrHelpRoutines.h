@@ -223,27 +223,32 @@ Verb meta 'help'    *                               -> Help
 [ AboutSub;
     print (ESB) "ABOUT^";
     print "I began writing this story in April 2020.
-    I was watching the Indiana Jones films at the time, so I decided to draw
-    some inspiration from the plucky protagonist.
+    I was watching the Indiana Jones films at the time, and drew
+    inspiration from the plucky protagonist.
     ^^
-    I also wanted to learn a new interactive fiction authoring system,
-    having already written stories in Inform 7 and Quest, and being versed
-    in multiple programming languages, I decided on a system that follows
-    more traditional programming paradigms.
+    This was also a time of adventure and upheaval for me.
+    I moved to another country earlier in the year, and just like this story,
+    I faced challenges I had to solve and overcome.
     ^^
-    Initially I tried TADS.
-    I devoured the Getting Started Guide, System Manual and Library Reference,
-    taking notes along the way.
-    Eight pages of notes and half a story later, yet I was unable to grok it.
-    I changed gears and switched to Inform 6, it provided a more familiar
-    syntax and the Designers Manual, 4th edition, has everything you need.";
+    I also wanted to learn a new interactive fiction authoring system.
+    Having written stories in Inform 7 and Quest, I wanted to try a system
+    that uses more traditional programming paradigms.
+    In the end I chose to write this story in Inform 6.
+    ^^
+    see CREDITS.
+    ^";
     
+];
+
+[ CreditsSub;
     print (ESB) "^^CREDITS^";
-    print "My thanks go to, and in no particular order:
-    ^- Graham Nelson, for creating Inform
-    ^- Emily Short, for putting HelpRoutines.h in the public domain
-    ^-
-    ";
+    print "My thanks to Andrew Schultz, Durafen and Jason Lautzenheiser for 
+    testing this story. Your bug hunting and grammar feedback was invaluable.
+    Additional thanks to Graham Nelson for creating Inform, and
+    Emily Short for putting HelpRoutines.h into the public domain.
+    Finally I want to thank you, the player, for coming on this adventure
+    with me.
+    ^";
 ];
 
 [ HelpMenu;
@@ -719,7 +724,7 @@ Verb meta 'help'    *                               -> Help
 ! Standard Verbs list
 !--------------------------------------------------------------------------- 
 
-[ StandardVerbs flag;
+[ StandardVerbs;
 
 	print "Here is a list of verbs you can use in this story. 
     To read more about a specific verb, type HELP followed by the verb.^^";
@@ -1215,4 +1220,4 @@ Verb meta 'help'    *                               -> Help
 ];
 
 Verb meta 'about' * -> About;
-Verb meta 'credits' = 'about';
+Verb meta 'credits' * -> Credits;

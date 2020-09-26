@@ -3839,3 +3839,10 @@ Verb 'notes'     * 'on' topic   -> Notes
                  * topic        -> Notes;
 Verb 'note' = 'notes';
 Verb 'j' = 'notes';
+
+! A test verb that does nothing, for annotating test scripts
+#ifdef DEBUG;
+[ AnnotationSub;
+];
+Verb 'annotate' * topic -> Annotation;
+#endif;

@@ -27,9 +27,7 @@
   In the canoe I can also see a trap (which is closed and empty), a fishing
   spear and a fishing net.
   
-> >  Comments can only be used in beta testing mode.
-  
-> >  Clearing
+> >> >  Clearing
   A hut is due south. An unexplored path is to the east.
   
 > >  I can't find the way past the clearing: The path is overgrown, and visible
@@ -94,18 +92,14 @@
   
 > >  I don't have any hints right now. Try exploring a bit more.
   
-> >  Comments can only be used in beta testing mode.
-  
-> >  Jungle Path
+> >> >  Jungle Path
   A clearing in the jungle is due west. The river shore is due south.
   
 > >  Lost in the Jungle
 . 
 > >  I can read my compass to find the way back.
   
-> >  Comments can only be used in beta testing mode.
-  
-> >  Waterfall
+> >> >  Waterfall
   A temple is due south. A rope bridge is due west.
   
 > >  Temple
@@ -136,9 +130,7 @@
   
   [I scored another point.]
   
-> >  Comments can only be used in beta testing mode.
-  
-> >  I need a light to enter the alcove: I could make a torch. I need something
+> >> >  I need a light to enter the alcove: I could make a torch. I need something
   long for the base of the torch, something that will work as a wick, and
   some kind of fuel.
   
@@ -192,9 +184,9 @@
   (putting the banana into the satchel to make room)
   I strike a match. The red phosphor crumbles into dust. They must be wet.
   
-> >  I strike another match. No luck that time.
-  
 > >  I strike another match. It crumbles, too.
+  
+> >  I strike another match. No luck that time.
   
 > >  The last match crumbles without so much as a spark. I discard the booklet.
   I will have to find another way to make fire.
@@ -215,9 +207,7 @@
   
 > >  I need a light to enter the alcove: The torch is lit. I can enter it now.
   
-> >  Comments can only be used in beta testing mode.
-  
-> >  [Purloined.]
+> >> >  [Purloined.]
   
 > >  Underground Tomb
   
@@ -266,14 +256,16 @@
 > >  [Purloined.]
   
 > >  Dropped.
+  The monkey appears nearby.
   
 > >  The carver has finished making the replica of the sun key.
   
 > >  (putting the compass into the satchel to make room)
   Taken.
-  The monkey appears nearby.
   
-> >  Comments can only be used in beta testing mode.
+  The monkey makes grunting noises.
+  
+> >  The monkey scratches itself.
   
 > >  Time to use the sun key. Return to the tomb, via the alcove by the
   waterfall.

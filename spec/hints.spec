@@ -1,7 +1,7 @@
 superbrief
 hint
 wait
-; TEST FIND THE WAY HINTS
+ANNOTATE FIND THE WAY HINTS
 gonear clearing portal
 hint
 hint
@@ -13,7 +13,7 @@ hint
 look northeast
 hint
 climb down
-; TEST GET COMPASS FROM MONKEY HINTS
+ANNOTATE GET COMPASS FROM MONKEY HINTS
 hint
 hint
 hint
@@ -25,11 +25,11 @@ hint
 hint
 purloin compass
 hint
-; TEST GET LOST HINTS
+ANNOTATE GET LOST HINTS
 go east
 go north
 hint
-; TEST FINDING THE ALCOVE
+ANNOTATE FINDING THE ALCOVE
 gonear waterf portal
 enter temple
 hint
@@ -42,7 +42,7 @@ hint
 hint
 exit north
 look behind waterfall
-; TEST MAKE TORCH HINTS
+ANNOTATE MAKE TORCH HINTS
 hint
 hint
 hint
@@ -74,7 +74,7 @@ purloin flint
 hint
 light torch with flint
 hint
-; CATCH THE CHICKEN HINTS
+ANNOTATE CATCH THE CHICKEN HINTS
 purloin wand
 gonear tomb portal
 hint
@@ -99,7 +99,7 @@ purloin sun key
 drop key
 hint
 get key
-; LOWER ALTAR HINTS
+ANNOTATE LOWER ALTAR HINTS
 hint
 gonear tomb portal
 hint
