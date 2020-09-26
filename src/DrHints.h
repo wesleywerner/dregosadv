@@ -182,7 +182,11 @@ with
         }
     }
     
-    !
+    ! Waiting for the carver
+    if (carver.carving_state > 1 && carver.carving_state < 50) {
+        "The carver is busy making a replica of the sun key.
+        I can go to him and WAIT until he is done with it. ";
+    }
     
     ! Lowering the altar
     if (Tomb has visited && stone_altar notin Tomb) {

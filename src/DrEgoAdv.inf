@@ -51,7 +51,7 @@ Constant RAIN_ON_PLAYER_ROLL 2;
 Constant AMUSING_PROVIDED;
 
 ! Define default responses for the five senses.
-Constant LOOK_DOWN_REPLY = "The ground is below you -- thank heavens!";
+Constant LOOK_DOWN_REPLY = "The ground is below me. Thank heavens! ";
 
 ! Set the PC carryall
 Constant MAX_CARRIED = 2;
@@ -286,8 +286,8 @@ Attribute walls;
 ! Print out amusing things to try (only available after game is won).
 [ Amusing;
     print_ret "Have you tried,^
-            ^1) Whipping the water, when in the canoe on the Maro River?
-            ^2) Get lost in the jungle then read your compass?";
+            ^* Whipping the water of the Maro?
+            ^* Get lost in the jungle then read your compass?";
 ];
 
 [ PressAnyKey k; @read_char 1 -> k; return k; ];
@@ -303,8 +303,9 @@ Attribute walls;
 ];
 
 [ PrintWinWording;
-    print "^^For the next few days you catalogue the precious artifact,
-    and then you donate ", (the) golden_egg, " to the museum of
+    print "^^I spend the next few days cataloguing the artifact,
+    and documenting my adventure leading up to discovery.
+    In the end I donated ", (the) golden_egg, " to the museum of
     Natural History. ";
 ];
 
@@ -743,7 +744,14 @@ with
         if (self provides swings_shut) {
             self.swings_shut();
         }
-];
+    ],
+    after [;
+        Insert:
+            if (second == SACK_OBJECT) {
+                "", (The) self, " is too heavy for my satchel.
+                I put it down instead. ";
+            }
+    ];
 
 ! [ ================================================================== Objects ]
 
@@ -1628,8 +1636,6 @@ with
     name 'seed' 'pouch' 'seeds//p',
     description "A small pouch with a drawstring, it is filled with edible seed. ",
     before [;
-        Drop:
-            "The seeds will work better inside the trap. ";
         Eat:
             "Mmm not bad, but it would probably taste better to a chicken. ";
         Insert:
@@ -1661,19 +1667,27 @@ with
     
     before [;
         Take:
-            ! Cannot take it before it is given to you
-            if (~~self has moved) print_ret (The) noun, " is not mine to take.
-            But I can ask ", (A) boatman, " for it. ";
-            remove some_seed;
-            remove trap_string;
-            self.is_set = false;
+            if (self has moved) {
+                ! remove the seed (if inside the trap)
+                remove some_seed;
+                ! remove the string (if trap was set)
+                remove trap_string;
+                ! unset the trap
+                self.is_set = false;
+            }
+            else if (ItemInPlayer(sun_drawing)) {
+                "I should ask ", (A) boatman, " for it.
+                It is only polite. ";
+            } else {
+                "", (The) self, " is not mine to take. ";
+            }
         Drop:
             if (last_known_location == Tribe) 
                 print "This looks like a good place to set the trap. ";
         Open:
             ! Cannot open it before it is given to you
             if (~~self has moved) "I would rather leave it alone. ";
-            if (chicken in self) "No, the chicken might escape. ";
+            if (chicken in self) <<Take chicken>>;
         Set:
             if (chicken in self)
                 "But I already have ", (the) chicken, ". ";
@@ -1701,8 +1715,11 @@ with
 Object trap_string "trigger string (held)"
 with 
     name 'string',
+    description "The string is attached to the trap. When I pull it the
+    trap door will close. ",
     before [;
         Pull:
+            remove self;
             box_trap.is_set = false;
             "I give the string a quick yank, the propped stick flies out from
             under the trap door. ";
@@ -1717,6 +1734,8 @@ with
     description [;
         if (self in box_trap)
             "The hen sits quietly in the trap. ";
+        else if (self in player)
+            "The hen seems content being held. ";
         else
             "The hen is pecking at the dirt for grubs and bugs. ";
     ],
@@ -1724,12 +1743,14 @@ with
     before [;
         Take:
             if (parent(self) == box_trap) {
-                "Best keep the chicken inside the trap, lest it escapes. ";
+                move self to player;
+                "I take the hen out of the trap. ";
+            } else {
+                remove self;
+                self.venture_clock = 5;
+                print_ret (The) self, " moves quickly out of reach and
+                disappears into the jungle. ";
             }
-            remove self;
-            self.venture_clock=5;
-            print_ret (The) self, " moves quickly out of reach and
-            disappears into the jungle. ";
         Drop:
             ! release the hen, reset capture progress
             ! (note: this code does not get called anymore, since we
@@ -1738,6 +1759,10 @@ with
             print "I put the hen down on the ground. ";
             ! Try take the hen which makes it scatter away
             <<Take self>>;
+        Insert:
+            if (second == SACK_OBJECT) {
+                "I would rather not. ";
+            }
     ],
     
     life [;
@@ -1749,6 +1774,12 @@ with
     ],
     
     daemon [;
+        ! Stop this daemon if the carver is already working
+        if (carver.carving_state > 0) {
+            StopDaemon(chicken);
+            remove chicken;
+            return;
+        }
         ! when inside the trap
         if (self in box_trap) {
             if (box_trap has open) {
@@ -2189,30 +2220,29 @@ HumanNPC boatman
                     move yam to self;
                     move box_trap to player;
                     move seed_pouch to player;
-                    give player burdened;
-                    print "~This will do fine!~ he says with a laugh. He hands
-                    you a pouch filled with seeds, along with the trap. 
+                    print "~This will do fine!~ he says laughing. He hands
+                    me a pouch filled with seeds, along with the trap. 
                     ~Remember to SET the trap, then PULL the string
                     when the chicken is inside. Good luck!~^";
                     return true;
                 }
                 if (noun == box_trap || noun == seed_pouch) {
                     if (carver.carving_state == 0) {
-                        "No, I still need to catch that sneaky chicken. ";
+                        "No, I still need to catch that sneaky hen. ";
                     }
                     move box_trap to canoe;
                     move seed_pouch to canoe;
                     give player ~burdened;
                     "~Thanks friend, I hope you caught that chicken.~ ";
                 }
-                "~No thanks~, ", (a) self, " politely declines. ";
+                "~No thanks,~ ", (a) self, " politely declines. ";
             Order:
                 if (ItemInPlayer(sun_drawing) && (second == box_trap || noun == box_trap)) {
                     if (yam in self) {
                         "~I hope you caught that chicken you were after!~ ";
                     } else if (self.expects_yam) {
                         "~Of course you are free to use my trap, just find me a
-                        yam~, ", (a) self, " says smiling. ";
+                        yam,~ ", (a) self, " says, smiling. ";
                     } else {
                         self.expects_yam = true;
                         "~You know, I will lend you my chicken trap, if you find
@@ -2308,7 +2338,7 @@ HumanNPC boatman
         'air':
             "~The air smells fresh, doesn't it.~";
     }
-    print_ret (The) self, " grins at you and nods. ";
+    print_ret (The) self, " grins at me and nods. ";
 ];
 
 [ boatman_answers noun;
@@ -2335,7 +2365,7 @@ HumanNPC boatman
         'yes':
             "~Glad to hear it!~ ";
         default:
-            print_ret (A) self, " does not seem to understand what you mean. ";
+            print_ret (A) self, " does not seem to understand what I mean. ";
     }
 ];
 
@@ -2436,17 +2466,23 @@ with
                 Achieved(SCORE_BRIBERY);
                 StartDaemon(self);
                 "I give him the drawing, he looks at it for a moment
-                then picks a piece of wood
-                from his pile and begins carving. This may take a while, 
-                I could return the trap to ", (a) boatman, " while I wait. ";
+                then picks a piece of wood from his pile and begins carving. ";
             }
-            else if (noun == box_trap && chicken in box_trap && self.carving_state == 0) {
+            else if (noun == box_trap && chicken in box_trap) {
+                remove chicken;
+                move box_trap to location;
+                self.carving_state = 1;
+                "The carver has a big grin on his face. He removes the hen
+                from the trap and takes her over to the firepit, handing it
+                to somebody there.
+                He returns and gestures to me for the drawing. ";
+            }
+            else if (noun == chicken) {
                 remove chicken;
                 self.carving_state = 1;
-                "The carver has a big grin on his face, he removes the hen
-                from the trap and takes her over to the firepit, handing the
-                hen to somebody else. He returns and gestures to me for the
-                drawing. ";
+                "The carver has a big grin on his face. He takes the hen
+                over to the firepit, handing it to somebody there.
+                He returns and gestures to me for the drawing. ";
             }
             else
                 "He takes ", (the) noun, " and examines it, turns it around a
@@ -2646,10 +2682,10 @@ with
         }
         if (self.turn_count == 2) {
             deadflag = 1;
-            print "^You plummet into the gorge below, cracking your head
-            on a rocky outcropping, far down below. Weeks pass before the small
-            search party discover your broken body.
-            ^^If only you tried your WHIP";
+            print "^I plummet into the gorge, cracking my head
+            on a rocky outcropping, far down below.
+            Weeks pass before the search party discover my body.
+            ^^If only I had tried my WHIP. ";
         }
         self.turn_count = self.turn_count + 1;
     ],
@@ -2882,7 +2918,7 @@ with
     before [;
         Exit:
             if (~~noun)
-                print_ret "Try say if you want to exit north, or exit south. ";
+                "I can exit north to the waterfall, or exit south to the jungle. ";
             ! Exit the temple
             if (noun == n_obj)
                 <<Go n_obj>>;
@@ -3690,7 +3726,7 @@ Extend    'search'    * 'in' noun                     -> Search;
     ! Run any intercepted object actions
     if (AfterRoutines()) return;
     ! Default response
-    "Begin your sentence with a Verb.^";
+    "Begin the sentence with a Verb.^";
 ];
 Verb    'use'       * noun                          -> Use;
 
