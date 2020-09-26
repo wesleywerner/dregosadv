@@ -380,26 +380,30 @@ with
                 ! if the direction in the location is a DoorWay
                 if (location.(noun) ofclass DoorWay) {
                     ! Describe what is seen that way
-                    print_ret "I see ", (a) location.(noun), " that way. ";
+                    "I see ", (a) location.(noun), " that way. ";
                 } else {
                     if (location ofclass JungleRoom) {
-                        print_ret "I see more jungle that way. ";
+                        "I see more jungle that way. ";
                     }
                     if (location ofclass OutdoorRoom) {
-                        print_ret "I see a wall is that way. " ;
+                        "I see a wall is that way. " ;
                     }
                 }
             }
         Listen:
             if (sky.state == WEATHER_DRY) {
-                print_ret "I can hear jungle sounds - faint rustling of
-                leaves in the wind, faint chirps of insects, and occasionally,
-                a small critter moving under cover of vegetation. ";
+                "I hear the chirps and clicks of insects, 
+                and occasionally, the movement of a
+                small critter hidden within the dense vegetation. ";
             } else {
-                print_ret "I hear the pitter-patter. ";
+                if (random(3) == 1) {
+                    "I hear rolling thunder in the distance. ";
+                } else {
+                    "I hear the pitter-patter of rain. ";
+                }
             }
         Smell:
-            print_ret "The air smells fresh, with earthy jungle tones. ";
+            "I smell fresh air with earthy jungle tones. ";
     ],
     has light;
 
@@ -577,6 +581,7 @@ with
             print ". ", (string) self.search_concludes, "^";
             ! move them into scope
             while (child(self)) {
+                give child(self) ~concealed;
                 if (self.auto_take)
                     move child(self) to player;
                 else
@@ -1145,7 +1150,7 @@ EssentialObject journal "journal"
             if (w1=='mannaz' || w1=='ehwaz' || w1=='gebo' || w1=='peorth')
                 context = 'Glyphs';
             
-            if (w1=='sun' || w1=='weather' || w1=='climate' || w1=='rain' || w1='sky')
+            if (w1=='sun' || w1=='weather' || w1=='climate' || w1=='rain' || w1=='sky')
                 context = 'Climate';
                 
             if ((w1=='Sowilu' || w2=='Sowilu') || (w1=='sun' && w2=='key'))
@@ -1274,10 +1279,13 @@ EssentialObject journal "journal"
 ! The jungle is visible in all JungleRooms
 SearchableObject jungle_scenery "jungle"
     with
-        name 'vegetation' 'jungle' 'foliage' 'plant' 'plants' 'bush' 'brush' 'shrub' 'vine' 'vines',
+        name 'vegetation' 'jungle' 'foliage' 'plant' 'plants' 
+            'bush' 'brush' 'shrub' 'vine' 'vines' 'shrubs',
         description "The jungle is dense and lush, and comprises various
         plants, shrubs and vines, with foliage of all shapes and sizes. ",
         auto_take true,
+        search_lead "I search the surrounding jungle and find ",
+        search_concludes "I take it.",
         found_in [;
             return (location ofclass JungleRoom);
         ],
@@ -1285,7 +1293,7 @@ SearchableObject jungle_scenery "jungle"
             Attack:
                 print_ret "I shake my fist angrily at ", (the) self, ". ";
         ],
-    has scenery;
+    has scenery transparent supporter;
 
 ! The word "compass" is a reserved keyword in Inform, as such we use "lodestar"
 ! to identify the object as it lives in the player's inventory.
@@ -1605,7 +1613,14 @@ TorchBaseObject torch_of_wood "stick"
 with
     name 'wood' 'wood' 'stick',
     material "wooden",
-    description "A wooden stick about the length of my arm. ";
+    description "A wooden stick about the length of my arm. ",
+    before [;
+        Take:
+            if (parent(self) == jungle_scenery) {
+                <<Search jungle_scenery>>;
+            }
+    ],
+    has concealed;
 
 Object seed_pouch "seed pouch"
 with
