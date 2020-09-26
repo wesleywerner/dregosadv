@@ -3017,17 +3017,28 @@ with
             "I don't want it. ";
     ];
 
-ScenicBase tomb_artifacts "artifacts"
+ScenicBase tomb_idols "idols"
 with
-    name 'artifact' 'artifacts' 'clay' 'pot' 'pots' 'idol' 'idols',
-    article "some",
-    description "The artifacts consist of old clay pots,
-    idols carved out of wood depicting oxen, pigs and dogs. ",
+    name 'artifact' 'artifacts' 'idol' 'idols' 'pigs' 'oxen',
+    description "The idols depict various animals: oxen, pigs and dogs. ",
     found_in Tomb,
     before [;
         Take, Search:
-            "I don't see anything worth taking. ";
-    ];
+            "I don't see any worth taking. ";
+    ],
+    has pluralname;
+
+ScenicBase tomb_pots "pots"
+with
+    name 'clay' 'pot' 'pots',
+    description "The pots are made of clay. They seem old, many of them are
+    chipped and cracked. ",
+    found_in Tomb,
+    before [;
+        Take, Search:
+            "I don't see any worth taking. ";
+    ],
+    has pluralname container openable;
 
 WeightedObject urn "urn"
 with
@@ -3154,13 +3165,13 @@ with
     before [;
         Go:
             if (noun == u_obj) {
-                if (torch_of_wood in location) {
+                if (torch_of_wood in location || torch_of_wood in stone_altar) {
                     move torch_of_wood to player;
-                    print "I take my torch with me. ";
+                    print "I take my torch with me.^";
                 }
-                if (torch_of_bone in location) {
+                if (torch_of_bone in location || torch_of_bone in stone_altar) {
                     move torch_of_bone to player;
-                    print "I take my torch with me. ";
+                    print "I take my torch with me.^";
                 }
             }
         Examine:
@@ -3186,22 +3197,25 @@ ScenicRockObject stone_column "stone column"
 with
     name 'stone' 'column',
     initial [;
-        print "A stone column stands in the center of the room";
-        if (sun_key_hole has examined) {
-            print ", a ", (name) sun_key_hole, " in the floor next to it";
+        print "A stone column stands in the center of the room. ";
+        if (sun_key_hole has examined || sun_key in sun_key_hole) {
+            print "There is ", (a) sun_key_hole, " in the floor, next to it. ";
         }
-        ".";
+        if (sun_key in sun_key_hole) {
+            print "There is a key in it. ";
+        }
+        "";
     ],
     description [;
         print "The column is round and carved out of stone, ";
         if (self.height == 5) {
-            print " it reaches from floor to ceiling. ";
+            print "it reaches from floor to ceiling. ";
         } else {
-            print " it reaches up from the floor toward the ceiling. ";
+            print "it reaches up from the floor toward the ceiling. ";
         }
         if (~~sun_key_hole has examined) {
-            print "My keen eye notices a small and peculiar hole in the floor
-            next to it. ";
+            print "My keen eye notices a peculiar hole in the floor,
+            next to the column. ";
         }
         "";
     ],
@@ -3238,16 +3252,25 @@ with
                 give self examined;
                 self.short_name = "sun-shaped hole";
             }
-            "The shallow hole is no more than a fist deep and a hand wide, it 
-            has been carved out of the stone floor, and is in the shape of a
-            sun. ";
+            print "The hole is no more than a fist deep and a hand wide, it 
+            is carved into the floor. The hole is in the shape of a sun. ";
+            if (sun_key in self) {
+                print "There is a key in it. ";
+            } else {
+                print "I see something in the bottom. ";
+            }
+            "";
         Search:
             if (~~sun_key in sun_key_hole) {
-                "Peering into the hole I see a glyph engraved in the bottom,
+                "I see a glyph engraved in the bottom,
                 I recognize it as Sowilu. ";
             }
         Insert:
             "That does not fit in the keyhole. ";
+        Receive:
+            if (noun ~= sun_key) {
+                "It does not fit in the hole. ";
+            }
     ],
     has scenery container open;
 
@@ -3282,8 +3305,8 @@ with
             print_ret (the) stone_egg, " on top of it. ";
         }
     ],
-    description "The stone altar extrudes up from the floor, its top surface
-    reaches up to my chest, there is a plate inset on top. ",
+    description "The stone altar rises up from the floor, its top surface
+    reaches up to my chest. There is a plate inset on top. ",
     each_turn [n is_weighted;
         is_weighted = false;
         objectloop (n in self) {
