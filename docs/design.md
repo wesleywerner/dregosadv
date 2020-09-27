@@ -242,7 +242,11 @@ Using the task scoring system, these tasks are Achievable. See the `task_scores`
 - SCORE_BRIBERY: Trade with the Carver (puzzle)
 
 # TODO
-* Fill the journal with notes
-* Quotes in journal entries.
-* Rewrite parser responses and PC feedback in the first person?
 * Map with IFM.
+
+# CREDITS
+
+Cover image composite from public domain images: 
+
+- https://www.flickr.com/photos/154957955@N07/35029817375
+- https://www.flickr.com/photos/sayotsu/26022492945/in/photolist-FDw5xt-BgdgV9-gJaVoi-gJaWrQ-gJb5Nk-gJaZNb-wyoQmB-gJb1d8-gJb3TD-gJaWeM-xdL4W8-gJbasS-gJaPUb-gJbSig-GDmkbH-rzq3fT-gJb4vm-gJbQop-GypQbp-gJaZow-gJaXnN-sgYEeh-gJaYhy-MpiVHc-MXG6p2-x6GE93-HSYLoS-DN39bq-xRhGiq-DsFwEM-JMnpqU-EYCFys-Ef5xCn-XG3yz8-tCuRLa-Dxk2kA-DTx9Lf-CFUmcJ-h3ocM7-GbQqzb-duPm5E-D4sQPc-84vu3Z-CBkTwm-7dhfx-D4sYK2-x2hmGh-P3twqt-cYqySj-2YPCMJ
