@@ -905,7 +905,7 @@ with
     ! Print flavor text during the trip in the canoe
     each_turn [;
         if (TurnsInCanoe - self.time_left == 5) {
-            print "When I am ready, I can sit back and WAIT
+            print "^When I am ready, I can sit back and WAIT
             until we reach the shore.^";
         }
         if (self.time_left == 2 && location == River)
