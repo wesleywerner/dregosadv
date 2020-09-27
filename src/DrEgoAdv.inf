@@ -1299,7 +1299,7 @@ EssentialObject journal "journal"
                 
                 'Sowilu':
                 print "Sowilu is the rune for the sun, and because of its symbolic
-                power, it is rumored that the treasure can only be unlocked with
+                power, is rumored that the treasure can only be unlocked with
                 a key of the sun. ";
                 if (~~sun_drawing has moved) {
                     move sun_drawing to player;
@@ -3295,7 +3295,7 @@ with
 
 ScenicEngravingObject sun_key_hole
 with
-    name 'hole' 'keyhole',
+    name 'peculiar' 'hole' 'keyhole',
     short_name "strange hole",
     found_in Tomb,
     before [;
