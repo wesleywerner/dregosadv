@@ -21,7 +21,7 @@ Constant DEATH_MENTION_UNDO;
 Constant StoryStartTime 780; ! 13:00
 
 ! The number of turns to pass until the canoe ride ends
-Constant TurnsInCanoe 12;
+Constant TurnsInCanoe 30;
 
 ! When going to undefined direction while in a JungleRoom, the player gets lost.
 ! Reading the compass returns them back on track, but if the player lost
@@ -899,6 +899,10 @@ with
 
     ! Print flavor text during the trip in the canoe
     each_turn [;
+        if (TurnsInCanoe - self.time_left == 5) {
+            print "When I am ready, I can sit back and WAIT
+            until we reach the shore.^";
+        }
         if (self.time_left == 2 && location == River)
             print_ret "^~We are almost there, ", (a) player, "~, ",
                         (a) boatman, " says. ";
@@ -2403,7 +2407,7 @@ HumanNPC boatman
             print "^", (A) boatman, " paddles with the oar.^";
         5:
             if (fish in canoe)
-                print "~We will have fish for dinner tonight~, ",
+                print "^~We will have fish for dinner tonight~, ",
                     (a) boatman, " says hungrily.^";
         7:
             print "^", (A) boatman, " looks across the salty water,

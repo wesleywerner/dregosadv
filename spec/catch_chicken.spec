@@ -1,4 +1,5 @@
 superbrief
+wait
 ask rom for the trap
 gonear garden portal
 search veggies
