@@ -2419,7 +2419,7 @@ HumanNPC boatman
 HumanNPC natives "natives"
 with
     name 'people' 'men' 'women' 'native' 'natives',
-    description "Women and men are weaving plant fibers into
+    description "Women and men are weaving natural fibers into
     fishing nets and ropes, some are tending to a firepit while others
     prepare pumpkins, tubers and fish. ",
     found_in Tribe,
@@ -3430,6 +3430,17 @@ with
     before [;
         Take:
         "I don't want any of those carvings. ";
+    ];
+
+ScenicBase tribe_things "various things"
+with
+    name 'nets' 'ropes' 'pumpkins' 'tubers' 'fish',
+    description "The people are seem busy with their chores, I'd rather not
+    interrupt them. ",
+    found_in Tribe,
+    before [;
+        Take:
+            "I should leave their things alone. ";
     ];
 
 ! [ ------------------------------------------------------------------- Valley ]
