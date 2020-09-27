@@ -617,7 +617,7 @@ Class ScenicWaterObject
 with
     before [;
         Take, Drink:
-            "Ah, that ", (name) self, " is refreshing! ";
+            "Ah, the ", (name) self, " is refreshing! ";
     ],
 has scenery static;
 
@@ -932,9 +932,10 @@ with
     ],
     has   enterable static container open;
 
-TorchWickObject cloth "strip of canvas"
+TorchWickObject cloth "canvas"
 with 
     name 'strip' 'cloth' 'canvas',
+    article "a strip of",
     description "A strip of dirty canvas cloth the length of my arm. ";
 
 EssentialObject fedora_hat "fedora"
@@ -2651,7 +2652,7 @@ with
         if (self hasnt visited) {
             print "After a good climb I reach the top of the hill.
             Jungle surrounds me on all sides, except for a deep gorge to the 
-            east, a rope bridge spans across it. ";
+            east. ";
         } else {
             print "I am overlooking a deep gorge. ";
         }
@@ -2933,8 +2934,8 @@ IndoorRoom Temple "Temple"
 with
     description [;
         if (self hasnt visited) {
-            print "The temple is cool inside and the stone floor is covered in a
-            layer of dirt, openings near the top of the structure
+            print "The temple is cool inside. The stone floor is covered in a
+            layer of dirt. Openings near the top of the structure
             provide ample natural light to see. ";
         }
         if (temple_stone_box hasnt open) {
@@ -3018,7 +3019,7 @@ with
 
 ScenicBase "dirt"
 with
-    name 'dirt',
+    name 'dirt' 'dust' 'leaves',
     description "Dust and dead leaves litter the floor. ",
     found_in Temple,
     before [;
@@ -3089,6 +3090,9 @@ with
         Smell:
             "It smells a bit rancid, but my nose tells me that it is oil,
             without a doubt. ";
+        Touch:
+            "I touch the substance and rub it between my thumb and index
+            fingers. It is definitely oil. ";
         Receive:
             <<Dip noun urn>>;
     ];
@@ -3520,7 +3524,7 @@ with
 
 ScenicWaterObject waterfall_cascade "cascading water" Waterfall
 with
-    name 'waterfall',
+    name 'waterfall' 'cascade' 'cascades',
     description "The source is from somewhere up above,
     the water splashes into the pool. ",
     before [;
@@ -3744,9 +3748,10 @@ with
     name 'temple' 'building',
     description [;
         if (location == Waterfall) {
-            "The temple is about three times the height of a man, it is
+            "The temple is about three times the height of a man. It is
             built from stone blocks, and seems partially swallowed by
-            vines and plant growth. An opening in the stone serves as a door. ";
+            vines and plant growth.
+            There is an entrance in the front. ";
         }
         if (location == JunglePath) {
             "The temple is too far to see from here. ";
