@@ -560,6 +560,11 @@ with
     before [;
         Take:
             <<Go self>>;
+        ! Allow climbing the steps to go their way
+        Climb:
+            if (self.door_dir() == u_to || self.door_dir() == d_to) {
+                <<Go (self.door_dir())>>;
+            }
     ],
 has static door open scenery;
 
@@ -3733,11 +3738,6 @@ with
         ! Return the direction this way is in
         if (self in Valley) return u_to;
         if (self in Cliff) return d_to;
-    ],
-    before [;
-        ! Allow climbing the steps to go their way
-        Climb:
-            <<Go (self.door_dir())>>;
     ];
 
 ! Ways to the Temple
