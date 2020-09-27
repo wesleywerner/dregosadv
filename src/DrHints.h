@@ -124,7 +124,13 @@ with
                 if (itemB) {
                     ! has wick
                     switch(++Hints.TieWick) {
-                        1: "To make a wick, bind some cloth to the base. ";
+                        1: "I could make a torch.
+                            I need something long for the base of the torch,
+                            something that will work as a wick,
+                            and some kind of fuel. ";
+                        2: "A stick or bone, but not a stone, 
+                            will work as a base for a torch. ";
+                        3: "To make the wick, tie some cloth to a stick or bone. ";
                         default: "Tie ", (the) itemB, " to ", (the) itemA, ". ";
                     }
                 } else {
