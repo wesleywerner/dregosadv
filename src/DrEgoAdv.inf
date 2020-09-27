@@ -50,8 +50,11 @@ Constant RAIN_ON_PLAYER_ROLL 2;
 ! Show the option to list AMUSING things you can try (at the End of the story)
 Constant AMUSING_PROVIDED;
 
-! Define default responses for the five senses.
+! Default look down response
 Constant LOOK_DOWN_REPLY = "The ground is below me. Thank heavens! ";
+
+! Magic world response
+Constant MAGIC_WORD_TEXT = "You are yanked in an unknown direction. You appear in the ... ^";
 
 ! Set the PC carryall
 Constant MAX_CARRIED = 2;
@@ -3943,16 +3946,14 @@ Verb 'annotate' * topic -> Annotation;
 ! Adds a tribute magic word
 [ XyzzySub;
     if (Tomb has visited) {
-        if (location == Tomb) {
-            print "You are yanked in an unknown direction. You appear in the ... ^";
+        if (real_location == Tomb) {
+            print (string) MAGIC_WORD_TEXT;
             PlayerTo(Valley);
-            !<Look>;
             return true;
         }
         if (location == Valley) {
-            print "You are yanked in an unknown direction. You appear in the ... ^";
+            print (string) MAGIC_WORD_TEXT;
             PlayerTo(Tomb);
-            !<Look>;
             return true;
         }
     }
