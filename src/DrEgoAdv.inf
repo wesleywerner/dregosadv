@@ -3092,8 +3092,7 @@ with
             without a doubt. ";
         Receive:
             <<Dip noun urn>>;
-    ],
-    has container open;
+    ];
 
 ! [ -------------------------------------------------------------- Top Of Tree ]
 OutdoorRoom TreeTop "Top of Tree"
