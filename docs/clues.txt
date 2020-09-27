@@ -137,7 +137,8 @@ How do I make fire?
     2.  If you show the matches to the [namtaob], he hints at 
         another way to make fire.
     3.  Keep an eye out for a [eulb] [tnilg] when in the [llafretaw] area.
-    4.  You can light the [hcrot] with the [tnilf].
+    4.  You can light the torch with the [tnilf].
+    5.  You can also put the torch in the [tiperif] found in the [ebirt].
 
 Why did my light go out?
     1.  The [leuf] only lasts so long.
@@ -197,7 +198,7 @@ SECTION J                                                          YOUR JOURNAL
 Why do I need the journal?
     1.  It contains your research notes.
     2.  To read it, type "notes on <topic>", or "consult journal about <topic>".
-    3.  Use it to find out about all the [sgnivargne].
+    3.  Use it to find out about all the [slobmys] you see.
 
 Can I write in my journal?
     1.  No, it is for reading only.
@@ -210,7 +211,7 @@ SECTION K                                                        THE GOLDEN EGG
 How can I take the Golden Egg without dying?
     1.  The prize rests on a [erusserp] [evitisnes] plate.
     2.  You can put something [yvaeh] on the [ratla] before taking it.
-    3.  You know something is [yvaeh] when you [gul] it around.
+    3.  You know something is [yvaeh] as story tells you so when moving around.
     4.  If you still don't know what to use...
     5.  The [enots] [gge] in the [elpmet] is your best choice.
 

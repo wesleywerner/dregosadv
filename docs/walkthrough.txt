@@ -1,0 +1,182 @@
+===============================================================================
+                    Dr Ego's Adventure walkthrough
+===============================================================================
+
+
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+In the canoe
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+You start in the canoe on the Maro river. You can examine your inventory and
+the scenery, and greet your guide.
+
+> say hi
+
+The boat ride can last for a while. You can WAIT to pass the time immediately
+until you reach the shore.
+
+> wait
+
+And head of to the next part of the story.
+
+> go north
+> go west
+
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+The clearing and the monkey
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+Climb up the tree to see the path forward
+
+> climb fig tree
+> look north
+> climb down
+
+Oh no, your compass dropped during your descent. If you stashed it in your
+satchel before climbing down this would have been avoided. Let us get it back.
+
+> go hut
+> search rubble
+> go southwest
+> examine veggies
+> get tuber
+> whip banana tree
+> wait (until the monkey appears, and then wait more until it grab the banana)
+> get compass
+
+Onward to the next area.
+
+> go hut
+> go north
+> go north
+> climb stairs
+> cross bridge
+
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+The rope bridge and deadly drop
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+Crossing the bridge has a chance of falling. If this happens:
+
+> whip bridge
+
+You emerge at the other side
+
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+The waterfall and temple
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+> enter temple
+> examine symbols
+> notes on air terjun
+> exit north
+> look behind waterfall
+> enter alcove
+
+We need a light to enter. Time to make a torch.
+
+> enter temple
+> examine floor
+> open slab
+> get bone
+> tie cloth to bone
+> open urn
+> dip torch in oil
+> exit north
+> examine blue glint
+> get stone
+> strike flint
+> enter alcove
+
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+The underground tomb
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+> examine stone column
+> examine hole
+> look inside hole
+> notes on sowilu
+
+We need the key, you have a drawing of it from your journal. 
+Time to visit the tribe.
+
+> climb stairs
+> enter temple
+> go south
+> go clearing
+> go valley
+> go path
+
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+The tribe and the carver
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+> show drawing to carver
+
+He wants payment in the form of a hen. There is a hen wandering aroung the
+tribe, but it is too quick to catch. You need a trap. Your guide, Rom, has one.
+
+> go path
+> go clearing
+> go path
+> go shore
+> ask rom for trap
+> give yam to rom
+
+Now return to the tribe.
+
+> go path
+> go clearing
+> go valley
+> go path
+
+Set the trap to catch the chicken.
+
+> drop trap
+> put seed in trap
+> set the trap
+> wait (until the hen enters the trap)
+> pull the string
+
+Give the carver his payment.
+
+> take hen from trap
+> give hen to carver
+> give drawing to him
+> wait
+> get sun key
+
+Now return to the temple. We need to refuel our torch, and get the heavy stone egg.
+
+> go path
+> go clearing
+> go path
+> go temple
+> put torch in oil
+> strike flint
+> take stone egg
+> exit north
+> enter alcove
+
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+The underground tomb
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+Use the sun key replica to lower the stone column.
+
+> put key in hole
+> turn key
+> again (until it wont turn any more)
+
+Place the heavy stone egg on the altar, to bypass the pressure plate booby trap.
+
+> put stone egg on altar
+> take golden egg
+
+Now return to the shore and get back in the canoe.
+
+> climb stairs
+> enter temple
+> exit south
+> go shore
+> get in the boat
