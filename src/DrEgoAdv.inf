@@ -3837,8 +3837,8 @@ Verb    'shake' = 'attack';
 Verb    'strike' = 'attack';
 
 ! Alternate forms to TIE thing ON/AROUND 
-Extend 'tie' * held 'on' held -> Tie;
-Extend 'tie' * held 'around' held -> Tie;
+Extend 'tie' * noun 'on' noun -> Tie;
+Extend 'tie' * noun 'around' noun -> Tie;
 
 ! Add a synonym for search, as "look behind the noun".
 ! The default rules does not have "look behind".
