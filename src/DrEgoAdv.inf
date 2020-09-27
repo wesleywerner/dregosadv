@@ -1,10 +1,10 @@
 ! For those interested, the Maro River starts in the Arafura Sea, Indonesia,
 ! at coordinates 8°28'03.0"S 140°21'20.8"E
 
-Release 1;
+Release 2;
 Serial "400410";
 
-Constant Story "Dr Ego and the Egg of Man-Toomba";
+Constant Story "Dr Ego and the egg of Man-Toomba";
 Constant Headline
             "^An Interactive Fiction Story
              ^by Special Agent.^";
