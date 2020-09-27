@@ -319,7 +319,7 @@ Attribute walls;
 
 [ PrintWinWording;
     print "^^I spend the next few days cataloguing the artifact,
-    and documenting my adventure leading up to discovery.
+    and documenting my adventure leading up to its discovery.
     In the end I donated ", (the) golden_egg, " to the museum of
     Natural History. ";
 ];
@@ -3575,7 +3575,11 @@ with
             his tales. ";
             PrintWinWording();
     ],
-    has supporter;
+    after [;
+        ! Override the default "I sit on the stool"
+        Enter: "";
+    ],
+    has supporter enterable;
 
 ! [ ========================================================== Doors & Bridges ]
 ! [ For auxiliary objects the player can enter to travel between rooms ]
