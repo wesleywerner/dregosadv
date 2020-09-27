@@ -1095,7 +1095,7 @@ with
             if (parent(banana) ~= garden_trees)
                 print_ret "I don't need another banana right now. ";
         Attack:
-            "I give the tree a good shake. That did not work. ";
+            "I give the banana tree a good shake. The bananas stay in place. ";
     ],
     after [;
         Whip:
@@ -2243,8 +2243,8 @@ HumanNPC boatman
                 }
                 print_ret (A) self, " looks amusingly at ", (the) noun, ". ";
             Give:
-                if (noun ofclass EdibleFruitObject) {
-                    remove noun;
+                if (noun == banana) {
+                    move banana to garden_trees;
                     print_ret (The) self, " takes ", (the) noun, " and eats it.
                     ~Thanks!~";
                 }
@@ -2482,8 +2482,8 @@ with
         Ask,Answer,Tell:
             "The man says something unintelligible while gesturing to his works. ";
         Give:
-            if (noun ofclass EdibleFruitObject) {
-                remove noun;
+            if (noun == banana) {
+                move banana to garden_trees;
                 print_ret (The) self, " takes ", (the) noun, " and eats it. ";
             }
             if (noun ofclass EssentialObject) {
@@ -2736,11 +2736,10 @@ JungleRoom Garden "Garden"
 with
     description [;
         if (self hasnt visited) {
-            print "I enter a small garden, which looks like it has not been
-            maintained for a very long time. The plants have grown wild. ";
+            print "I enter a small garden, it looks abandoned. ";
         }
-        "The small garden has grown wild, I see some vegetable plants
-        and fruit trees. ";
+        "The plants in the garden have grown wild.
+        I see vegetables and a couple of fruit trees. ";
     ],
     ne_to bungalow_way;
 
