@@ -6,6 +6,6 @@ go northeast
 read compass
 climb the tree
 look northeast
+put compass in bag
 climb down
-
-go northeast
+go north

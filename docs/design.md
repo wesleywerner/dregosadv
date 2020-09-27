@@ -22,6 +22,7 @@ This is a short story written in Inform 6 with the hope of learning how to imple
 > ^ climbable
 > & present in the connecting location
 > > enterable
+> . concealed until discovered
 
 ```
                       Cliff --- (bridge) --- Waterfall                         
@@ -35,8 +36,8 @@ This is a short story written in Inform 6 with the hope of learning how to imple
                         ^                |                                     
                         ^                |                                     
       Tree Top     Valley --- Tribe      .                                     
-             ^      /                    .                                     
-             ^     /                     .                                     
+             ^     .                     .                                     
+             ^     .                     .                                     
              ^ Clearing -------- Jungle Path                                   
                   |                   |                                        
                Old Hut                |                                        

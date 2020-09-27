@@ -3093,7 +3093,8 @@ with
             print "I climb up the tree, as high as safely possible, and spend
             a moment to take in the view. ";
         }
-        "I can see in all directions from this vantage point. ";
+        print "I can see in all directions from this vantage point.
+        I can climb down the tree. ";
     ],
     cant_go "The only way is down. ",
     d_to Clearing,
@@ -3117,18 +3118,32 @@ with
         
         ! Look in directions
         Examine:
-            if (lodestar notin player && lodestar notin satchel) {
-                "I can't look in a direction without my compass. ";
+            ! Look up / down
+            if (noun == u_obj) {
+                <<Examine sky>>;
             }
-            if (noun in compass && lodestar notin player && lodestar in satchel) {
+            if (noun == d_obj) {
+                "I see the clearing down below. ";
+            }
+            ! Take item from satchel
+            if (noun in compass && lodestar in satchel) {
                 <Take lodestar>;
             }
-            if (noun == ne_obj) {
-                Clearing.ne_to = valley_way;
-                move valley_way to Clearing;
-                Achieved(SCORE_FIND_THE_WAY);
-                print_ret "There! I see stone stairs leading up that hill, to ",
-                    (a) noun, ". ";
+            ! Can't look in direction without the lodestar
+            if (noun in compass && lodestar notin player) {
+                if (noun ~= u_obj && noun ~= d_obj) {
+                    "I can't look in a direction without my compass. ";
+                }
+            }
+            ! Look in the correct direction
+            if (noun == n_obj || noun == ne_obj || noun == nw_obj) {
+                if (valley_way notin Clearing) {
+                    Clearing.n_to = valley_way;
+                    move valley_way to Clearing;
+                    Achieved(SCORE_FIND_THE_WAY);
+                }
+                print_ret "I see a path leading to the north,
+                from the clearing below. ";
             }
             ! Any other direction gives a canned response.
             ! Note that we *must* test for CompassDirection here
@@ -3139,12 +3154,37 @@ with
             if (noun ofclass CompassDirection) {
                 "I see more jungle to ", (a) noun, ". ";
             }
+        Jump:
+            "This tomfoolery will get you hurt. ";
     ],
     
     after [;
         Drop:
             move noun to Clearing;
             print_ret (The) noun, " falls down below. ";
+    ];
+
+ScenicBase "view"
+with
+    name 'view',
+    description "The view is magnificent.
+    I can see in all directions from up here. ",
+    found_in TreeTop,
+    before [;
+        Take:
+            "I take in the scenery. ";
+        Enter:
+            "I am already in the middle of this wonderful view. ";
+    ];
+
+ScenicBase "figs"
+with
+    name 'figs' 'fruit',
+    description "The tree is not bearing any fruit at the moment. ",
+    found_in Clearing TreeTop,
+    before [;
+        Take:
+            "I don't see any figs in the tree. ";
     ];
 
 ! [ --------------------------------------------------------------------- Tomb ]
@@ -3581,7 +3621,7 @@ with
     name 'valley',
     description "I can't see the valley from here, but the way leads there. ",
     door_to Valley,
-    door_dir ne_to;
+    door_dir n_to;
 
 ! Connect the inside of the Tomb with the Waterfall
 DoorWay tomb_stairs "stairs"

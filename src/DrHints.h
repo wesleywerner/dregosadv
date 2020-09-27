@@ -43,7 +43,7 @@ with
     }
     
     ! Seeing the way to the Valley
-    if (Clearing has visited && Clearing.ne_to ~= valley_way) {
+    if (Clearing has visited && Clearing.n_to ~= valley_way) {
         style bold;
         print "I can't find the way past the clearing: ";
         style roman;
