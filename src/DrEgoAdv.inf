@@ -12,7 +12,7 @@ Constant Headline
 ! [ ================================================================ Constants ]
 
 ! Enable beta test functions
-Constant BETA_TEST;
+!Constant BETA_TEST;
 
 ! Mention to dead players that they can UNDO the last action.
 Constant DEATH_MENTION_UNDO;
