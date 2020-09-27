@@ -1670,7 +1670,7 @@ with
     description "A small pouch with a drawstring, it is filled with edible seed. ",
     before [;
         Eat:
-            "Mmm not bad, but it would probably taste better to a chicken. ";
+            "Mmm not bad. They probably taste better to a chicken. ";
         Insert:
             if (second == box_trap) {
                 if (box_trap in player) 
@@ -1684,6 +1684,9 @@ with
                     "I scatter some seeds inside the trap. ";
                 }
             }
+        Open:
+            "I look inside the seed pouch. Yep, those are seeds.
+            I will need to put the seeds in the trap. ";
     ],
     has edible;
 
@@ -2365,9 +2368,13 @@ HumanNPC boatman
             , (string) pause,
             "The stone has a blue shine.~ ";
         'gold', 'golden', 'treasure':
-            "~I have heard the stories of ancient treasures,
-            I do not know how true they are.
-            For me, the real treasure is our land.~";
+            if (ItemInPlayer(golden_egg)) {
+                <<Show golden_egg boatman>>;
+            } else {
+                "~I have heard the stories of ancient treasures,
+                I do not know how true they are.
+                For me, the real treasure is our land.~";
+            }
         'air':
             "~The air smells fresh, doesn't it.~";
     }
@@ -3554,10 +3561,10 @@ with
 
 Object wood_stool "stool"
 with 
-    name 'stool' 'chair' 'log',
+    name 'stool' 'chair' 'log' 'seat',
     description [; 
-        print_ret "It is a piece of log used as a makeshift stool, ", (A) boatman,
-        " is sitting on a similar log, next to a fire. ";],
+        print_ret "It is a piece of log used as a makeshift seat, ", (A) boatman,
+        " is sitting on one just like it, next to a fire. ";],
     before [;
         Enter:
             deadflag = 2;
