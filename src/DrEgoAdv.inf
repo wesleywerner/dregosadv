@@ -1490,7 +1490,7 @@ with
 ! The sky is visible in all outdoor areas.
 Object sky "sky"
     with
-        name 'sky' 'clouds' 'weather' 'sun',
+        name 'sky' 'clouds' 'weather' 'sun' 'thunder' 'lightning',
         
         ! Describe the changing sky
         description [;
