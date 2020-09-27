@@ -17,3 +17,4 @@ kdiff3 weather.expected             weather.actual          -o weather.expected
 kdiff3 help.expected                help.actual             -o help.expected
 kdiff3 hints.expected               hints.actual            -o hints.expected
 kdiff3 torch_variation.expected     torch_variation.actual  -o torch_variation.expected
+kdiff3 xyzzy.expected               xyzzy.actual            -o xyzzy.expected

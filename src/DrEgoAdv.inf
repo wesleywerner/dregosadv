@@ -299,9 +299,10 @@ Attribute walls;
 
 ! Print out amusing things to try (only available after game is won).
 [ Amusing;
-    print_ret "Have you tried,^
-            ^* Whipping the water of the Maro?
-            ^* Get lost in the jungle then read your compass?";
+    print_ret "Here are some amusing things you can try next time:^
+            ^* Whip the water of the Maro
+            ^* Get lost in the jungle then read your compass
+            ^* Use the magic word Xyzzy";
 ];
 
 [ PressAnyKey k; @read_char 1 -> k; return k; ];
@@ -3920,3 +3921,23 @@ Verb 'j' = 'notes';
 ];
 Verb 'annotate' * topic -> Annotation;
 #endif;
+
+! Adds a tribute magic word
+[ XyzzySub;
+    if (Tomb has visited) {
+        if (location == Tomb) {
+            print "You are yanked in an unknown direction. You appear in the ... ^";
+            PlayerTo(Valley);
+            !<Look>;
+            return true;
+        }
+        if (location == Valley) {
+            print "You are yanked in an unknown direction. You appear in the ... ^";
+            PlayerTo(Tomb);
+            !<Look>;
+            return true;
+        }
+    }
+    "Nothing happens. ";
+];
+Verb 'xyzzy' * -> Xyzzy;
