@@ -763,7 +763,7 @@ with
             ! item being left on the ground.
             move self to location;
         }
-        if (action == ##Go && self in player) {
+        if ((action == ##Go || action == ##Enter) && self in player) {
             "Hrmpf, this ", (name) self," sure is heavy. ";
         }
         if (self provides swings_shut) {
