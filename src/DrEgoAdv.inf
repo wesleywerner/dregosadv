@@ -2881,6 +2881,13 @@ with
             SetTime(the_time + canoe.time_left);
             canoe.time_left = 0;
             "I sit back and enjoy the boat ride until... ";
+    ],
+    
+    after [;
+        Whip:
+            if (IndirectlyContains(canoe, noun)) {
+                "I could hurt myself or somebody around me. ";
+            }
     ];
 
 Object "jungle"
@@ -2936,6 +2943,13 @@ with
         Smell:
             if (fish_fire in location) {
                 print "I smell the fish cooking over the fire. ";
+            }
+    ],
+    
+    after [;
+        Whip:
+            if (IndirectlyContains(canoe, noun)) {
+                "I could hurt myself or somebody around me. ";
             }
     ];
 
@@ -3890,11 +3904,11 @@ Verb    'dip'       * noun 'in'/'into' noun         -> Dip;
     if (bullwhip notin player)
         "Not without my bullwhip. ";
 
-    if (noun in player)
-        "I could hurt myself. ";
-
     if (noun == player)
         "I am not into that kind of thing. ";
+        
+    if (IndirectlyContains(player, noun))
+        "I could hurt myself. ";
 
     if (noun ofclass NonPlayerCharacter)
         <<Attack noun>>;
