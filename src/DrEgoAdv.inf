@@ -982,7 +982,6 @@ with
 Object fish "fish"
 with
     name 'fish',
-    initial "A fish flops around inside the canoe. ",
     description "It looks like a black bass. ",
 
     ! Tracks if the fish was caught
@@ -1020,7 +1019,7 @@ with
     ],
 
     each_turn [;
-        if (self in canoe && random(3) == 1) {
+        if (location == River && random(3) == 1) {
             print "^A fish flops around inside the canoe.^";
         }
     ];
@@ -2308,7 +2307,7 @@ HumanNPC boatman
             if (location == Shore) {
                 "~That path to the north will take you into the jungle.~ ";
             }
-        'canoe', 'boat', 'oar':
+        'canoe', 'boat', 'boats', 'oar', 'craft':
             "~I have the canoe for many years now, built it myself,~ ",
             (a) self, " says proudly"
             , (string) pause;
