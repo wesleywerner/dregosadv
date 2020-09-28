@@ -1,7 +1,7 @@
 ! For those interested, the Maro River starts in the Arafura Sea, Indonesia,
 ! at coordinates 8°28'03.0"S 140°21'20.8"E
 
-Release 2;
+Release 3;
 Serial "400410";
 
 Constant Story "Dr Ego and the egg of Man-Toomba";
@@ -224,6 +224,8 @@ Attribute walls;
     move stone_egg to temple_stone_box;
     move urn to temple_stone_box;
     move torch_of_bone to temple_stone_box;
+    move stone_column to Tomb;
+    move flint_stone to Waterfall;
     
     ! Start Daemons
     StartDaemon(monkey);
@@ -1052,20 +1054,18 @@ with
 SparkThrowerObject flint_stone "flint"
 with
     name 'flint' 'stone' 'metallic' 'blue' 'glint',
+    article "a piece of",
     initial "A metallic blue glint catches my eye. ",
     description [;
         if (self has moved)
-            print "A piece of flint stone, it can be used to spark a flame.^ ";
+            print "It is a piece of flint stone.
+            I can strike it to make sparks.^ ";
         else
             print "The glint is coming from a stone on the ground.^ ";
         ],
-    found_in [;
-        ! Only visible when the player has crafted the torch
-        return (location == Waterfall && GetPlayerTorchObject());
-    ],
     before [item;
         Use:
-            print_ret "To use the flint, I should LIGHT TORCH WITH FLINT. ";
+            <<Attack self>>;
         Attack:
             item = ItemOfClassInPlayer(TorchBaseObject);
             if (item) {
@@ -3281,7 +3281,6 @@ with
         }
         "";
     ],
-    found_in Tomb,
     ! The height of the column reduces until zero
     height 5,
     ! lower the column by one unit

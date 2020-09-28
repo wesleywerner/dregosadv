@@ -17,6 +17,8 @@ again
 again
 again
 look
+gonear waterf portal
+gonear tomb portal
 take golden egg
 undo
 purloin stone egg
