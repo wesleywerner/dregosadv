@@ -265,9 +265,9 @@ Attribute walls;
             docking at Port Moresby, it was two days of riding on
             the back of a truck to Kerema, followed by a flight in a small
             seaplane, landing near the mouth of the Maro River.
-            ^^I met my guide and his canoe, who will take me up the river
-            to a remote and relatively uncharted
-            area in New Guinea -- where I hope to find the legendary ",
+            ^^I met my guide and his canoe, who will take me
+            to a remote and uncharted area in Papua New Guinea.
+            It is here that I hope to find the legendary ",
             (name) golden_egg, ".^";
     #endif;
     
@@ -2847,8 +2847,8 @@ with
     #ifnot;
     description [;
         if (self hasnt visited) {
-            print (The) canoe, " rocks gently on the water as I ride
-            down the river. ", (A) boatman, " sits at the other end of the craft
+            print (The) canoe, " rocks gently as we cruise
+            up the river. ", (A) boatman, " sits at the other end of the craft
             rowing with an oar. I wonder how much longer this will take, I
             have been in this ", (a) canoe, " for a while now. I am anxious
             to start searching for the treasure. ";
