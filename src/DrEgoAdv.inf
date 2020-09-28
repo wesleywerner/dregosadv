@@ -245,7 +245,7 @@ Attribute walls;
     move journal to satchel;
     move matchbook to satchel;
     move fedora_hat to player;
-    move leather_jacket to player;
+    !move leather_jacket to player;
     move satchel to player;
 
     ! Change the narrative voice to first person
@@ -949,11 +949,11 @@ with
     description "This is my brown felt hat. ",
     has clothing worn;
 
-EssentialObject leather_jacket "leather jacket"
-with
-    name 'jacket',
-    description "This is my brown jacket. ",
-    has clothing worn;
+!EssentialObject leather_jacket "leather jacket"
+!with
+!    name 'jacket',
+!    description "This is my brown jacket. ",
+!    has clothing worn;
 
 !
 ScenicTreeObject fig_tree "fig tree"
@@ -2223,9 +2223,9 @@ HumanNPC boatman
                     , (string) pause,
                     "We farm the waters mostly, and some pigs too.~ ";
                 }
-                if (noun == leather_jacket) {
-                    "~I like your jacket, ", (string)pname, ".~ ";
-                }
+                !if (noun == leather_jacket) {
+                !    "~I like your jacket, ", (string)pname, ".~ ";
+                !}
                 if (noun == fedora_hat) {
                     "~That is one fine hat, ", (string)pname, ", but I never
                     cared for having one myself.~ ";
