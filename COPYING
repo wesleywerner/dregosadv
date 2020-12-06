@@ -1,20 +1,3 @@
-# Dr Ego's Adventure
-
-An interactive fiction story about an archeologist looking for a famed cursed treasure.
-
-The story is written in Inform version 6.
-
-See [docs](docs) for more reading material.
-
-# Cover image credits
-
-Cover image composite from public domain images: 
-
-- https://www.flickr.com/photos/154957955@N07/35029817375
-- https://www.flickr.com/photos/sayotsu/26022492945/in/photolist-FDw5xt-BgdgV9-gJaVoi-gJaWrQ-gJb5Nk-gJaZNb-wyoQmB-gJb1d8-gJb3TD-gJaWeM-xdL4W8-gJbasS-gJaPUb-gJbSig-GDmkbH-rzq3fT-gJb4vm-gJbQop-GypQbp-gJaZow-gJaXnN-sgYEeh-gJaYhy-MpiVHc-MXG6p2-x6GE93-HSYLoS-DN39bq-xRhGiq-DsFwEM-JMnpqU-EYCFys-Ef5xCn-XG3yz8-tCuRLa-Dxk2kA-DTx9Lf-CFUmcJ-h3ocM7-GbQqzb-duPm5E-D4sQPc-84vu3Z-CBkTwm-7dhfx-D4sYK2-x2hmGh-P3twqt-cYqySj-2YPCMJ
-
-# License
-
 Copyright 2020 Wesley Werner
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
